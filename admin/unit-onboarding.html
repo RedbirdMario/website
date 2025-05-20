@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Onboarding - RedBird Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-styles.css">
+    <link rel="stylesheet" href="../css/unit-onboarding.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+</head>
+<body class="admin-body">
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+                <span class="admin-badge">Admin</span>
+            </div>
+            <ul class="admin-nav-menu">
+                <li class="admin-nav-item"><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="admin-nav-item"><a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a></li>
+                <li class="admin-nav-item"><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                <li class="admin-nav-item active"><a href="unit-onboarding.html"><i class="fas fa-home"></i> Unit Onboarding</a></li>
+                <li class="admin-nav-item"><a href="messaging.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                <li class="admin-nav-item"><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+                <li class="admin-nav-item"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="admin-user-menu">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-content-wrapper">
+        <div class="admin-sidebar">
+            <div class="sidebar-section">
+                <h3>Quick Filters</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">All Units</a></li>
+                    <li><a href="#">In Preparation</a></li>
+                    <li><a href="#">Ready for Handover</a></li>
+                    <li><a href="#">Critical Units</a></li>
+                    <li><a href="#">Recently Added</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>Onboarding Stats</h3>
+                <div class="mini-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">18</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">5</span>
+                        <span class="stat-label">Ready</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">Delayed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">89%</span>
+                        <span class="stat-label">On-Time Rate</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Recent Activity</h3>
+                <div class="activity-feed">
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <div class="activity-content">
+                            <p>Sunset Bay A-203 moved to <strong>Ready for Handover</strong></p>
+                            <span class="activity-time">15 min ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="activity-content">
+                            <p>Inspection failed for <strong>Crystal Heights 15B</strong></p>
+                            <span class="activity-time">1 hour ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-plus-circle"></i></div>
+                        <div class="activity-content">
+                            <p>New unit added: <strong>Palm View C-112</strong></p>
+                            <span class="activity-time">3 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-main-content">
+            <div class="page-header">
+                <h1>Unit Onboarding Pipeline</h1>
+                <div class="page-actions">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search units..." class="search-input">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-primary" id="addUnitBtn"><i class="fas fa-plus"></i> Add Unit</button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <div class="dropdown-content filter-dropdown">
+                            <div class="filter-section">
+                                <h4>Property</h4>
+                                <div class="filter-options">
+                                    <label><input type="checkbox" checked> All</label>
+                                    <label><input type="checkbox"> Sunset Bay Resort</label>
+                                    <label><input type="checkbox"> Crystal Heights</label>
+                                    <label><input type="checkbox"> Palm View Residences</label>
+                                </div>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Unit Type</h4>
+                                <div class="filter-options">
+                                    <label><input type="checkbox" checked> All</label>
+                                    <label><input type="checkbox"> 1 Bedroom</label>
+                                    <label><input type="checkbox"> 2 Bedroom</label>
+                                    <label><input type="checkbox"> 3+ Bedroom</label>
+                                </div>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Timeline</h4>
+                                <div class="filter-options">
+                                    <label><input type="radio" name="timeline" checked> All</label>
+                                    <label><input type="radio" name="timeline"> Due This Week</label>
+                                    <label><input type="radio" name="timeline"> Due Next Week</label>
+                                    <label><input type="radio" name="timeline"> Overdue</label>
+                                </div>
+                            </div>
+                            <div class="filter-actions">
+                                <button class="btn btn-sm">Reset</button>
+                                <button class="btn btn-primary btn-sm">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-container">
+                <div class="pipeline-header">
+                    <div class="pipeline-stage-header" data-stage="registration">
+                        <h3>Registration</h3>
+                        <span class="stage-count">5</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="preparation">
+                        <h3>Preparation</h3>
+                        <span class="stage-count">8</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="inspection">
+                        <h3>Inspection</h3>
+                        <span class="stage-count">4</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="documentation">
+                        <h3>Documentation</h3>
+                        <span class="stage-count">3</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="utilities">
+                        <h3>Utilities Setup</h3>
+                        <span class="stage-count">2</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="ready">
+                        <h3>Ready for Handover</h3>
+                        <span class="stage-count">1</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="completed">
+                        <h3>Completed</h3>
+                        <span class="stage-count">0</span>
+                    </div>
+                </div>
+                
+                <div class="pipeline-stages">
+                    <div class="pipeline-stage" data-stage="registration" id="registrationStage">
+                        <div class="unit-card" data-id="unit1">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Sunset Bay Resort, A-105</h4>
+                                    <p>Added: May 15, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                    <div class="card-menu">
+                                        <a href="#"><i class="fas fa-eye"></i> View Details</a>
+                                        <a href="#"><i class="fas fa-edit"></i> Edit</a>
+                                        <a href="#"><i class="fas fa-clipboard-list"></i> Checklists</a>
+                                        <a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a>
+                                        <a href="#" class="text-danger"><i class="fas fa-trash"></i> Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="unit-details">
+                                    <p><i class="fas fa-bed"></i> 2 Bedroom</p>
+                                    <p><i class="fas fa-ruler-combined"></i> 95 m²</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">Registration Progress</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 25%;"></div>
+                                    </div>
+                                    <div class="progress-value">25%</div>
+                                </div>
+                                <div class="checklist-summary">
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Property Registration</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Title Deed</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Tax Registration</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Ownership Transfer</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="due-date">Due: Jun 1, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <div class="unit-card" data-id="unit2">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Crystal Heights, 12B</h4>
+                                    <p>Added: May 14, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="unit-details">
+                                    <p><i class="fas fa-bed"></i> 1 Bedroom</p>
+                                    <p><i class="fas fa-ruler-combined"></i> 68 m²</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">Registration Progress</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="progress-value">50%</div>
+                                </div>
+                                <div class="checklist-summary">
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Property Registration</span>
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Title Deed</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Tax Registration</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Ownership Transfer</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="due-date warning">Due: May 25, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="preparation" id="preparationStage">
+                        <div class="unit-card" data-id="unit3">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Palm View Residences, C-203</h4>
+                                    <p>Preparation Started: May 12, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="unit-details">
+                                    <p><i class="fas fa-bed"></i> 3 Bedroom</p>
+                                    <p><i class="fas fa-ruler-combined"></i> 135 m²</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">Preparation Progress</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <div class="progress-value">75%</div>
+                                </div>
+                                <div class="checklist-summary">
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Cleaning</span>
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Painting</span>
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Basic Furniture</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Appliance Setup</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-alex.jpg" alt="Alex" class="avatar-xs">
+                                    <span>Alex Johnson</span>
+                                </div>
+                                <div class="due-date">Due: May 30, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <div class="unit-card" data-id="unit4">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Sunset Bay Resort, B-110</h4>
+                                    <p>Preparation Started: May 10, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="unit-details">
+                                    <p><i class="fas fa-bed"></i> 2 Bedroom</p>
+                                    <p><i class="fas fa-ruler-combined"></i> 98 m²</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">Preparation Progress</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 30%;"></div>
+                                    </div>
+                                    <div class="progress-value">30%</div>
+                                </div>
+                                <div class="checklist-summary">
+                                    <span class="checklist-item completed"><i class="fas fa-check-circle"></i> Cleaning</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Painting</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Basic Furniture</span>
+                                    <span class="checklist-item pending"><i class="far fa-circle"></i> Appliance Setup</span>
+                                </div>
+                                <div class="issue-tag">
+                                    <i class="fas fa-exclamation-circle"></i> Paint delivery delayed
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="due-date alert">Due: May 20, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="inspection" id="inspectionStage">
+                        <div class="unit-card" data-id="unit5">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Crystal Heights, 15A</h4>
+                                    <p>Inspection Scheduled: May 22, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="unit-details">
+                                    <p><i class="fas fa-bed"></i> 2 Bedroom</p>
+                                    <p><i class="fas fa-ruler-combined"></i> 88 m²</p>
+                                </div>
+                                <div class="inspection-details">
+                                    <p><strong>Inspector:</strong> Thomas Weber</p>
+                                    <p><strong>Type:</strong> Full Property Inspection</p>
+                                    <p><strong>Date:</strong> May 22, 2025 at 10:00 AM</p>
+                                </div>
+                                <div class="inspection-actions">
+                                    <button class="btn btn-sm btn-outline"><i class="fas fa-calendar-alt"></i> Reschedule</button>
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-clipboard-check"></i> Pre-Check</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="due-date">Due: May 25, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="documentation" id="documentationStage">
+                        <div class="unit-card" data-id="unit6">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Palm View Residences, A-101</h4>
+                                    <p>Documentation Started: May 8, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="document-status">
+                                    <div class="status-item">
+                                        <span class="status-label">Property Manual:</span>
+                                        <span class="status-value completed">Completed</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Appliance Warranties:</span>
+                                        <span class="status-value completed">Completed</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Floor Plans:</span>
+                                        <span class="status-value completed">Completed</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Final Inspection Report:</span>
+                                        <span class="status-value pending">Pending</span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="btn btn-sm btn-outline"><i class="fas fa-folder-open"></i> View Documents</button>
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-upload"></i> Upload Document</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-alex.jpg" alt="Alex" class="avatar-xs">
+                                    <span>Alex Johnson</span>
+                                </div>
+                                <div class="progress-container mini">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <div class="progress-value">75%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="utilities" id="utilitiesStage">
+                        <div class="unit-card" data-id="unit7">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Sunset Bay Resort, C-212</h4>
+                                    <p>Utilities Setup: May 5, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="utilities-status">
+                                    <div class="status-item">
+                                        <span class="status-label">Electricity:</span>
+                                        <span class="status-value completed">Connected</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Water:</span>
+                                        <span class="status-value completed">Connected</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Internet:</span>
+                                        <span class="status-value pending">Pending</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Security System:</span>
+                                        <span class="status-value pending">Pending</span>
+                                    </div>
+                                </div>
+                                <div class="utility-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-phone-alt"></i> Contact Provider</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="progress-container mini">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="progress-value">50%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="ready" id="readyStage">
+                        <div class="unit-card" data-id="unit8">
+                            <div class="card-header">
+                                <div class="unit-info">
+                                    <h4>Crystal Heights, 10C</h4>
+                                    <p>Ready Since: May 3, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="readiness-status">
+                                    <div class="status-message success">
+                                        <i class="fas fa-check-circle"></i>
+                                        <p>All preparation tasks completed</p>
+                                    </div>
+                                </div>
+                                <div class="handover-details">
+                                    <p><strong>Client:</strong> Sophie Martin</p>
+                                    <p><strong>Handover Date:</strong> May 25, 2025</p>
+                                    <p><strong>Contact:</strong> +44 789 123456</p>
+                                </div>
+                                <div class="handover-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-calendar-check"></i> Schedule Handover</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="client-status">
+                                    <span class="status-indicator client-notified">
+                                        <i class="fas fa-bell"></i> Client Notified
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="completed" id="completedStage">
+                        <div class="empty-stage-message">
+                            <i class="fas fa-clipboard-check"></i>
+                            <p>No recently completed units</p>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Unit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Unit Modal -->
+    <div class="modal" id="addUnitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Unit</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addUnitForm">
+                    <div class="form-section">
+                        <h3>Unit Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="property">Property*</label>
+                                <select id="property" name="property" required>
+                                    <option value="">Select Property</option>
+                                    <option value="sunset-bay">Sunset Bay Resort</option>
+                                    <option value="crystal-heights">Crystal Heights</option>
+                                    <option value="palm-view">Palm View Residences</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="unitNumber">Unit Number*</label>
+                                <input type="text" id="unitNumber" name="unitNumber" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="unitType">Unit Type*</label>
+                                <select id="unitType" name="unitType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="1br">1 Bedroom</option>
+                                    <option value="2br">2 Bedroom</option>
+                                    <option value="3br">3 Bedroom</option>
+                                    <option value="penthouse">Penthouse</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="area">Area (m²)*</label>
+                                <input type="number" id="area" name="area" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Onboarding Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="initialStage">Initial Stage*</label>
+                                <select id="initialStage" name="initialStage" required>
+                                    <option value="registration">Registration</option>
+                                    <option value="preparation">Preparation</option>
+                                    <option value="inspection">Inspection</option>
+                                    <option value="documentation">Documentation</option>
+                                    <option value="utilities">Utilities Setup</option>
+                                    <option value="ready">Ready for Handover</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignedTo">Assign To*</label>
+                                <select id="assignedTo" name="assignedTo" required>
+                                    <option value="">Select Team Member</option>
+                                    <option value="sarah">Sarah Williams</option>
+                                    <option value="mike">Mike Peterson</option>
+                                    <option value="alex">Alex Johnson</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="targetDate">Target Completion Date*</label>
+                                <input type="date" id="targetDate" name="targetDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="priority">Priority</label>
+                                <select id="priority" name="priority">
+                                    <option value="normal">Normal</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="notes">Notes</label>
+                                <textarea id="notes" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Client Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clientName">Client Name</label>
+                                <input type="text" id="clientName" name="clientName">
+                            </div>
+                            <div class="form-group">
+                                <label for="clientEmail">Client Email</label>
+                                <input type="email" id="clientEmail" name="clientEmail">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clientPhone">Client Phone</label>
+                                <input type="tel" id="clientPhone" name="clientPhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="expectedHandover">Expected Handover</label>
+                                <input type="date" id="expectedHandover" name="expectedHandover">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelAddUnit">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Unit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/unit-onboarding.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Sortable.js on each pipeline stage
+            document.querySelectorAll('.pipeline-stage').forEach(stage => {
+                new Sortable(stage, {
+                    group: 'pipeline',
+                    animation: 150,
+                    ghostClass: 'card-ghost',
+                    chosenClass: 'card-chosen',
+                    dragClass: 'card-drag',
+                    onEnd: function(evt) {
+                        // Get the source and target stages
+                        const fromStage = evt.from.getAttribute('data-stage');
+                        const toStage = evt.to.getAttribute('data-stage');
+                        const unitId = evt.item.getAttribute('data-id');
+                        
+                        // Log the move (would be an API call in production)
+                        console.log(`Moved unit ${unitId} from ${fromStage} to ${toStage}`);
+                        
+                        // In a real application, this would update the backend via API
+                        // updateUnitStage(unitId, toStage);
+                        
+                        // Update the count in each stage
+                        updateStageCounts();
+                    }
+                });
+            });
+            
+            // Function to update stage counts
+            function updateStageCounts() {
+                document.querySelectorAll('.pipeline-stage').forEach(stage => {
+                    const stageId = stage.getAttribute('data-stage');
+                    const count = stage.querySelectorAll('.unit-card').length;
+                    const stageHeader = document.querySelector(`.pipeline-stage-header[data-stage="${stageId}"] .stage-count`);
+                    
+                    if (stageHeader) {
+                        stageHeader.textContent = count;
+                    }
+                });
+            }
+            
+            // Handle card menu toggle
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.card-menu-btn')) {
+                    const menu = e.target.closest('.card-actions').querySelector('.card-menu');
+                    
+                    // Close all other menus first
+                    document.querySelectorAll('.card-menu.active').forEach(m => {
+                        if (m !== menu) m.classList.remove('active');
+                    });
+                    
+                    // Toggle this menu
+                    menu?.classList.toggle('active');
+                    e.stopPropagation();
+                } else if (!e.target.closest('.card-menu')) {
+                    // Close all menus when clicking elsewhere
+                    document.querySelectorAll('.card-menu.active').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Modal handling
+            const addUnitBtn = document.getElementById('addUnitBtn');
+            const addUnitModal = document.getElementById('addUnitModal');
+            const closeBtn = addUnitModal.querySelector('.close-btn');
+            const cancelBtn = document.getElementById('cancelAddUnit');
+            
+            addUnitBtn.addEventListener('click', function() {
+                addUnitModal.classList.add('active');
+            });
+            
+            function closeModal() {
+                addUnitModal.classList.remove('active');
+            }
+            
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === addUnitModal) {
+                    closeModal();
+                }
+            });
+            
+            // Add stage buttons
+            document.querySelectorAll('.add-item-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Get the stage this button belongs to
+                    const stage = btn.closest('.pipeline-stage').getAttribute('data-stage');
+                    
+                    // Open the modal
+                    addUnitModal.classList.add('active');
+                    
+                    // Set the initial stage in the form
+                    document.getElementById('initialStage').value = stage;
+                });
+            });
+            
+            // Form submission
+            const addUnitForm = document.getElementById('addUnitForm');
+            
+            addUnitForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real application, this would send form data to an API
+                // Here we'll just create a new card based on the form data
+                const property = document.getElementById('property');
+                const propertyValue = property.value;
+                const propertyText = property.options[property.selectedIndex].text;
+                
+                const unitNumber = document.getElementById('unitNumber').value;
+                const unitType = document.getElementById('unitType');
+                const unitTypeText = unitType.options[unitType.selectedIndex].text;
+                
+                const area = document.getElementById('area').value;
+                const assignedTo = document.getElementById('assignedTo').value;
+                const initialStage = document.getElementById('initialStage').value;
+                const targetDate = document.getElementById('targetDate').value;
+                
+                // Map advisor value to name and image
+                let advisorName = "Unassigned";
+                let advisorImage = "../img/avatar-default.jpg";
+                
+                switch(assignedTo) {
+                    case 'sarah':
+                        advisorName = "Sarah Williams";
+                        advisorImage = "../img/avatar-sarah.jpg";
+                        break;
+                    case 'mike':
+                        advisorName = "Mike Peterson";
+                        advisorImage = "../img/avatar-mike.jpg";
+                        break;
+                    case 'alex':
+                        advisorName = "Alex Johnson";
+                        advisorImage = "../img/avatar-alex.jpg";
+                        break;
+                }
+                
+                // Format the date
+                const dueDate = new Date(targetDate);
+                const formattedDate = dueDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                // Create a new unit card
+                const newCard = document.createElement('div');
+                newCard.className = 'unit-card';
+                newCard.setAttribute('data-id', 'new-' + Date.now());
+                
+                // Create card HTML based on which stage it's in
+                let cardBody = '';
+                
+                switch(initialStage) {
+                    case 'registration':
+                        cardBody = `
+                            <div class="unit-details">
+                                <p><i class="fas fa-bed"></i> ${unitTypeText}</p>
+                                <p><i class="fas fa-ruler-combined"></i> ${area} m²</p>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">Registration Progress</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-value">0%</div>
+                            </div>
+                            <div class="checklist-summary">
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Property Registration</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Title Deed</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Tax Registration</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Ownership Transfer</span>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'preparation':
+                        cardBody = `
+                            <div class="unit-details">
+                                <p><i class="fas fa-bed"></i> ${unitTypeText}</p>
+                                <p><i class="fas fa-ruler-combined"></i> ${area} m²</p>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">Preparation Progress</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-value">0%</div>
+                            </div>
+                            <div class="checklist-summary">
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Cleaning</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Painting</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Basic Furniture</span>
+                                <span class="checklist-item pending"><i class="far fa-circle"></i> Appliance Setup</span>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'inspection':
+                        cardBody = `
+                            <div class="unit-details">
+                                <p><i class="fas fa-bed"></i> ${unitTypeText}</p>
+                                <p><i class="fas fa-ruler-combined"></i> ${area} m²</p>
+                            </div>
+                            <div class="inspection-details">
+                                <p><strong>Inspector:</strong> Not Assigned</p>
+                                <p><strong>Type:</strong> Full Property Inspection</p>
+                                <p><strong>Date:</strong> Not Scheduled</p>
+                            </div>
+                            <div class="inspection-actions">
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-calendar-alt"></i> Schedule Inspection</button>
+                            </div>
+                        `;
+                        break;
+                        
+                    default:
+                        cardBody = `
+                            <div class="unit-details">
+                                <p><i class="fas fa-bed"></i> ${unitTypeText}</p>
+                                <p><i class="fas fa-ruler-combined"></i> ${area} m²</p>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">Onboarding Progress</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-value">0%</div>
+                            </div>
+                        `;
+                }
+                
+                newCard.innerHTML = `
+                    <div class="card-header">
+                        <div class="unit-info">
+                            <h4>${propertyText}, ${unitNumber}</h4>
+                            <p>Added: ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            <div class="card-menu">
+                                <a href="#"><i class="fas fa-eye"></i> View Details</a>
+                                <a href="#"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="#"><i class="fas fa-clipboard-list"></i> Checklists</a>
+                                <a href="#"><i class="fas fa-calendar-alt"></i> Schedule</a>
+                                <a href="#" class="text-danger"><i class="fas fa-trash"></i> Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        ${cardBody}
+                    </div>
+                    <div class="card-footer">
+                        <div class="assigned-to">
+                            <img src="${advisorImage}" alt="${advisorName}" class="avatar-xs">
+                            <span>${advisorName}</span>
+                        </div>
+                        <div class="due-date">Due: ${formattedDate}</div>
+                    </div>
+                `;
+                
+                // Add the new card to the appropriate stage
+                const targetStage = document.getElementById(initialStage + 'Stage');
+                targetStage.insertBefore(newCard, targetStage.querySelector('.add-item-btn'));
+                
+                // Update counts
+                updateStageCounts();
+                
+                // Close the modal and reset form
+                closeModal();
+                addUnitForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>

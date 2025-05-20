@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projektstatus - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-body {
+            background-color: #f5f5f5;
+            padding-bottom: 0;
+            display: block;
+        }
+        
+        .admin-header {
+            background-color: var(--redbird-dark);
+            color: white;
+            padding: 1rem 0;
+        }
+        
+        .admin-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-title img {
+            height: 40px;
+        }
+        
+        .admin-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-user-info span {
+            display: block;
+        }
+        
+        .admin-user-name {
+            font-weight: 500;
+        }
+        
+        .admin-user-role {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .admin-sidebar {
+            width: 250px;
+            background-color: white;
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        .admin-menu {
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+        }
+        
+        .admin-menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--redbird-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 0.75rem;
+        }
+        
+        .admin-menu-item a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .admin-menu-item.active a {
+            background-color: #f5f5f5;
+            border-left: 4px solid var(--redbird-red);
+            padding-left: calc(1.5rem - 4px);
+            color: var(--redbird-red);
+            font-weight: 500;
+        }
+        
+        .admin-content {
+            margin-left: 250px;
+            padding: 2rem;
+            max-width: 1200px;
+        }
+        
+        .admin-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .admin-section-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        .admin-section-body {
+            padding: 1.25rem;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th,
+        .admin-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .admin-table th {
+            font-weight: 500;
+            color: var(--redbird-gray);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .admin-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .user-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .status-completed {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            padding-left: 2.5rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--redbird-gray);
+        }
+
+        .timeline {
+            position: relative;
+            margin: 0 0 30px 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+            left: 31px;
+            margin-left: -1.5px;
+        }
+
+        .timeline > li {
+            position: relative;
+            margin-bottom: 30px;
+            min-height: 50px;
+        }
+
+        .timeline > li:before,
+        .timeline > li:after {
+            content: " ";
+            display: table;
+        }
+
+        .timeline > li:after {
+            clear: both;
+        }
+
+        .timeline > li .timeline-panel {
+            float: right;
+            position: relative;
+            width: calc(100% - 70px);
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline > li .timeline-badge {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 32px;
+            height: 32px;
+            z-index: 100;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 32px;
+            text-align: center;
+            background: var(--redbird-red);
+            color: #fff;
+        }
+
+        .timeline > li.timeline-completed .timeline-badge {
+            background: #28a745;
+        }
+
+        .timeline > li.timeline-pending .timeline-badge {
+            background: #ffc107;
+        }
+
+        .timeline > li.timeline-inactive .timeline-badge {
+            background: #6c757d;
+        }
+
+        .timeline-heading h4 {
+            margin-top: 0;
+            color: var(--redbird-dark);
+        }
+
+        .timeline-body {
+            padding-top: 10px;
+        }
+
+        .progress-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .progress-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .progress-tab.active {
+            border-bottom-color: var(--redbird-red);
+            color: var(--redbird-red);
+            font-weight: 500;
+        }
+
+        .progress-content {
+            display: none;
+        }
+
+        .progress-content.active {
+            display: block;
+        }
+
+        .update-progress-btn {
+            margin-top: 15px;
+            background-color: var(--redbird-red);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .property-card {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .property-image {
+            width: 180px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .property-details {
+            padding: 15px;
+            flex: 1;
+        }
+
+        .property-title {
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: var(--redbird-dark);
+        }
+
+        .property-location {
+            color: var(--redbird-gray);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .property-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .property-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .progress-indicator {
+            margin: 15px 0;
+            background: #f5f5f5;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--redbird-red);
+            width: 65%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--redbird-gray);
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <header class="admin-header">
+        <div class="admin-header-container">
+            <div class="admin-title">
+                <img src="../img/redbird-logo.png" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">System Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <aside class="admin-sidebar">
+        <ul class="admin-menu">
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-users"></i> Kunden</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-home"></i> Immobilien</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-file-alt"></i> Dokumente</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="media.html"><i class="fas fa-images"></i> Medienverwaltung</a>
+            </li>
+            <li class="admin-menu-item active">
+                <a href="progress.html"><i class="fas fa-tasks"></i> Projektstatus</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="fulfillment-process.html"><i class="fas fa-clipboard-check"></i> Fulfillment Prozess</a>
+            </li>
+        </ul>
+    </aside>
+    
+    <main class="admin-content">
+        <h1>Projektstatus</h1>
+        <p>Überwachen Sie den Fortschritt von Immobilienprojekten und managen Sie den Status.</p>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2>Projektübersicht</h2>
+                <div>
+                    <select class="form-control" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                        <option>Alle Projekte</option>
+                        <option>Aktive Projekte</option>
+                        <option>Abgeschlossene Projekte</option>
+                        <option>Ausstehende Projekte</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-section-body">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Suche nach Projekten, Kunden oder Immobilien...">
+                </div>
+                
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Projekt</th>
+                            <th>Kunde</th>
+                            <th>Immobilie</th>
+                            <th>Fortschritt</th>
+                            <th>Status</th>
+                            <th>Letzte Aktualisierung</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kauf-Projekt #1072</td>
+                            <td>Max Mustermann</td>
+                            <td>Sunset Bay Resort, A-203</td>
+                            <td>
+                                <div style="width: 100%; background-color: #f5f5f5; height: 6px; border-radius: 3px;">
+                                    <div style="width: 70%; background-color: var(--redbird-red); height: 6px; border-radius: 3px;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 3px;">5/7 Schritte</div>
+                            </td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>15.05.2025</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Dokumentation"><i class="fas fa-file-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kauf-Projekt #1064</td>
+                            <td>Maria Schmidt</td>
+                            <td>Palm View Residence, B-105</td>
+                            <td>
+                                <div style="width: 100%; background-color: #f5f5f5; height: 6px; border-radius: 3px;">
+                                    <div style="width: 40%; background-color: var(--redbird-red); height: 6px; border-radius: 3px;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 3px;">3/7 Schritte</div>
+                            </td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>10.05.2025</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Dokumentation"><i class="fas fa-file-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kauf-Projekt #1058</td>
+                            <td>Klaus Weber</td>
+                            <td>Golden Bay Villas, C-301</td>
+                            <td>
+                                <div style="width: 100%; background-color: #f5f5f5; height: 6px; border-radius: 3px;">
+                                    <div style="width: 15%; background-color: var(--redbird-red); height: 6px; border-radius: 3px;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 3px;">1/7 Schritte</div>
+                            </td>
+                            <td><span class="user-status status-pending">Ausstehend</span></td>
+                            <td>12.05.2025</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Dokumentation"><i class="fas fa-file-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kauf-Projekt #1042</td>
+                            <td>Anna Becker</td>
+                            <td>Mountain View Resort, D-102</td>
+                            <td>
+                                <div style="width: 100%; background-color: #f5f5f5; height: 6px; border-radius: 3px;">
+                                    <div style="width: 100%; background-color: #28a745; height: 6px; border-radius: 3px;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 3px;">7/7 Schritte</div>
+                            </td>
+                            <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                            <td>05.05.2025</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Dokumentation"><i class="fas fa-file-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2>Projektdetails: Kauf-Projekt #1072</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="property-card">
+                    <img src="../img/apartment-preview.jpg" alt="Apartment" class="property-image">
+                    <div class="property-details">
+                        <h3 class="property-title">Sunset Bay Resort, A-203</h3>
+                        <div class="property-location"><i class="fas fa-map-marker-alt"></i> Esentepe, Nordzypern</div>
+                        <div class="property-meta">
+                            <div class="property-meta-item"><i class="fas fa-expand"></i> 85 m²</div>
+                            <div class="property-meta-item"><i class="fas fa-bed"></i> 2 Schlafzimmer</div>
+                            <div class="property-meta-item"><i class="fas fa-bath"></i> 1 Badezimmer</div>
+                            <div class="property-meta-item"><i class="fas fa-euro-sign"></i> 189.000</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-tabs">
+                    <div class="progress-tab active" data-tab="fulfillment-tab">Fulfillment Prozess</div>
+                    <div class="progress-tab" data-tab="purchase-tab">Kaufprozess</div>
+                    <div class="progress-tab" data-tab="timeline-tab">Zeitlinie</div>
+                </div>
+                
+                <div id="fulfillment-tab" class="progress-content active">
+                    <div style="margin-bottom: 20px;">
+                        <h4>Fulfillment Prozess Fortschritt</h4>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 29%;"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <div>5 von 17 Schritten abgeschlossen</div>
+                            <div>29% abgeschlossen</div>
+                        </div>
+                    </div>
+                    
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Schritt</th>
+                                <th>Status</th>
+                                <th>Verantwortlich</th>
+                                <th>Letzte Aktualisierung</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. WhatsApp Gruppe Welcome</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>Team</td>
+                                <td>01.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2. Onboarding Terminvereinbarung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>Assistent</td>
+                                <td>03.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3. Onboarding Video-Call</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>Berater</td>
+                                <td>05.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4. Unit-Matching</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>Berater</td>
+                                <td>10.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5. Beratung Terminvereinbarung</td>
+                                <td><span class="user-status status-active">In Bearbeitung</span></td>
+                                <td>Berater</td>
+                                <td>15.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                        <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6. Beratung Video Call</td>
+                                <td><span class="user-status status-pending">Ausstehend</span></td>
+                                <td>Berater</td>
+                                <td>-</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Weitere Schritte würden hier folgen -->
+                        </tbody>
+                    </table>
+                    <button class="update-progress-btn">Status aktualisieren</button>
+                </div>
+                
+                <div id="purchase-tab" class="progress-content">
+                    <div style="margin-bottom: 20px;">
+                        <h4>Kaufprozess Fortschritt</h4>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 70%;"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <div>5 von 7 Schritten abgeschlossen</div>
+                            <div>70% abgeschlossen</div>
+                        </div>
+                    </div>
+                    
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Schritt</th>
+                                <th>Status</th>
+                                <th>Datum</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Reservierung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>25.04.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2. Anzahlung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>28.04.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3. Vertragsunterzeichnung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>05.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4. Vollständige Zahlung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>10.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5. Eigentumseintragung</td>
+                                <td><span class="user-status status-completed">Abgeschlossen</span></td>
+                                <td>15.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6. Schlüsselübergabe</td>
+                                <td><span class="user-status status-pending">Ausstehend</span></td>
+                                <td>Geplant: 25.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                        <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7. Abschluss</td>
+                                <td><span class="user-status status-pending">Ausstehend</span></td>
+                                <td>Geplant: 30.05.2025</td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <button class="admin-action-btn" title="Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="update-progress-btn">Status aktualisieren</button>
+                </div>
+                
+                <div id="timeline-tab" class="progress-content">
+                    <ul class="timeline">
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Reservierung abgeschlossen</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 25.04.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Kunde hat die Immobilie Sunset Bay Resort, A-203 reserviert. Reservierungsgebühr von 2.000€ wurde bezahlt.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Anzahlung erhalten</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 28.04.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Anzahlung von 30% (56.700€) wurde auf das Firmenkonto überwiesen.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>WhatsApp Gruppe Welcome erstellt</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 01.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Welcome-Gruppe für den Kunden wurde erstellt und Begrüßungsnachricht gesendet.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Onboarding Termin vereinbart</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 03.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Onboarding-Termin für den 05.05.2025 um 14:00 Uhr vereinbart.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Vertragsunterzeichnung</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 05.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Kaufvertrag wurde von beiden Parteien unterzeichnet.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Onboarding Video-Call durchgeführt</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 05.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Erfolgreicher Onboarding-Call mit dem Kunden. Alle Fragen wurden beantwortet.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Unit-Matching abgeschlossen</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 10.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Passende Immobilie für den Kunden wurde bestätigt.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Vollständige Zahlung erhalten</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 10.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Restzahlung von 132.300€ wurde auf das Firmenkonto überwiesen.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-completed">
+                            <div class="timeline-badge"><i class="fas fa-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Eigentumseintragung erfolgt</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 15.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Eigentumsübertragung im Grundbuchamt wurde abgeschlossen.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-active">
+                            <div class="timeline-badge"><i class="fas fa-spinner"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Beratung Terminvereinbarung</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> 15.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Terminvereinbarung für die Beratung ist im Gange.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-pending">
+                            <div class="timeline-badge"><i class="fas fa-pause"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Schlüsselübergabe geplant</h4>
+                                    <p><small class="text-muted"><i class="fas fa-clock"></i> Geplant: 25.05.2025</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Schlüsselübergabe und Einweisung in die Immobilie.</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.progress-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all content
+                    const contents = document.querySelectorAll('.progress-content');
+                    contents.forEach(content => content.classList.remove('active'));
+                    
+                    // Show content for clicked tab
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

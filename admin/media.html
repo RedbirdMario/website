@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medienverwaltung - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Override some styles to match the member portal design */
+        :root {
+            --redbird-red: #ff2121;
+            --redbird-dark: #0b0b0b;
+            --redbird-white: #ffffff;
+            --redbird-gray: #6c757d;
+            --redbird-light-gray: #f8f9fa;
+            --redbird-border: #dee2e6;
+            --status-success: #28a745;
+            --status-warning: #ffc107;
+            --status-danger: #dc3545;
+        }
+        
+        body {
+            background-color: var(--redbird-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--redbird-dark);
+        }
+        
+        .admin-header {
+            background-color: var(--redbird-dark);
+            color: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-title img {
+            height: 40px;
+        }
+        
+        .admin-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-user-info span {
+            display: block;
+            color: white;
+        }
+        
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--redbird-dark);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .admin-menu {
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+        }
+        
+        .admin-menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 0.75rem;
+        }
+        
+        .admin-menu-item a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .admin-menu-item.active a {
+            background-color: rgba(255, 33, 33, 0.2);
+            border-left: 4px solid var(--redbird-red);
+            padding-left: calc(1.5rem - 4px);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .admin-content {
+            margin-left: 250px;
+            padding: 2rem;
+            max-width: 1200px;
+            flex: 1;
+            background-color: var(--redbird-light-gray);
+            min-height: calc(100vh - 70px);
+        }
+        
+        .admin-section {
+            background-color: var(--redbird-white);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .admin-section-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--redbird-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 33, 33, 0.05);
+        }
+        
+        .admin-section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--redbird-red);
+        }
+        
+        .dropbtn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        
+        .dropbtn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dropdown-content {
+            background-color: var(--redbird-dark);
+            min-width: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        .dropdown-content a {
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dropdown-content a:hover {
+            background-color: rgba(255, 33, 33, 0.7);
+            color: white;
+        }
+        
+        .btn {
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--redbird-red);
+            border-color: var(--redbird-red);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d80000;
+            border-color: #d80000;
+        }
+        
+        .btn-outline {
+            color: var(--redbird-red);
+            background-color: transparent;
+            border: 1px solid var(--redbird-red);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--redbird-red);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .media-upload-area {
+            background-color: var(--redbird-light-gray);
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .media-upload-area:hover {
+            background-color: #f0f0f0;
+            border-color: var(--redbird-red);
+        }
+        
+        .media-upload-area.dragover {
+            background-color: rgba(255, 33, 33, 0.05);
+            border-color: var(--redbird-red);
+        }
+        
+        .media-upload-area.dragover .media-upload-icon i {
+            color: var(--redbird-red);
+        }
+        
+        .media-browse-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--redbird-red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .media-browse-btn:hover {
+            background-color: #d80000;
+        }
+        
+        .form-control {
+            border: 1px solid var(--redbird-border);
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--redbird-red);
+            box-shadow: 0 0 0 0.2rem rgba(255, 33, 33, 0.25);
+        }
+        
+        .media-action-btn:hover {
+            background-color: var(--redbird-red);
+            color: white;
+        }
+        
+        .media-detail-btn.save {
+            background-color: var(--redbird-red);
+        }
+        
+        .media-detail-btn.save:hover {
+            background-color: #d80000;
+        }
+        
+        .media-pagination-btn.active {
+            background-color: var(--redbird-red);
+            color: white;
+            border-color: var(--redbird-red);
+        }
+        
+        /* Toast styling */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--redbird-dark);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            z-index: 1100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background-color: var(--status-success);
+        }
+        
+        .toast.error {
+            background-color: var(--status-danger);
+        }
+        
+        /* Footer styling */
+        .main-footer {
+            background-color: var(--redbird-dark);
+            color: var(--redbird-white);
+            padding: 1.5rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--redbird-white);
+            font-size: 0.875rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+        
+        /* Media upload and preview area */
+        .upload-preview-area {
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .upload-preview-title {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--redbird-dark);
+        }
+        
+        .upload-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .upload-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        
+        .upload-preview-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .upload-preview-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .upload-preview-info {
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-top: 1px solid var(--redbird-border);
+        }
+        
+        .upload-preview-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-preview-remove:hover {
+            background-color: var(--redbird-red);
+        }
+        
+        .upload-progress {
+            height: 4px;
+            background-color: #eee;
+            margin-top: 0;
+            overflow: hidden;
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            background-color: var(--redbird-red);
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .upload-complete .upload-progress-bar {
+            background-color: var(--status-success);
+        }
+        
+        /* Media grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .media-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .media-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .media-preview {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .media-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .media-item:hover .media-preview img {
+            transform: scale(1.05);
+        }
+        
+        .media-preview-document {
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            color: var(--redbird-gray);
+            font-size: 3.5rem;
+        }
+        
+        .media-preview-document i.pdf {
+            color: #f40f02;
+        }
+        
+        .media-preview-document i.doc {
+            color: #2b579a;
+        }
+        
+        .media-preview-document i.xls {
+            color: #217346;
+        }
+        
+        .media-info {
+            padding: 1.25rem;
+        }
+        
+        .media-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--redbird-dark);
+        }
+        
+        .media-details {
+            font-size: 0.875rem;
+            color: var(--redbird-gray);
+        }
+        
+        .media-actions {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            gap: 0.75rem;
+        }
+        
+        .media-item:hover .media-actions {
+            opacity: 1;
+        }
+        
+        .media-action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--redbird-dark);
+        }
+        
+        /* Customer list */
+        .customer-attachment-list {
+            margin-top: 1.5rem;
+        }
+        
+        .customer-attachment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--redbird-border);
+        }
+        
+        .customer-attachment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .customer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--redbird-light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: var(--redbird-dark);
+            border: 2px solid var(--redbird-red);
+        }
+        
+        .customer-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .customer-property {
+            font-size: 0.875rem;
+            color: var(--redbird-gray);
+        }
+        
+        /* Media detail modal */
+        .media-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .media-detail-content {
+            background-color: white;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .media-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--redbird-border);
+            background-color: rgba(255, 33, 33, 0.05);
+        }
+        
+        .media-detail-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--redbird-red);
+        }
+        
+        .media-detail-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--redbird-gray);
+            transition: color 0.3s;
+        }
+        
+        .media-detail-close:hover {
+            color: var(--redbird-red);
+        }
+        
+        .media-detail-body {
+            padding: 2rem;
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .media-detail-preview {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .media-detail-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            max-height: 350px;
+            object-fit: contain;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .media-detail-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .media-detail-section {
+            margin-bottom: 2rem;
+        }
+        
+        .media-detail-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--redbird-red);
+            border-bottom: 1px solid rgba(255, 33, 33, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .media-detail-footer {
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border-top: 1px solid var(--redbird-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .media-detail-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                display: none;
+            }
+            
+            .admin-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .media-detail-body {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-container">
+            <div class="admin-title">
+                <img src="../img/redbird-logo.png" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">System Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <aside class="admin-sidebar">
+        <ul class="admin-menu">
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-users"></i> Kunden</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-home"></i> Immobilien</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-file-alt"></i> Dokumente</a>
+            </li>
+            <li class="admin-menu-item active">
+                <a href="media.html"><i class="fas fa-images"></i> Medienverwaltung</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="progress.html"><i class="fas fa-tasks"></i> Projektstatus</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="fulfillment-process.html"><i class="fas fa-clipboard-check"></i> Fulfillment Prozess</a>
+            </li>
+        </ul>
+    </aside>
+    
+    <main class="admin-content">
+        <h1>Medienverwaltung</h1>
+        <p>Verwalten Sie Bilder und Dokumente für alle Kunden und Immobilien. Laden Sie neue Medien hoch oder organisieren Sie bestehende Dateien.</p>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2><i class="fas fa-cloud-upload-alt"></i> Medien hochladen</h2>
+            </div>
+            <div class="admin-section-body">
+                <div id="uploadArea" class="media-upload-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)">
+                    <div class="media-upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="media-upload-text">
+                        <h3>Dateien hier ablegen</h3>
+                        <p>oder klicken Sie, um Dateien auszuwählen</p>
+                        <p>Unterstützte Formate: JPG, PNG, PDF, DOC, XLS (Max. 10 MB)</p>
+                        <button type="button" class="media-browse-btn" onclick="document.getElementById('fileInput').click()">Dateien auswählen</button>
+                        <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+                
+                <div id="uploadPreviewArea" class="upload-preview-area">
+                    <h3 class="upload-preview-title">Ausgewählte Dateien</h3>
+                    <div id="uploadPreviewGrid" class="upload-preview-grid">
+                        <!-- Upload preview items will be added here -->
+                    </div>
+                </div>
+                
+                <form id="uploadForm" class="media-upload-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mediaTitle">Titel</label>
+                            <input type="text" id="mediaTitle" class="form-control" placeholder="z.B. Außenansicht des Gebäudes" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mediaCategory">Kategorie</label>
+                            <select id="mediaCategory" class="form-control" required>
+                                <option value="">Kategorie wählen...</option>
+                                <option value="exterior">Außenansicht</option>
+                                <option value="interior">Innenansicht</option>
+                                <option value="amenities">Ausstattung</option>
+                                <option value="area">Umgebung</option>
+                                <option value="contracts">Verträge</option>
+                                <option value="floorplans">Grundrisse</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mediaProperty">Immobilie</label>
+                            <select id="mediaProperty" class="form-control" required>
+                                <option value="">Immobilie wählen...</option>
+                                <option value="property-1">Sunset Bay Resort, A-203</option>
+                                <option value="property-2">Palm View Residence, B-105</option>
+                                <option value="property-3">Golden Bay Villas, C-301</option>
+                                <option value="property-4">Mountain View Resort, D-102</option>
+                                <option value="property-5">Seaside Apartments, E-405</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mediaDescription">Beschreibung</label>
+                            <textarea id="mediaDescription" class="form-control" rows="3" placeholder="Kurze Beschreibung des Mediums"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mediaCustomers">Kunden zuweisen</label>
+                            <select id="mediaCustomers" class="form-control" multiple>
+                                <option value="customer-1">Max Mustermann - Sunset Bay Resort, A-203</option>
+                                <option value="customer-2">Maria Schmidt - Palm View Residence, B-105</option>
+                                <option value="customer-3">Klaus Weber - Golden Bay Villas, C-301</option>
+                                <option value="customer-4">Anna Becker - Mountain View Resort, D-102</option>
+                                <option value="customer-5">Michael Schneider - Seaside Apartments, E-405</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <button type="button" class="btn btn-outline" onclick="resetUploadForm()">Abbrechen</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadFiles()">Hochladen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2><i class="fas fa-photo-video"></i> Medienbibliothek</h2>
+                <div class="search-container" style="max-width: 300px;">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Suche nach Medien...">
+                </div>
+            </div>
+            <div class="admin-section-body">
+                <div class="media-filters">
+                    <select class="media-filter-select" id="filterType">
+                        <option value="all">Alle Medientypen</option>
+                        <option value="image">Bilder</option>
+                        <option value="document">Dokumente</option>
+                    </select>
+                    
+                    <select class="media-filter-select" id="filterCategory">
+                        <option value="all">Alle Kategorien</option>
+                        <option value="exterior">Außenansicht</option>
+                        <option value="interior">Innenansicht</option>
+                        <option value="amenities">Ausstattung</option>
+                        <option value="area">Umgebung</option>
+                        <option value="contracts">Verträge</option>
+                        <option value="floorplans">Grundrisse</option>
+                    </select>
+                    
+                    <select class="media-filter-select" id="filterProperty">
+                        <option value="all">Alle Immobilien</option>
+                        <option value="property-1">Sunset Bay Resort</option>
+                        <option value="property-2">Palm View Residence</option>
+                        <option value="property-3">Golden Bay Villas</option>
+                        <option value="property-4">Mountain View Resort</option>
+                        <option value="property-5">Seaside Apartments</option>
+                    </select>
+                    
+                    <select class="media-filter-select" id="filterDate">
+                        <option value="all">Alle Zeiträume</option>
+                        <option value="today">Heute</option>
+                        <option value="week">Diese Woche</option>
+                        <option value="month">Dieser Monat</option>
+                        <option value="year">Dieses Jahr</option>
+                    </select>
+                </div>
+                
+                <div class="media-batch-actions">
+                    <div class="media-batch-info">
+                        <span id="selectedCount">0 Elemente ausgewählt</span>
+                    </div>
+                    <div class="media-batch-buttons">
+                        <button class="btn btn-outline" id="batchAssignBtn" disabled>Zuweisen</button>
+                        <button class="btn btn-outline" id="batchDownloadBtn" disabled>Herunterladen</button>
+                        <button class="btn btn-outline" id="batchDeleteBtn" disabled>Löschen</button>
+                    </div>
+                </div>
+                
+                <div id="mediaGrid" class="media-grid">
+                    <!-- Media items will be loaded here -->
+                </div>
+                
+                <div class="media-pagination">
+                    <button class="media-pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="media-pagination-btn active">1</button>
+                    <button class="media-pagination-btn">2</button>
+                    <button class="media-pagination-btn">3</button>
+                    <button class="media-pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2><i class="fas fa-user-friends"></i> Kundenzuweisungen</h2>
+            </div>
+            <div class="admin-section-body">
+                <p>Sehen Sie, welchen Kunden die Medien zugewiesen sind, und verwalten Sie den Zugriff.</p>
+                
+                <div class="customer-attachment-list">
+                    <div class="customer-attachment-item">
+                        <div class="customer-info">
+                            <div class="customer-avatar">MM</div>
+                            <div>
+                                <div class="customer-name">Max Mustermann</div>
+                                <div class="customer-property">Sunset Bay Resort, A-203</div>
+                            </div>
+                        </div>
+                        <div>8 Medien zugeordnet</div>
+                        <div class="customer-actions">
+                            <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('customer-1')">Zugriff verwalten</button>
+                            <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('customer-1')">Medien zuweisen</button>
+                        </div>
+                    </div>
+                    
+                    <div class="customer-attachment-item">
+                        <div class="customer-info">
+                            <div class="customer-avatar">MS</div>
+                            <div>
+                                <div class="customer-name">Maria Schmidt</div>
+                                <div class="customer-property">Palm View Residence, B-105</div>
+                            </div>
+                        </div>
+                        <div>5 Medien zugeordnet</div>
+                        <div class="customer-actions">
+                            <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('customer-2')">Zugriff verwalten</button>
+                            <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('customer-2')">Medien zuweisen</button>
+                        </div>
+                    </div>
+                    
+                    <div class="customer-attachment-item">
+                        <div class="customer-info">
+                            <div class="customer-avatar">KW</div>
+                            <div>
+                                <div class="customer-name">Klaus Weber</div>
+                                <div class="customer-property">Golden Bay Villas, C-301</div>
+                            </div>
+                        </div>
+                        <div>3 Medien zugeordnet</div>
+                        <div class="customer-actions">
+                            <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('customer-3')">Zugriff verwalten</button>
+                            <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('customer-3')">Medien zuweisen</button>
+                        </div>
+                    </div>
+                    
+                    <div class="customer-attachment-item">
+                        <div class="customer-info">
+                            <div class="customer-avatar">AB</div>
+                            <div>
+                                <div class="customer-name">Anna Becker</div>
+                                <div class="customer-property">Mountain View Resort, D-102</div>
+                            </div>
+                        </div>
+                        <div>6 Medien zugeordnet</div>
+                        <div class="customer-actions">
+                            <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('customer-4')">Zugriff verwalten</button>
+                            <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('customer-4')">Medien zuweisen</button>
+                        </div>
+                    </div>
+                    
+                    <div class="customer-attachment-item">
+                        <div class="customer-info">
+                            <div class="customer-avatar">MS</div>
+                            <div>
+                                <div class="customer-name">Michael Schneider</div>
+                                <div class="customer-property">Seaside Apartments, E-405</div>
+                            </div>
+                        </div>
+                        <div>4 Medien zugeordnet</div>
+                        <div class="customer-actions">
+                            <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('customer-5')">Zugriff verwalten</button>
+                            <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('customer-5')">Medien zuweisen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Media Detail Modal -->
+    <div class="media-detail-modal" id="mediaDetailModal">
+        <div class="media-detail-content">
+            <div class="media-detail-header">
+                <h3>Medium bearbeiten</h3>
+                <button class="media-detail-close" onclick="closeMediaDetail()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="media-detail-body">
+                <div class="media-detail-preview">
+                    <img src="" alt="" id="detailPreviewImage">
+                </div>
+                <div class="media-detail-info">
+                    <div class="media-detail-section">
+                        <h4>Allgemeine Informationen</h4>
+                        <div class="form-group">
+                            <label for="detailTitle">Titel</label>
+                            <input type="text" id="detailTitle" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="detailDescription">Beschreibung</label>
+                            <textarea id="detailDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="media-detail-section">
+                        <h4>Kategorisierung</h4>
+                        <div class="form-group">
+                            <label for="detailCategory">Kategorie</label>
+                            <select id="detailCategory" class="form-control">
+                                <option value="exterior">Außenansicht</option>
+                                <option value="interior">Innenansicht</option>
+                                <option value="amenities">Ausstattung</option>
+                                <option value="area">Umgebung</option>
+                                <option value="contracts">Verträge</option>
+                                <option value="floorplans">Grundrisse</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="detailProperty">Immobilie</label>
+                            <select id="detailProperty" class="form-control">
+                                <option value="property-1">Sunset Bay Resort, A-203</option>
+                                <option value="property-2">Palm View Residence, B-105</option>
+                                <option value="property-3">Golden Bay Villas, C-301</option>
+                                <option value="property-4">Mountain View Resort, D-102</option>
+                                <option value="property-5">Seaside Apartments, E-405</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="media-detail-section">
+                        <h4>Zugewiesene Kunden</h4>
+                        <div class="form-group">
+                            <label for="detailCustomers">Kunden</label>
+                            <select id="detailCustomers" class="form-control" multiple>
+                                <option value="customer-1">Max Mustermann - Sunset Bay Resort, A-203</option>
+                                <option value="customer-2">Maria Schmidt - Palm View Residence, B-105</option>
+                                <option value="customer-3">Klaus Weber - Golden Bay Villas, C-301</option>
+                                <option value="customer-4">Anna Becker - Mountain View Resort, D-102</option>
+                                <option value="customer-5">Michael Schneider - Seaside Apartments, E-405</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="media-detail-section">
+                        <h4>Metadaten</h4>
+                        <p><strong>Dateiname:</strong> <span id="detailFilename"></span></p>
+                        <p><strong>Dateigröße:</strong> <span id="detailFilesize"></span></p>
+                        <p><strong>Abmessungen:</strong> <span id="detailDimensions"></span></p>
+                        <p><strong>Hochgeladen am:</strong> <span id="detailUploadDate"></span></p>
+                        <p><strong>Hochgeladen von:</strong> <span id="detailUploader">Administrator</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="media-detail-footer">
+                <button class="media-detail-btn delete" onclick="deleteMedia(currentMediaId)">Löschen</button>
+                <button class="media-detail-btn cancel" onclick="closeMediaDetail()">Abbrechen</button>
+                <button class="media-detail-btn save" onclick="saveMediaDetails()">Änderungen speichern</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Message -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="../js/main.js"></script>
+    <script src="../js/data-store.js"></script>
+    <script src="../js/demo-utils.js"></script>
+    <script>
+        // Global variables
+        let mediaItems = [];
+        let selectedFiles = [];
+        let currentMediaId = null;
+        const uploadPreviewArea = document.getElementById('uploadPreviewArea');
+        const uploadPreviewGrid = document.getElementById('uploadPreviewGrid');
+        const mediaGrid = document.getElementById('mediaGrid');
+        
+        // We'll load data from our data-store.js instead of using these hardcoded values
+        /*const initialMediaItems = [*/
+            {
+                id: 1,
+                type: 'image',
+                title: 'Außenansicht des Resorts',
+                description: 'Vorderansicht des Sunset Bay Resort mit Blick auf das Hauptgebäude und den Eingangsbereich.',
+                category: 'exterior',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '../img/gallery/exterior-1.jpg',
+                fileName: 'exterior-1.jpg',
+                fileSize: '2.4 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '15.03.2025'
+            },
+            {
+                id: 2,
+                type: 'image',
+                title: 'Gemeinschaftspool',
+                description: 'Der große Gemeinschaftspool mit Blick auf das Mittelmeer.',
+                category: 'exterior',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '../img/gallery/exterior-2.jpg',
+                fileName: 'exterior-2.jpg',
+                fileSize: '1.8 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '15.03.2025'
+            },
+            {
+                id: 3,
+                type: 'image',
+                title: 'Wohnzimmer',
+                description: 'Das geräumige Wohnzimmer mit modernen Möbeln und direktem Zugang zur Terrasse.',
+                category: 'interior',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '../img/gallery/interior-1.jpg',
+                fileName: 'interior-1.jpg',
+                fileSize: '1.5 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '20.03.2025'
+            },
+            {
+                id: 4,
+                type: 'image',
+                title: 'Voll ausgestattete Küche',
+                description: 'Moderne Küche mit Qualitätsgeräten und ausreichend Stauraum.',
+                category: 'interior',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '../img/gallery/interior-2.jpg',
+                fileName: 'interior-2.jpg',
+                fileSize: '1.7 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '20.03.2025'
+            },
+            {
+                id: 5,
+                type: 'image',
+                title: 'Hauptschlafzimmer',
+                description: 'Geräumiges Hauptschlafzimmer mit Kingsize-Bett und eingebauten Schränken.',
+                category: 'interior',
+                property: 'property-2',
+                propertyName: 'Palm View Residence',
+                customers: ['customer-2'],
+                fileUrl: '../img/gallery/interior-3.jpg',
+                fileName: 'interior-3.jpg',
+                fileSize: '1.6 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '20.03.2025'
+            },
+            {
+                id: 6,
+                type: 'image',
+                title: 'Fitnesscenter',
+                description: 'Modernes Fitnesscenter mit verschiedenen Geräten und Blick auf den Pool.',
+                category: 'amenities',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1', 'customer-4'],
+                fileUrl: '../img/gallery/amenities-1.jpg',
+                fileName: 'amenities-1.jpg',
+                fileSize: '1.9 MB',
+                dimensions: '1920 x 1080 px',
+                uploadDate: '18.03.2025'
+            },
+            {
+                id: 7,
+                type: 'document',
+                title: 'Kaufvertrag',
+                description: 'Kaufvertrag für das Apartment A-203 im Sunset Bay Resort.',
+                category: 'contracts',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '#',
+                fileName: 'kaufvertrag-sunsetbay-a203.pdf',
+                fileSize: '1.2 MB',
+                dimensions: 'n/a',
+                uploadDate: '10.03.2025',
+                documentType: 'pdf'
+            },
+            {
+                id: 8,
+                type: 'document',
+                title: 'Grundriss - Apartment A-203',
+                description: 'Detaillierter Grundriss des Apartments A-203 im Sunset Bay Resort.',
+                category: 'floorplans',
+                property: 'property-1',
+                propertyName: 'Sunset Bay Resort',
+                customers: ['customer-1'],
+                fileUrl: '#',
+                fileName: 'grundriss-sunsetbay-a203.pdf',
+                fileSize: '0.8 MB',
+                dimensions: 'n/a',
+                uploadDate: '12.03.2025',
+                documentType: 'pdf'
+            },
+            {
+                id: 9,
+                type: 'document',
+                title: 'Mietvertrag',
+                description: 'Mietvertrag für das Apartment B-105 in der Palm View Residence.',
+                category: 'contracts',
+                property: 'property-2',
+                propertyName: 'Palm View Residence',
+                customers: ['customer-2'],
+                fileUrl: '#',
+                fileName: 'mietvertrag-palmview-b105.docx',
+                fileSize: '0.5 MB',
+                dimensions: 'n/a',
+                uploadDate: '14.03.2025',
+                documentType: 'doc'
+            }
+        ];
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load media items from our data store
+            mediaItems = RedBirdDB.getAllMedia();
+            renderMediaItems();
+            
+            // Populate customer dropdowns with actual users
+            populateCustomerDropdowns();
+            
+            // Initialize filter event listeners
+            document.getElementById('filterType').addEventListener('change', applyFilters);
+            document.getElementById('filterCategory').addEventListener('change', applyFilters);
+            document.getElementById('filterProperty').addEventListener('change', applyFilters);
+            document.getElementById('filterDate').addEventListener('change', applyFilters);
+            
+            // Initialize search
+            document.getElementById('searchInput').addEventListener('input', function() {
+                applyFilters();
+            });
+            
+            // Render customer list
+            renderCustomerList();
+            
+            // Initialize batch action buttons
+            document.getElementById('batchAssignBtn').addEventListener('click', function() {
+                // Get selected media IDs
+                const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+                if (selectedIds.length > 0) {
+                    showToast(`${selectedIds.length} Medien werden zugewiesen...`, 'success');
+                }
+            });
+            
+            document.getElementById('batchDownloadBtn').addEventListener('click', function() {
+                // Get selected media IDs
+                const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+                if (selectedIds.length > 0) {
+                    showToast(`${selectedIds.length} Medien werden heruntergeladen...`, 'success');
+                }
+            });
+            
+            document.getElementById('batchDeleteBtn').addEventListener('click', function() {
+                // Get selected media IDs
+                const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+                if (selectedIds.length > 0) {
+                    if (confirm(`Möchten Sie wirklich ${selectedIds.length} Medien löschen?`)) {
+                        // Remove selected items from the mediaItems array
+                        mediaItems = mediaItems.filter(item => !item.selected);
+                        renderMediaItems();
+                        showToast(`${selectedIds.length} Medien wurden gelöscht.`, 'success');
+                    }
+                }
+            });
+        });
+        
+        // Render media items
+        function renderMediaItems() {
+            mediaGrid.innerHTML = '';
+            
+            mediaItems.forEach(item => {
+                const mediaItem = document.createElement('div');
+                mediaItem.className = 'media-item';
+                mediaItem.setAttribute('data-id', item.id);
+                mediaItem.setAttribute('data-type', item.type);
+                mediaItem.setAttribute('data-category', item.category);
+                mediaItem.setAttribute('data-property', item.property);
+                
+                if (item.selected) {
+                    mediaItem.style.boxShadow = '0 0 0 3px var(--redbird-red), 0 10px 25px rgba(0,0,0,0.1)';
+                }
+                
+                if (item.type === 'image') {
+                    mediaItem.innerHTML = `
+                        <div class="media-preview">
+                            <img src="${item.fileUrl}" alt="${item.title}">
+                            <div class="media-actions">
+                                <button class="media-action-btn" onclick="toggleSelectMedia(${item.id})"><i class="fas ${item.selected ? 'fa-check-square' : 'fa-square'}"></i></button>
+                                <button class="media-action-btn" onclick="openMediaDetail(${item.id})"><i class="fas fa-edit"></i></button>
+                                <button class="media-action-btn" onclick="viewMedia(${item.id})"><i class="fas fa-eye"></i></button>
+                                <button class="media-action-btn" onclick="downloadMedia(${item.id})"><i class="fas fa-download"></i></button>
+                                <button class="media-action-btn" onclick="deleteMedia(${item.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-title">${item.title}</div>
+                            <div class="media-details">${item.propertyName} | ${item.uploadDate}</div>
+                        </div>
+                    `;
+                } else {
+                    const iconClass = item.documentType === 'pdf' ? 'pdf' : (item.documentType === 'doc' ? 'doc' : 'xls');
+                    const icon = item.documentType === 'pdf' ? 'fa-file-pdf' : (item.documentType === 'doc' ? 'fa-file-word' : 'fa-file-excel');
+                    
+                    mediaItem.innerHTML = `
+                        <div class="media-preview-document">
+                            <i class="fas ${icon} ${iconClass}"></i>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-title">${item.title}</div>
+                            <div class="media-details">${item.propertyName} | ${item.uploadDate}</div>
+                        </div>
+                        <div class="media-actions">
+                            <button class="media-action-btn" onclick="toggleSelectMedia(${item.id})"><i class="fas ${item.selected ? 'fa-check-square' : 'fa-square'}"></i></button>
+                            <button class="media-action-btn" onclick="openMediaDetail(${item.id})"><i class="fas fa-edit"></i></button>
+                            <button class="media-action-btn" onclick="viewMedia(${item.id})"><i class="fas fa-eye"></i></button>
+                            <button class="media-action-btn" onclick="downloadMedia(${item.id})"><i class="fas fa-download"></i></button>
+                            <button class="media-action-btn" onclick="deleteMedia(${item.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                }
+                
+                mediaGrid.appendChild(mediaItem);
+            });
+            
+            updateSelectedCount();
+        }
+        
+        // Apply media filters
+        function applyFilters() {
+            const typeFilter = document.getElementById('filterType').value;
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const propertyFilter = document.getElementById('filterProperty').value;
+            const dateFilter = document.getElementById('filterDate').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const mediaItems = document.querySelectorAll('.media-item');
+            
+            mediaItems.forEach(item => {
+                const itemType = item.getAttribute('data-type');
+                const itemCategory = item.getAttribute('data-category');
+                const itemProperty = item.getAttribute('data-property');
+                const itemTitle = item.querySelector('.media-title').textContent.toLowerCase();
+                const itemDetails = item.querySelector('.media-details').textContent.toLowerCase();
+                
+                // Check if the item matches all selected filters
+                const matchesType = typeFilter === 'all' || itemType === typeFilter;
+                const matchesCategory = categoryFilter === 'all' || itemCategory === categoryFilter;
+                const matchesProperty = propertyFilter === 'all' || itemProperty === propertyFilter;
+                
+                // For dateFilter we would need actual dates to compare
+                // In this demo, we'll treat all dates as matching
+                const matchesDate = true;
+                
+                // Check if the item matches the search term
+                const matchesSearch = searchTerm === '' || 
+                                     itemTitle.includes(searchTerm) || 
+                                     itemDetails.includes(searchTerm);
+                
+                // Show or hide item based on filter match
+                if (matchesType && matchesCategory && matchesProperty && matchesDate && matchesSearch) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // File drag and drop handlers
+        function dragOverHandler(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.add('dragover');
+        }
+        
+        function dragLeaveHandler(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+        }
+        
+        function dropHandler(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+            
+            if (e.dataTransfer.items) {
+                // Use DataTransferItemList interface
+                for (let i = 0; i < e.dataTransfer.items.length; i++) {
+                    if (e.dataTransfer.items[i].kind === 'file') {
+                        const file = e.dataTransfer.items[i].getAsFile();
+                        addFileToSelection(file);
+                    }
+                }
+            } else {
+                // Use DataTransfer interface
+                for (let i = 0; i < e.dataTransfer.files.length; i++) {
+                    addFileToSelection(e.dataTransfer.files[i]);
+                }
+            }
+        }
+        
+        // File input change handler
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                addFileToSelection(files[i]);
+            }
+        }
+        
+        // Add file to selection
+        function addFileToSelection(file) {
+            // Check file type and size
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const allowedDocTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            
+            if (![...allowedImageTypes, ...allowedDocTypes].includes(file.type)) {
+                showToast('Nicht unterstütztes Dateiformat. Bitte wählen Sie JPG, PNG, PDF, DOC oder XLS.', 'error');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) { // 10 MB
+                showToast('Die Datei ist zu groß. Maximale Größe: 10 MB.', 'error');
+                return;
+            }
+            
+            // Add to selected files array
+            const fileId = Date.now() + Math.random().toString(36).substring(2, 15);
+            selectedFiles.push({
+                id: fileId,
+                file: file,
+                type: file.type,
+                preview: null
+            });
+            
+            // Show preview area
+            uploadPreviewArea.style.display = 'block';
+            
+            // Create preview item
+            const previewItem = document.createElement('div');
+            previewItem.className = 'upload-preview-item';
+            previewItem.setAttribute('data-id', fileId);
+            
+            // Determine file type
+            const isImage = allowedImageTypes.includes(file.type);
+            
+            // Create preview content
+            if (isImage) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Store preview URL
+                    selectedFiles.find(f => f.id === fileId).preview = e.target.result;
+                    
+                    // Create preview element
+                    previewItem.innerHTML = `
+                        <div class="upload-preview-image">
+                            <img src="${e.target.result}" alt="${file.name}">
+                        </div>
+                        <div class="upload-preview-info">
+                            ${file.name}
+                        </div>
+                        <div class="upload-preview-remove" onclick="removeFileFromSelection('${fileId}')">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="upload-progress">
+                            <div class="upload-progress-bar"></div>
+                        </div>
+                    `;
+                    
+                    uploadPreviewGrid.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Determine document icon
+                let iconClass = 'fa-file';
+                
+                if (file.type === 'application/pdf') {
+                    iconClass = 'fa-file-pdf';
+                } else if (file.type.includes('word')) {
+                    iconClass = 'fa-file-word';
+                } else if (file.type.includes('excel')) {
+                    iconClass = 'fa-file-excel';
+                }
+                
+                previewItem.innerHTML = `
+                    <div class="upload-preview-image">
+                        <i class="fas ${iconClass} fa-3x"></i>
+                    </div>
+                    <div class="upload-preview-info">
+                        ${file.name}
+                    </div>
+                    <div class="upload-preview-remove" onclick="removeFileFromSelection('${fileId}')">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="upload-progress">
+                        <div class="upload-progress-bar"></div>
+                    </div>
+                `;
+                
+                uploadPreviewGrid.appendChild(previewItem);
+            }
+        }
+        
+        // Remove file from selection
+        function removeFileFromSelection(fileId) {
+            selectedFiles = selectedFiles.filter(file => file.id !== fileId);
+            
+            const previewItem = document.querySelector(`.upload-preview-item[data-id="${fileId}"]`);
+            if (previewItem) {
+                previewItem.remove();
+            }
+            
+            if (selectedFiles.length === 0) {
+                uploadPreviewArea.style.display = 'none';
+            }
+        }
+        
+        // Upload files
+        function uploadFiles() {
+            // Check if any files are selected
+            if (selectedFiles.length === 0) {
+                showToast('Bitte wählen Sie mindestens eine Datei aus.', 'error');
+                return;
+            }
+            
+            // Validate form
+            const title = document.getElementById('mediaTitle').value;
+            const category = document.getElementById('mediaCategory').value;
+            const property = document.getElementById('mediaProperty').value;
+            
+            if (!title || !category || !property) {
+                showToast('Bitte füllen Sie alle erforderlichen Felder aus.', 'error');
+                return;
+            }
+            
+            // Get additional form values
+            const description = document.getElementById('mediaDescription').value;
+            const customersSelect = document.getElementById('mediaCustomers');
+            const selectedCustomers = [];
+            
+            for (let i = 0; i < customersSelect.options.length; i++) {
+                if (customersSelect.options[i].selected) {
+                    selectedCustomers.push(customersSelect.options[i].value);
+                }
+            }
+            
+            // Get property name
+            const propertySelect = document.getElementById('mediaProperty');
+            const propertyName = propertySelect.options[propertySelect.selectedIndex].text;
+            
+            // Upload files (in a real application, this would send files to a server)
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                
+                // Find preview item
+                const previewItem = document.querySelector(`.upload-preview-item[data-id="${file.id}"]`);
+                const progressBar = previewItem.querySelector('.upload-progress-bar');
+                
+                // Simulate upload progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Add completed class
+                        previewItem.classList.add('upload-complete');
+                        
+                        // Determine file type
+                        const isImage = file.type.includes('image');
+                        let documentType = '';
+                        
+                        if (!isImage) {
+                            if (file.type.includes('pdf')) {
+                                documentType = 'pdf';
+                            } else if (file.type.includes('word')) {
+                                documentType = 'doc';
+                            } else if (file.type.includes('excel')) {
+                                documentType = 'xls';
+                            }
+                        }
+                        
+                        // Format date
+                        const today = new Date();
+                        const formattedDate = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
+                        
+                        // Format file size
+                        const fileSizeInMB = (file.file.size / (1024 * 1024)).toFixed(1);
+                        
+                        // In a real app, we would upload the actual file to a server
+                        // For this demo, we'll save file's data URL (for images) or a placeholder (for documents)
+                        // In practice, we'd save all uploads to the uploads/ directory
+                        
+                        // For this demo, simulate file saving to uploads directory
+                        let fileUrl = isImage ? file.preview : '#';
+                        
+                        // In a real implementation, we'd use server-side code to save the file
+                        // Simulate it here by using a URL that points to our uploads directory
+                        if (isImage) {
+                            fileUrl = `../uploads/images/${file.file.name}`;
+                        } else if (documentType === 'pdf') {
+                            fileUrl = `../uploads/documents/${file.file.name}`;
+                        }
+                        
+                        // Create new media item
+                        const newMediaItem = {
+                            id: null, // Will be assigned by saveMedia
+                            type: isImage ? 'image' : 'document',
+                            title: title,
+                            description: description,
+                            category: category,
+                            property: property,
+                            propertyName: propertyName,
+                            customers: selectedCustomers,
+                            fileUrl: fileUrl,
+                            fileName: file.file.name,
+                            fileSize: `${fileSizeInMB} MB`,
+                            dimensions: isImage ? 'Wird geladen...' : 'n/a',
+                            uploadDate: formattedDate,
+                            documentType: documentType
+                        };
+                        
+                        // Save to our data store
+                        RedBirdDB.saveMedia(newMediaItem);
+                        
+                        // Update UI
+                        if (i === selectedFiles.length - 1) {
+                            // All files uploaded, update media items from data store
+                            mediaItems = RedBirdDB.getAllMedia();
+                            renderMediaItems();
+                            
+                            // Update customer list since media assignments may have changed
+                            renderCustomerList();
+                            
+                            // Reset form
+                            resetUploadForm();
+                            
+                            // Show success message
+                            showToast(`${selectedFiles.length} ${selectedFiles.length === 1 ? 'Datei' : 'Dateien'} erfolgreich hochgeladen.`, 'success');
+                        }
+                    }
+                }, 100);
+            }
+        }
+        
+        // Reset upload form
+        function resetUploadForm() {
+            document.getElementById('mediaTitle').value = '';
+            document.getElementById('mediaCategory').value = '';
+            document.getElementById('mediaProperty').value = '';
+            document.getElementById('mediaDescription').value = '';
+            document.getElementById('mediaCustomers').selectedIndex = -1;
+            document.getElementById('fileInput').value = '';
+            
+            selectedFiles = [];
+            uploadPreviewArea.style.display = 'none';
+            uploadPreviewGrid.innerHTML = '';
+        }
+        
+        // Media Actions
+        function toggleSelectMedia(id) {
+            const mediaItem = mediaItems.find(item => item.id === id);
+            if (mediaItem) {
+                mediaItem.selected = !mediaItem.selected;
+                renderMediaItems();
+            }
+        }
+        
+        function updateSelectedCount() {
+            const selectedCount = mediaItems.filter(item => item.selected).length;
+            document.getElementById('selectedCount').textContent = `${selectedCount} ${selectedCount === 1 ? 'Element' : 'Elemente'} ausgewählt`;
+            
+            // Update batch action buttons
+            const batchButtons = document.querySelectorAll('.media-batch-buttons button');
+            batchButtons.forEach(button => {
+                button.disabled = selectedCount === 0;
+            });
+        }
+        
+        function openMediaDetail(id) {
+            const mediaItem = mediaItems.find(item => item.id === id);
+            if (mediaItem) {
+                currentMediaId = id;
+                
+                // Populate modal fields
+                document.getElementById('detailTitle').value = mediaItem.title;
+                document.getElementById('detailDescription').value = mediaItem.description;
+                document.getElementById('detailCategory').value = mediaItem.category;
+                document.getElementById('detailProperty').value = mediaItem.property;
+                
+                // Populate metadata
+                document.getElementById('detailFilename').textContent = mediaItem.fileName;
+                document.getElementById('detailFilesize').textContent = mediaItem.fileSize;
+                document.getElementById('detailDimensions').textContent = mediaItem.dimensions;
+                document.getElementById('detailUploadDate').textContent = mediaItem.uploadDate;
+                
+                // Set selected customers
+                const customersSelect = document.getElementById('detailCustomers');
+                for (let i = 0; i < customersSelect.options.length; i++) {
+                    customersSelect.options[i].selected = mediaItem.customers.includes(customersSelect.options[i].value);
+                }
+                
+                // Set preview image for images
+                if (mediaItem.type === 'image') {
+                    document.getElementById('detailPreviewImage').src = mediaItem.fileUrl;
+                    document.getElementById('detailPreviewImage').style.display = 'block';
+                } else {
+                    // For documents, hide the image and show an icon instead
+                    document.getElementById('detailPreviewImage').style.display = 'none';
+                    // In a real app, you might show a document preview or icon here
+                }
+                
+                // Show modal
+                document.getElementById('mediaDetailModal').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeMediaDetail() {
+            document.getElementById('mediaDetailModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentMediaId = null;
+        }
+        
+        function saveMediaDetails() {
+            if (currentMediaId) {
+                const mediaItem = RedBirdDB.getMediaById(currentMediaId);
+                if (mediaItem) {
+                    // Update media item with new values
+                    mediaItem.title = document.getElementById('detailTitle').value;
+                    mediaItem.description = document.getElementById('detailDescription').value;
+                    mediaItem.category = document.getElementById('detailCategory').value;
+                    mediaItem.property = document.getElementById('detailProperty').value;
+                    
+                    // Update property name
+                    const propertySelect = document.getElementById('detailProperty');
+                    mediaItem.propertyName = propertySelect.options[propertySelect.selectedIndex].text;
+                    
+                    // Update customers
+                    const customersSelect = document.getElementById('detailCustomers');
+                    mediaItem.customers = [];
+                    
+                    for (let i = 0; i < customersSelect.options.length; i++) {
+                        if (customersSelect.options[i].selected) {
+                            mediaItem.customers.push(customersSelect.options[i].value);
+                        }
+                    }
+                    
+                    // Save to data store
+                    RedBirdDB.saveMedia(mediaItem);
+                    
+                    // Update local array
+                    mediaItems = RedBirdDB.getAllMedia();
+                    
+                    // Close modal
+                    closeMediaDetail();
+                    
+                    // Update UI
+                    renderMediaItems();
+                    renderCustomerList();
+                    
+                    // Show success message
+                    showToast('Änderungen gespeichert.', 'success');
+                }
+            }
+        }
+        
+        function viewMedia(id) {
+            const mediaItem = mediaItems.find(item => item.id === id);
+            if (mediaItem) {
+                if (mediaItem.type === 'image') {
+                    // Open image in a new tab
+                    window.open(mediaItem.fileUrl, '_blank');
+                } else {
+                    // For documents, show a message (in a real app, this would open the document)
+                    showToast(`Dokument wird geöffnet: ${mediaItem.fileName}`, 'success');
+                }
+            }
+        }
+        
+        function downloadMedia(id) {
+            const mediaItem = mediaItems.find(item => item.id === id);
+            if (mediaItem) {
+                // In a real app, this would trigger a download
+                showToast(`Download gestartet: ${mediaItem.fileName}`, 'success');
+            }
+        }
+        
+        function deleteMedia(id) {
+            const mediaItem = RedBirdDB.getMediaById(id);
+            if (mediaItem) {
+                if (confirm(`Möchten Sie wirklich "${mediaItem.title}" löschen?`)) {
+                    // Delete from data store
+                    RedBirdDB.deleteMedia(id);
+                    
+                    // Update local array
+                    mediaItems = RedBirdDB.getAllMedia();
+                    
+                    // Close modal if open
+                    if (currentMediaId === id) {
+                        closeMediaDetail();
+                    }
+                    
+                    // Update UI
+                    renderMediaItems();
+                    renderCustomerList();
+                    
+                    // Show success message
+                    showToast('Medium erfolgreich gelöscht.', 'success');
+                }
+            }
+        }
+        
+        // Populate customer dropdowns with actual users
+        function populateCustomerDropdowns() {
+            const users = RedBirdDB.getAllUsers();
+            const customerDropdowns = document.querySelectorAll('#mediaCustomers, #detailCustomers');
+            
+            customerDropdowns.forEach(dropdown => {
+                dropdown.innerHTML = ''; // Clear existing options
+                
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = `${user.name} - ${user.property}`;
+                    dropdown.appendChild(option);
+                });
+            });
+        }
+        
+        // Render customer list with their media associations
+        function renderCustomerList() {
+            const customerList = document.querySelector('.customer-attachment-list');
+            const users = RedBirdDB.getAllUsers();
+            
+            customerList.innerHTML = ''; // Clear existing list
+            
+            users.forEach(user => {
+                // Count media assigned to this customer
+                const userMedia = RedBirdDB.getMediaForCustomer(user.id);
+                
+                const customerItem = document.createElement('div');
+                customerItem.className = 'customer-attachment-item';
+                customerItem.innerHTML = `
+                    <div class="customer-info">
+                        <div class="customer-avatar">${user.avatar}</div>
+                        <div>
+                            <div class="customer-name">${user.name}</div>
+                            <div class="customer-property">${user.property}</div>
+                        </div>
+                    </div>
+                    <div>${userMedia.length} Medien zugeordnet</div>
+                    <div class="customer-actions">
+                        <button class="btn btn-outline btn-sm" onclick="manageCustomerAccess('${user.id}')">Zugriff verwalten</button>
+                        <button class="btn btn-primary btn-sm" onclick="assignMediaToCustomer('${user.id}')">Medien zuweisen</button>
+                    </div>
+                `;
+                
+                customerList.appendChild(customerItem);
+            });
+        }
+        
+        // Customer Actions
+        function assignMediaToCustomer(customerId) {
+            // Create and show the assign media modal
+            const modal = document.createElement('div');
+            modal.className = 'media-detail-modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="media-detail-content">
+                    <div class="media-detail-header">
+                        <h3>Medien zuweisen</h3>
+                        <button class="media-detail-close" onclick="this.closest('.media-detail-modal').remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="media-detail-body">
+                        <div class="media-detail-section">
+                            <h4>Medien für ${RedBirdDB.getUserById(customerId).name}</h4>
+                            <p>Wählen Sie die Medien aus, die diesem Kunden zugewiesen werden sollen.</p>
+                            <div class="media-selection" style="max-height: 400px; overflow-y: auto;">
+                                <!-- Media items will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-detail-footer">
+                        <button class="media-detail-btn cancel" onclick="this.closest('.media-detail-modal').remove()">Abbrechen</button>
+                        <button class="media-detail-btn save" onclick="saveCustomerMediaAssignments('${customerId}', this)">Speichern</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add all media items to the selection
+            const mediaSelection = modal.querySelector('.media-selection');
+            const allMedia = RedBirdDB.getAllMedia();
+            const customerMedia = RedBirdDB.getMediaForCustomer(customerId);
+            
+            allMedia.forEach(media => {
+                const isAssigned = customerMedia.some(item => item.id === media.id);
+                
+                const mediaItem = document.createElement('div');
+                mediaItem.className = 'media-assignment-item';
+                mediaItem.style.display = 'flex';
+                mediaItem.style.alignItems = 'center';
+                mediaItem.style.padding = '10px';
+                mediaItem.style.marginBottom = '10px';
+                mediaItem.style.backgroundColor = '#f9f9f9';
+                mediaItem.style.borderRadius = '5px';
+                
+                mediaItem.innerHTML = `
+                    <input type="checkbox" data-media-id="${media.id}" ${isAssigned ? 'checked' : ''} style="margin-right: 15px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: bold;">${media.title}</div>
+                        <div style="font-size: 0.8rem; color: #666;">${media.propertyName} | ${media.category}</div>
+                    </div>
+                    <div>
+                        <img src="${media.type === 'image' ? media.fileUrl : '../img/document-icon.png'}" 
+                             alt="${media.title}" 
+                             style="width: 60px; height: 40px; object-fit: cover; border-radius: 3px;">
+                    </div>
+                `;
+                
+                mediaSelection.appendChild(mediaItem);
+            });
+            
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Save customer media assignments
+        function saveCustomerMediaAssignments(customerId, button) {
+            const modal = button.closest('.media-detail-modal');
+            const checkboxes = modal.querySelectorAll('input[type="checkbox"]');
+            
+            // Process all checkboxes
+            checkboxes.forEach(checkbox => {
+                const mediaId = checkbox.getAttribute('data-media-id');
+                const isChecked = checkbox.checked;
+                
+                // Get current media item
+                const media = RedBirdDB.getMediaById(mediaId);
+                
+                if (isChecked) {
+                    // Add customer if not already assigned
+                    if (!media.customers.includes(customerId)) {
+                        RedBirdDB.assignMediaToCustomer(mediaId, customerId);
+                    }
+                } else {
+                    // Remove customer if assigned
+                    if (media.customers.includes(customerId)) {
+                        RedBirdDB.removeMediaFromCustomer(mediaId, customerId);
+                    }
+                }
+            });
+            
+            // Reload media items from DB
+            mediaItems = RedBirdDB.getAllMedia();
+            
+            // Update UI
+            renderMediaItems();
+            renderCustomerList();
+            
+            // Close modal
+            modal.remove();
+            document.body.style.overflow = 'auto';
+            
+            // Show success message
+            showToast(`Medienzuweisungen für ${RedBirdDB.getUserById(customerId).name} aktualisiert.`, 'success');
+        }
+        
+        function manageCustomerAccess(customerId) {
+            const user = RedBirdDB.getUserById(customerId);
+            const userMedia = RedBirdDB.getMediaForCustomer(customerId);
+            
+            // Create and show modal with list of assigned media for this customer
+            const modal = document.createElement('div');
+            modal.className = 'media-detail-modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="media-detail-content">
+                    <div class="media-detail-header">
+                        <h3>Medienzugriff für ${user.name}</h3>
+                        <button class="media-detail-close" onclick="this.closest('.media-detail-modal').remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="media-detail-body">
+                        <div class="media-detail-section">
+                            <h4>Zugewiesene Medien</h4>
+                            <p>${user.name} hat Zugriff auf ${userMedia.length} Medien.</p>
+                            <div class="media-list" style="max-height: 400px; overflow-y: auto;">
+                                ${userMedia.length > 0 ? '' : '<p>Diesem Kunden sind noch keine Medien zugewiesen.</p>'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-detail-footer">
+                        <button class="media-detail-btn cancel" onclick="this.closest('.media-detail-modal').remove()">Schließen</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            if (userMedia.length > 0) {
+                const mediaList = modal.querySelector('.media-list');
+                
+                userMedia.forEach(media => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-access-item';
+                    mediaItem.style.display = 'flex';
+                    mediaItem.style.alignItems = 'center';
+                    mediaItem.style.padding = '10px';
+                    mediaItem.style.marginBottom = '10px';
+                    mediaItem.style.backgroundColor = '#f9f9f9';
+                    mediaItem.style.borderRadius = '5px';
+                    
+                    mediaItem.innerHTML = `
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold;">${media.title}</div>
+                            <div style="font-size: 0.8rem; color: #666;">${media.propertyName} | ${media.category}</div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-right: 10px;" 
+                            onclick="removeCustomerAccess('${customerId}', ${media.id}, this)">
+                            Zugriff entziehen
+                        </button>
+                        <div>
+                            <img src="${media.type === 'image' ? media.fileUrl : '../img/document-icon.png'}" 
+                                 alt="${media.title}" 
+                                 style="width: 60px; height: 40px; object-fit: cover; border-radius: 3px;">
+                        </div>
+                    `;
+                    
+                    mediaList.appendChild(mediaItem);
+                });
+            }
+            
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Remove customer access to a media item
+        function removeCustomerAccess(customerId, mediaId, button) {
+            if (confirm('Möchten Sie diesem Kunden wirklich den Zugriff auf dieses Medium entziehen?')) {
+                // Remove customer from media
+                RedBirdDB.removeMediaFromCustomer(mediaId, customerId);
+                
+                // Remove from UI
+                button.closest('.media-access-item').remove();
+                
+                // Update media count in the modal
+                const user = RedBirdDB.getUserById(customerId);
+                const userMedia = RedBirdDB.getMediaForCustomer(customerId);
+                const countElement = button.closest('.media-detail-section').querySelector('p');
+                countElement.textContent = `${user.name} hat Zugriff auf ${userMedia.length} Medien.`;
+                
+                // If no more media, show message
+                if (userMedia.length === 0) {
+                    const mediaList = button.closest('.media-list');
+                    mediaList.innerHTML = '<p>Diesem Kunden sind keine Medien zugewiesen.</p>';
+                }
+                
+                // Reload media items from DB
+                mediaItems = RedBirdDB.getAllMedia();
+                
+                // Update UI
+                renderMediaItems();
+                renderCustomerList();
+                
+                // Show success message
+                showToast(`Zugriff für ${user.name} entfernt.`, 'success');
+            }
+        }
+        
+        // Toast message
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

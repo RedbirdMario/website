@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging System - RedBird Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-styles.css">
+    <link rel="stylesheet" href="../css/messaging.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+                <span class="admin-badge">Admin</span>
+            </div>
+            <ul class="admin-nav-menu">
+                <li class="admin-nav-item"><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="admin-nav-item"><a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a></li>
+                <li class="admin-nav-item"><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                <li class="admin-nav-item"><a href="unit-onboarding.html"><i class="fas fa-home"></i> Unit Onboarding</a></li>
+                <li class="admin-nav-item active"><a href="messaging.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                <li class="admin-nav-item"><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+                <li class="admin-nav-item"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="admin-user-menu">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="messaging-container">
+        <!-- Sidebar with contacts and channels -->
+        <div class="messaging-sidebar">
+            <div class="messaging-header">
+                <h2>Messages</h2>
+                <div class="messaging-actions">
+                    <button class="action-btn" id="newMessageBtn" title="New Message">
+                        <i class="fas fa-pen-to-square"></i>
+                    </button>
+                    <button class="action-btn" id="refreshBtn" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="action-btn" id="settingsBtn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Search conversations..." class="search-input">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="channel-tabs">
+                <button class="channel-tab active" data-channel="all">All</button>
+                <button class="channel-tab" data-channel="whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="channel-tab" data-channel="email">
+                    <i class="fas fa-envelope"></i> Email
+                </button>
+                <button class="channel-tab" data-channel="sms">
+                    <i class="fas fa-sms"></i> SMS
+                </button>
+                <button class="channel-tab" data-channel="portal">
+                    <i class="fas fa-portal-enter"></i> Portal
+                </button>
+            </div>
+            <div class="contact-list">
+                <div class="contact-item unread" data-id="contact1" data-channel="whatsapp">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                        <span class="channel-indicator whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">John Smith</div>
+                        <div class="contact-preview">I'm interested in the property...</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">10:42 AM</div>
+                        <div class="unread-badge">2</div>
+                    </div>
+                </div>
+                <div class="contact-item" data-id="contact2" data-channel="email">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar2.jpg" alt="Maria Garcia">
+                        <span class="channel-indicator email">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Maria Garcia</div>
+                        <div class="contact-preview">Thank you for sending the documents...</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">Yesterday</div>
+                    </div>
+                </div>
+                <div class="contact-item unread" data-id="contact3" data-channel="whatsapp">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar3.jpg" alt="Ahmed Hassan">
+                        <span class="channel-indicator whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Ahmed Hassan</div>
+                        <div class="contact-preview">When can we schedule a viewing?</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">Yesterday</div>
+                        <div class="unread-badge">1</div>
+                    </div>
+                </div>
+                <div class="contact-item" data-id="contact4" data-channel="sms">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar4.jpg" alt="Lisa Chen">
+                        <span class="channel-indicator sms">
+                            <i class="fas fa-sms"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Lisa Chen</div>
+                        <div class="contact-preview">Are there any updates on the paperwork?</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">Sunday</div>
+                    </div>
+                </div>
+                <div class="contact-item" data-id="contact5" data-channel="portal">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar5.jpg" alt="Thomas Weber">
+                        <span class="channel-indicator portal">
+                            <i class="fas fa-portal-enter"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Thomas Weber</div>
+                        <div class="contact-preview">I submitted the request form</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">May 12</div>
+                    </div>
+                </div>
+                <div class="contact-item" data-id="contact6" data-channel="email">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar6.jpg" alt="Sophia Martin">
+                        <span class="channel-indicator email">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Sophia Martin</div>
+                        <div class="contact-preview">Please send the floorplans for unit B-203...</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">May 10</div>
+                    </div>
+                </div>
+                <div class="contact-item" data-id="contact7" data-channel="whatsapp">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar7.jpg" alt="Robert Johnson">
+                        <span class="channel-indicator whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">Robert Johnson</div>
+                        <div class="contact-preview">Please call me when you're available</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">May 8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main chat area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-contact">
+                    <div class="contact-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                        <span class="channel-indicator whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">John Smith</div>
+                        <div class="contact-status">Last active: Today at 10:42 AM</div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" id="viewProfileBtn" title="View Profile">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="action-btn" id="callBtn" title="Call">
+                        <i class="fas fa-phone"></i>
+                    </button>
+                    <button class="action-btn" id="videocallBtn" title="Video Call">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <div class="dropdown">
+                        <button class="action-btn dropbtn" title="More">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#"><i class="fas fa-user-plus"></i> Add to Group</a>
+                            <a href="#"><i class="fas fa-archive"></i> Archive Chat</a>
+                            <a href="#"><i class="fas fa-bell-slash"></i> Mute Notifications</a>
+                            <a href="#" class="text-danger"><i class="fas fa-trash"></i> Delete Chat</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-messages">
+                <div class="date-divider">
+                    <span>Today</span>
+                </div>
+
+                <div class="message received">
+                    <div class="message-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hello! I'm interested in the Sunset Bay Resort property. Is it still available?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">9:32 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hi John! Yes, we still have several units available at Sunset Bay Resort. Are you looking for a specific size or type of property?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">9:45 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message received">
+                    <div class="message-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>I'm interested in a 2-bedroom apartment with a sea view. What options do you have available?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:02 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>We have several 2-bedroom units with sea views in blocks A and B. The units range from 95m² to 115m² and prices start at €180,000.</p>
+                            <p>Would you like me to send you some floor plans and photos?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:15 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message received">
+                    <div class="message-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>That sounds great! Yes, please send me the floor plans and some photos if possible. Also, what's the payment structure like?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:22 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble message-file">
+                            <i class="fas fa-file-pdf"></i>
+                            <div class="file-info">
+                                <div class="file-name">SunsetBay_Floorplans.pdf</div>
+                                <div class="file-size">2.4 MB</div>
+                            </div>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:30 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble image-message">
+                            <img src="../img/gallery/sunset-bay-1.jpg" alt="Sunset Bay Apartment">
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:31 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble image-message">
+                            <img src="../img/gallery/sunset-bay-2.jpg" alt="Sunset Bay Apartment">
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:31 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Here are the floor plans and some photos of our available units. Regarding payment, we typically require a 30% down payment, with the remaining balance paid in installments during construction or upon completion.</p>
+                            <p>We can discuss flexible payment options based on your preferences. Would you be interested in scheduling a viewing?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:33 AM</span>
+                            <span class="message-status">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message received">
+                    <div class="message-avatar">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Thank you for the information! The properties look beautiful. I'll be in Cyprus next week. Would it be possible to arrange a viewing then?</p>
+                        </div>
+                        <div class="message-info">
+                            <span class="message-time">10:42 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <div class="message-toolbar">
+                    <button class="tool-btn" title="Attach Files">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="tool-btn" title="Send Photos">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="tool-btn" title="Schedule Meeting">
+                        <i class="fas fa-calendar-alt"></i>
+                    </button>
+                    <button class="tool-btn" title="Send Property">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="tool-btn" title="Send Template">
+                        <i class="fas fa-clone"></i>
+                    </button>
+                </div>
+                <div class="message-input-wrapper">
+                    <textarea class="message-input" placeholder="Type a message..."></textarea>
+                    <div class="input-actions">
+                        <button class="emoji-btn" title="Insert Emoji">
+                            <i class="far fa-smile"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="send-btn" title="Send Message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact profile/information sidebar -->
+        <div class="contact-profile-sidebar">
+            <div class="profile-header">
+                <h3>Contact Info</h3>
+                <button class="close-profile-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="profile-content">
+                <div class="profile-avatar">
+                    <img src="../img/avatar1.jpg" alt="John Smith">
+                </div>
+                <h2 class="profile-name">John Smith</h2>
+                <div class="profile-status">Last active today at 10:42 AM</div>
+                
+                <div class="profile-section">
+                    <h4 class="section-title">Contact Information</h4>
+                    <div class="contact-detail">
+                        <i class="fab fa-whatsapp"></i>
+                        <div class="detail-content">
+                            <div class="detail-label">WhatsApp</div>
+                            <div class="detail-value">+44 7890 123456</div>
+                        </div>
+                        <button class="detail-action">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="fas fa-envelope"></i>
+                        <div class="detail-content">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">john.smith@example.com</div>
+                        </div>
+                        <button class="detail-action">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="fas fa-phone"></i>
+                        <div class="detail-content">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value">+44 7890 123456</div>
+                        </div>
+                        <button class="detail-action">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h4 class="section-title">Client Information</h4>
+                    <div class="info-detail">
+                        <div class="info-label">Status</div>
+                        <div class="info-value"><span class="status-badge lead">Lead</span></div>
+                    </div>
+                    <div class="info-detail">
+                        <div class="info-label">Assigned To</div>
+                        <div class="info-value">Sarah Williams</div>
+                    </div>
+                    <div class="info-detail">
+                        <div class="info-label">Interested In</div>
+                        <div class="info-value">2BR, Sea View, Sunset Bay Resort</div>
+                    </div>
+                    <div class="info-detail">
+                        <div class="info-label">Budget</div>
+                        <div class="info-value">€180,000 - €210,000</div>
+                    </div>
+                    <div class="info-detail">
+                        <div class="info-label">Notes</div>
+                        <div class="info-value">Looking for a holiday home with rental potential. Will be visiting next week for property viewings.</div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h4 class="section-title">Shared Files</h4>
+                    <div class="file-item">
+                        <i class="fas fa-file-pdf"></i>
+                        <div class="file-info">
+                            <div class="file-name">SunsetBay_Floorplans.pdf</div>
+                            <div class="file-meta">2.4 MB · May 17, 2025</div>
+                        </div>
+                        <button class="file-action">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="file-item">
+                        <i class="fas fa-file-image"></i>
+                        <div class="file-info">
+                            <div class="file-name">sunset-bay-1.jpg</div>
+                            <div class="file-meta">1.8 MB · May 17, 2025</div>
+                        </div>
+                        <button class="file-action">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="file-item">
+                        <i class="fas fa-file-image"></i>
+                        <div class="file-info">
+                            <div class="file-name">sunset-bay-2.jpg</div>
+                            <div class="file-meta">2.1 MB · May 17, 2025</div>
+                        </div>
+                        <button class="file-action">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="profile-action-btn">
+                        <i class="fas fa-user-edit"></i> Edit Contact
+                    </button>
+                    <button class="profile-action-btn">
+                        <i class="fas fa-exchange-alt"></i> Move to Pipeline
+                    </button>
+                    <button class="profile-action-btn danger">
+                        <i class="fas fa-ban"></i> Block Contact
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div class="modal" id="newMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Message</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newMessageForm">
+                    <div class="form-group">
+                        <label for="messageChannel">Channel</label>
+                        <select id="messageChannel" name="channel" required>
+                            <option value="">Select Channel</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="email">Email</option>
+                            <option value="sms">SMS</option>
+                            <option value="portal">Portal Messenger</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageRecipient">Recipient</label>
+                        <div class="recipient-search-container">
+                            <input type="text" id="messageRecipient" name="recipient" placeholder="Search for a contact..." required>
+                            <div class="recipient-suggestions">
+                                <!-- Suggestions will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageSubject">Subject (Email only)</label>
+                        <input type="text" id="messageSubject" name="subject" placeholder="Enter subject line">
+                    </div>
+                    <div class="form-group">
+                        <label for="messageContent">Message</label>
+                        <textarea id="messageContent" name="content" rows="5" placeholder="Type your message..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Attachments</label>
+                        <div class="attachment-upload">
+                            <button type="button" class="attachment-btn">
+                                <i class="fas fa-paperclip"></i> Add Attachments
+                            </button>
+                            <input type="file" id="attachmentFiles" multiple style="display: none;">
+                        </div>
+                        <div class="attachment-list">
+                            <!-- Attachments will appear here -->
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelNewMessage">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Modal -->
+    <div class="modal" id="templatesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Message Templates</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="template-search">
+                    <input type="text" placeholder="Search templates..." class="search-input">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="template-categories">
+                    <button class="template-category active">All</button>
+                    <button class="template-category">Welcome</button>
+                    <button class="template-category">Property Info</button>
+                    <button class="template-category">Viewings</button>
+                    <button class="template-category">Follow-up</button>
+                    <button class="template-category">Documents</button>
+                </div>
+                <div class="template-list">
+                    <div class="template-item">
+                        <div class="template-header">
+                            <div class="template-title">Welcome Message</div>
+                            <div class="template-tag">Welcome</div>
+                        </div>
+                        <div class="template-preview">
+                            Hello {name}, thank you for your interest in RedBird properties. My name is {agent} and I'll be your dedicated advisor...
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Use Template</button>
+                        </div>
+                    </div>
+                    <div class="template-item">
+                        <div class="template-header">
+                            <div class="template-title">Property Information</div>
+                            <div class="template-tag">Property Info</div>
+                        </div>
+                        <div class="template-preview">
+                            Thank you for your interest in {property}. This {bedrooms} property features {features} and is available for {price}...
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Use Template</button>
+                        </div>
+                    </div>
+                    <div class="template-item">
+                        <div class="template-header">
+                            <div class="template-title">Viewing Confirmation</div>
+                            <div class="template-tag">Viewings</div>
+                        </div>
+                        <div class="template-preview">
+                            I'm pleased to confirm your viewing appointment for {property} on {date} at {time}. Our representative will meet you at...
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Use Template</button>
+                        </div>
+                    </div>
+                    <div class="template-item">
+                        <div class="template-header">
+                            <div class="template-title">Document Request</div>
+                            <div class="template-tag">Documents</div>
+                        </div>
+                        <div class="template-preview">
+                            To proceed with your application for {property}, we'll need the following documents: {documents}. You can upload them...
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Use Template</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-footer">
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Create New Template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Integration Modal -->
+    <div class="modal" id="whatsappIntegrationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>WhatsApp Integration</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="integration-status connected">
+                    <div class="status-icon">
+                        <i class="fab fa-whatsapp"></i>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>WhatsApp Business API Connected</h3>
+                        <p>Your WhatsApp Business account is connected and active.</p>
+                    </div>
+                </div>
+                
+                <div class="integration-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Connected Account</div>
+                        <div class="detail-value">RedBird Properties (+357 2345 6789)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">API Status</div>
+                        <div class="detail-value"><span class="status-badge success">Active</span></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Message Quota</div>
+                        <div class="detail-value">23,500 / 25,000 remaining</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Connected Since</div>
+                        <div class="detail-value">March 15, 2025</div>
+                    </div>
+                </div>
+                
+                <div class="integration-templates">
+                    <h3>WhatsApp Message Templates</h3>
+                    <p>These pre-approved message templates can be used to initiate conversations with clients.</p>
+                    
+                    <div class="template-list">
+                        <div class="template-item">
+                            <div class="template-header">
+                                <div class="template-title">Welcome Message</div>
+                                <span class="status-badge success">Approved</span>
+                            </div>
+                            <div class="template-preview">
+                                Hello {{1}}! Thank you for your interest in RedBird Properties. My name is {{2}} and I'll be your dedicated advisor. How can I help you today?
+                            </div>
+                        </div>
+                        <div class="template-item">
+                            <div class="template-header">
+                                <div class="template-title">Viewing Confirmation</div>
+                                <span class="status-badge success">Approved</span>
+                            </div>
+                            <div class="template-preview">
+                                Hello {{1}}! Your viewing appointment for {{2}} is confirmed for {{3}} at {{4}}. Our representative will meet you at the property. Please reply to confirm.
+                            </div>
+                        </div>
+                        <div class="template-item">
+                            <div class="template-header">
+                                <div class="template-title">Document Request</div>
+                                <span class="status-badge pending">In Review</span>
+                            </div>
+                            <div class="template-preview">
+                                Hello {{1}}! To proceed with your application for {{2}}, we require the following documents: {{3}}. Please send them at your earliest convenience.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-actions">
+                        <button class="btn btn-outline"><i class="fas fa-sync-alt"></i> Refresh Status</button>
+                        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create New Template</button>
+                    </div>
+                </div>
+                
+                <div class="integration-settings">
+                    <h3>Settings</h3>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <div class="setting-label">Automatic Replies</div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Business Hours Only</div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Notification Sounds</div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Show Read Receipts</div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-outline danger"><i class="fas fa-unlink"></i> Disconnect</button>
+                    <button class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/messaging.js"></script>
+</body>
+</html>

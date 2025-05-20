@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fulfillment Prozess - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Fulfillment Process Specific Styles */
+        .process-step-card {
+            background-color: var(--bg-card, white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .process-step-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .process-step-header {
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .process-step-number {
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .process-step-info {
+            flex: 1;
+        }
+        
+        .process-step-title {
+            font-size: 1.25rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .process-step-description {
+            color: var(--neutral-600);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .process-step-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .process-step-body {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+        }
+        
+        .process-step-body.expanded {
+            padding: 1.25rem;
+            max-height: 1000px;
+        }
+        
+        .responsible-person-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-full);
+            color: var(--neutral-700);
+            font-size: 0.85rem;
+            margin-right: 0.75rem;
+            margin-bottom: 0.75rem;
+            gap: 0.5rem;
+        }
+        
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .checklist-item-enhanced {
+            background-color: var(--bg-card, white);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            transition: all 0.25s ease;
+        }
+        
+        .checklist-item-enhanced:hover {
+            border-color: var(--neutral-300);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .checklist-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neutral-300);
+            border-radius: 4px;
+            margin-top: 0.1rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .checklist-checkbox:checked {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+        
+        .checklist-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .checklist-label {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        
+        .progress-form-enhanced {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .form-grid-enhanced {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-heading-enhanced {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+        <i class="fas fa-moon" data-theme-icon></i>
+    </button>
+    
+    <!-- Header -->
+    <header class="admin-header-enhanced">
+        <div class="admin-header-container-enhanced">
+            <div class="admin-title-enhanced">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-controls-enhanced">
+                <div class="admin-search-enhanced">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Suche...">
+                </div>
+                <div class="admin-notifications-enhanced dropdown-enhanced">
+                    <button class="notification-btn-enhanced" aria-label="Benachrichtigungen">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="dropdown-content-enhanced notification-dropdown">
+                        <div class="notification-header">
+                            <h3>Benachrichtigungen</h3>
+                            <button class="text-btn">Alle markieren</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-success-soft">
+                                    <i class="fas fa-check text-success"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1064 wurde aktualisiert</p>
+                                    <span class="notification-time">Vor 10 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-primary-soft">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Neuer Kunde registriert: Maria Schmidt</p>
+                                    <span class="notification-time">Vor 30 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-warning-soft">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1058 benötigt Ihre Aufmerksamkeit</p>
+                                    <span class="notification-time">Vor 1 Stunde</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" class="text-btn">Alle Benachrichtigungen ansehen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-user-enhanced dropdown-enhanced">
+                    <button class="user-btn-enhanced">
+                        <div class="user-avatar-enhanced">
+                            <span>AS</span>
+                        </div>
+                        <div class="user-info-enhanced d-none d-md-block">
+                            <span class="user-name-enhanced">Admin User</span>
+                            <span class="user-role-enhanced">Administrator</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content-enhanced">
+                        <a href="#"><i class="fas fa-user-circle"></i> Mein Profil</a>
+                        <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> Hilfe & Support</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar-enhanced">
+        <div class="sidebar-header-enhanced">
+            <img src="../img/redbird-logo.svg" alt="RedBird" class="sidebar-logo-enhanced">
+            <button class="sidebar-toggle-enhanced" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-user-enhanced">
+            <div class="user-avatar-enhanced">
+                <span>AS</span>
+            </div>
+            <div class="user-info-enhanced">
+                <span class="user-name-enhanced">Admin User</span>
+                <span class="user-role-enhanced">Administrator</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav-enhanced">
+            <ul class="sidebar-menu-enhanced">
+                <li class="sidebar-item-enhanced">
+                    <a href="index-enhanced.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-users"></i>
+                        <span>Kunden</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        <span>Immobilien</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Dokumente</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="media-refined.html">
+                        <i class="fas fa-images"></i>
+                        <span>Medienverwaltung</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="progress-enhanced.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Projektstatus</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced active">
+                    <a href="fulfillment-process-enhanced.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Fulfillment Prozess</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Berichte</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Einstellungen</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-content-enhanced">
+        <div class="content-header-enhanced">
+            <div>
+                <h1 class="mb-2">Fulfillment Prozess</h1>
+                <p class="text-muted">Verwalten Sie den Fulfillment-Prozess für alle Kunden, von der Begrüßung bis zum Aftersales-Service.</p>
+            </div>
+            <div class="content-actions-enhanced">
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-file-export"></i> Exportieren
+                </button>
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-print"></i> Drucken
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Neuer Prozess
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tabs Container -->
+        <div class="tabs-enhanced">
+            <div class="tabs-header-enhanced">
+                <button class="tab-btn-enhanced active" data-tab="customer-management">Kundenverwaltung</button>
+                <button class="tab-btn-enhanced" data-tab="process-template">Prozessvorlage</button>
+            </div>
+            
+            <div class="tabs-content-enhanced">
+                <!-- Customer Management Tab -->
+                <div id="customer-management" class="tab-pane-enhanced active">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="search-container-enhanced">
+                                <i class="fas fa-search search-icon-enhanced"></i>
+                                <input type="text" class="search-input-enhanced" placeholder="Suche nach Kunden...">
+                            </div>
+                            
+                            <div class="projects-table-responsive">
+                                <table class="table-enhanced">
+                                    <thead>
+                                        <tr>
+                                            <th>Kunde</th>
+                                            <th>Immobilie</th>
+                                            <th>Aktueller Schritt</th>
+                                            <th>Letzte Aktualisierung</th>
+                                            <th>Verantwortlich</th>
+                                            <th>Status</th>
+                                            <th>Aktionen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="stagger-item">
+                                            <td>
+                                                <div class="project-cell">
+                                                    <div class="project-icon bg-primary-soft">
+                                                        <i class="fas fa-user text-primary"></i>
+                                                    </div>
+                                                    <span>Max Mustermann</span>
+                                                </div>
+                                            </td>
+                                            <td>Sunset Bay Resort, A-203</td>
+                                            <td>5. Beratung Terminvereinbarung</td>
+                                            <td>15.05.2025</td>
+                                            <td>Berater</td>
+                                            <td><span class="status-badge status-active">In Bearbeitung</span></td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Fortschritt aktualisieren">
+                                                        <i class="fas fa-tasks"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="stagger-item">
+                                            <td>
+                                                <div class="project-cell">
+                                                    <div class="project-icon bg-primary-soft">
+                                                        <i class="fas fa-user text-primary"></i>
+                                                    </div>
+                                                    <span>Maria Schmidt</span>
+                                                </div>
+                                            </td>
+                                            <td>Palm View Residence, B-105</td>
+                                            <td>9. Reservierung</td>
+                                            <td>10.05.2025</td>
+                                            <td>Berater</td>
+                                            <td><span class="status-badge status-active">In Bearbeitung</span></td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Fortschritt aktualisieren">
+                                                        <i class="fas fa-tasks"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="stagger-item">
+                                            <td>
+                                                <div class="project-cell">
+                                                    <div class="project-icon bg-primary-soft">
+                                                        <i class="fas fa-user text-primary"></i>
+                                                    </div>
+                                                    <span>Klaus Weber</span>
+                                                </div>
+                                            </td>
+                                            <td>Golden Bay Villas, C-301</td>
+                                            <td>2. Onboarding Terminvereinbarung</td>
+                                            <td>12.05.2025</td>
+                                            <td>Assistent</td>
+                                            <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Fortschritt aktualisieren">
+                                                        <i class="fas fa-tasks"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="stagger-item">
+                                            <td>
+                                                <div class="project-cell">
+                                                    <div class="project-icon bg-primary-soft">
+                                                        <i class="fas fa-user text-primary"></i>
+                                                    </div>
+                                                    <span>Anna Becker</span>
+                                                </div>
+                                            </td>
+                                            <td>Mountain View Resort, D-102</td>
+                                            <td>15. Aftersales</td>
+                                            <td>05.05.2025</td>
+                                            <td>Aftersales</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Fortschritt aktualisieren">
+                                                        <i class="fas fa-tasks"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="table-footer-enhanced">
+                                <div class="table-info">Zeige 1 bis 4 von 24 Einträgen</div>
+                                <div class="pagination-enhanced">
+                                    <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                                    <button class="pagination-btn active">1</button>
+                                    <button class="pagination-btn">2</button>
+                                    <button class="pagination-btn">3</button>
+                                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Progress Update Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h2>Kundenfortschritt aktualisieren</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="customer-info mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar-enhanced">
+                                        <span>MM</span>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="mb-1">Max Mustermann</h3>
+                                        <p class="text-muted mb-0">Sunset Bay Resort, A-203</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-form-enhanced">
+                                <div class="form-grid-enhanced">
+                                    <div class="form-group-enhanced">
+                                        <label for="current-step">Aktueller Schritt</label>
+                                        <select id="current-step" class="form-control-enhanced">
+                                            <option>1. WhatsApp Gruppe Welcome</option>
+                                            <option>2. Onboarding Terminvereinbarung</option>
+                                            <option>3. Onboarding Video-Call</option>
+                                            <option>4. Unit-Matching</option>
+                                            <option selected>5. Beratung Terminvereinbarung</option>
+                                            <option>6. Beratung Video Call</option>
+                                            <option>7. Vorbereitung auf Legal-Call</option>
+                                            <option>8. Live Call in Wohnung</option>
+                                            <option>9. Reservierung</option>
+                                            <option>10. Vertragsvorbereitungen</option>
+                                            <option>11. Tripplanung</option>
+                                            <option>12. Trip-Call</option>
+                                            <option>13. Trip-Tag I</option>
+                                            <option>14. Trip-Tag II</option>
+                                            <option>15. Aftersales</option>
+                                            <option>16. WhatsApp Gruppe Legal</option>
+                                            <option>17. WhatsApp Gruppe Aftersales</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="responsible-person">Verantwortliche Person</label>
+                                        <select id="responsible-person" class="form-control-enhanced">
+                                            <option>Assistent</option>
+                                            <option selected>Berater</option>
+                                            <option>Legal-Abteilung</option>
+                                            <option>Administrator</option>
+                                            <option>Aftersales</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="status">Status</label>
+                                        <select id="status" class="form-control-enhanced">
+                                            <option selected>In Bearbeitung</option>
+                                            <option>Ausstehend</option>
+                                            <option>Abgeschlossen</option>
+                                            <option>Verzögert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group-enhanced mt-3">
+                                    <label for="notes">Notizen</label>
+                                    <textarea id="notes" class="form-control-enhanced" rows="4" placeholder="Fügen Sie wichtige Notizen oder Anmerkungen hinzu..."></textarea>
+                                </div>
+                                
+                                <div class="form-heading-enhanced">Checkliste für aktuellen Schritt</div>
+                                <div class="checklist-grid">
+                                    <div class="checklist-item-enhanced">
+                                        <input type="checkbox" id="check1" class="checklist-checkbox" checked>
+                                        <label for="check1" class="checklist-label">Verfügbarkeit des Beraters prüfen</label>
+                                    </div>
+                                    <div class="checklist-item-enhanced">
+                                        <input type="checkbox" id="check2" class="checklist-checkbox" checked>
+                                        <label for="check2" class="checklist-label">Terminvorschläge erstellen</label>
+                                    </div>
+                                    <div class="checklist-item-enhanced">
+                                        <input type="checkbox" id="check3" class="checklist-checkbox">
+                                        <label for="check3" class="checklist-label">Termin mit Kunde abstimmen</label>
+                                    </div>
+                                    <div class="checklist-item-enhanced">
+                                        <input type="checkbox" id="check4" class="checklist-checkbox">
+                                        <label for="check4" class="checklist-label">Terminbestätigung versenden</label>
+                                    </div>
+                                    <div class="checklist-item-enhanced">
+                                        <input type="checkbox" id="check5" class="checklist-checkbox">
+                                        <label for="check5" class="checklist-label">Erinnerung einrichten</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions-enhanced mt-4">
+                                    <button type="button" class="btn btn-primary">Fortschritt aktualisieren</button>
+                                    <button type="button" class="btn btn-secondary">Abbrechen</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Process Template Tab -->
+                <div id="process-template" class="tab-pane-enhanced">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Prozessvorlage</h2>
+                            <div>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-cog"></i> Prozess bearbeiten
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- 1. WhatsApp Gruppe Welcome -->
+                            <div class="process-step-card">
+                                <div class="process-step-header">
+                                    <div class="d-flex align-items-start">
+                                        <div class="process-step-number">1</div>
+                                        <div class="process-step-info">
+                                            <h3 class="process-step-title">WhatsApp Gruppe Welcome</h3>
+                                            <p class="process-step-description">WhatsApp Gruppe Welcome von Close...</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step-actions">
+                                        <button class="btn btn-sm btn-outline process-toggle" data-step="1">
+                                            <i class="fas fa-chevron-down"></i> Details
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="process-step-body" id="process-step-body-1">
+                                    <div class="responsible-persons mb-3">
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Team
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mt-3 mb-2">Checkliste</h4>
+                                    <div class="checklist-grid">
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step1-check1" class="checklist-checkbox">
+                                            <label for="step1-check1" class="checklist-label">WhatsApp Gruppe erstellen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step1-check2" class="checklist-checkbox">
+                                            <label for="step1-check2" class="checklist-label">Begrüßungsnachricht versenden</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step1-check3" class="checklist-checkbox">
+                                            <label for="step1-check3" class="checklist-label">Mitglieder hinzufügen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step1-check4" class="checklist-checkbox">
+                                            <label for="step1-check4" class="checklist-label">Grundregeln kommunizieren</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 2. Onboarding Terminvereinbarung -->
+                            <div class="process-step-card">
+                                <div class="process-step-header">
+                                    <div class="d-flex align-items-start">
+                                        <div class="process-step-number">2</div>
+                                        <div class="process-step-info">
+                                            <h3 class="process-step-title">Onboarding Terminvereinbarung</h3>
+                                            <p class="process-step-description">Assistent macht für Berater Termin auf...</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step-actions">
+                                        <button class="btn btn-sm btn-outline process-toggle" data-step="2">
+                                            <i class="fas fa-chevron-down"></i> Details
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="process-step-body" id="process-step-body-2">
+                                    <div class="responsible-persons mb-3">
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Assistent
+                                        </div>
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Berater
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mt-3 mb-2">Checkliste</h4>
+                                    <div class="checklist-grid">
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step2-check1" class="checklist-checkbox">
+                                            <label for="step2-check1" class="checklist-label">Verfügbarkeit des Beraters prüfen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step2-check2" class="checklist-checkbox">
+                                            <label for="step2-check2" class="checklist-label">Terminvorschläge erstellen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step2-check3" class="checklist-checkbox">
+                                            <label for="step2-check3" class="checklist-label">Termin mit Kunde abstimmen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step2-check4" class="checklist-checkbox">
+                                            <label for="step2-check4" class="checklist-label">Terminbestätigung versenden</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step2-check5" class="checklist-checkbox">
+                                            <label for="step2-check5" class="checklist-label">Erinnerung einrichten</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 3. Onboarding Video-Call -->
+                            <div class="process-step-card">
+                                <div class="process-step-header">
+                                    <div class="d-flex align-items-start">
+                                        <div class="process-step-number">3</div>
+                                        <div class="process-step-info">
+                                            <h3 class="process-step-title">Onboarding Video-Call</h3>
+                                            <p class="process-step-description">Assistent macht Termin aus für Berater</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step-actions">
+                                        <button class="btn btn-sm btn-outline process-toggle" data-step="3">
+                                            <i class="fas fa-chevron-down"></i> Details
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="process-step-body" id="process-step-body-3">
+                                    <div class="responsible-persons mb-3">
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Assistent
+                                        </div>
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Berater
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mt-3 mb-2">Checkliste</h4>
+                                    <div class="checklist-grid">
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step3-check1" class="checklist-checkbox">
+                                            <label for="step3-check1" class="checklist-label">Videokonferenz-Link erstellen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step3-check2" class="checklist-checkbox">
+                                            <label for="step3-check2" class="checklist-label">Link an alle Teilnehmer versenden</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step3-check3" class="checklist-checkbox">
+                                            <label for="step3-check3" class="checklist-label">Technische Ausstattung prüfen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step3-check4" class="checklist-checkbox">
+                                            <label for="step3-check4" class="checklist-label">Agenda vorbereiten</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step3-check5" class="checklist-checkbox">
+                                            <label for="step3-check5" class="checklist-label">Notwendige Unterlagen bereitstellen</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 4. Unit-Matching -->
+                            <div class="process-step-card">
+                                <div class="process-step-header">
+                                    <div class="d-flex align-items-start">
+                                        <div class="process-step-number">4</div>
+                                        <div class="process-step-info">
+                                            <h3 class="process-step-title">Unit-Matching</h3>
+                                            <p class="process-step-description">Berater findet die passende Immobilie</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step-actions">
+                                        <button class="btn btn-sm btn-outline process-toggle" data-step="4">
+                                            <i class="fas fa-chevron-down"></i> Details
+                                        </button>
+                                        <a href="property-recommendation.html" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-file-pdf"></i> Beratungsunterlagen
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="process-step-body" id="process-step-body-4">
+                                    <div class="responsible-persons mb-3">
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Berater
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mt-3 mb-2">Checkliste</h4>
+                                    <div class="checklist-grid">
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check1" class="checklist-checkbox">
+                                            <label for="step4-check1" class="checklist-label">Kundenbedürfnisse analysieren</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check2" class="checklist-checkbox">
+                                            <label for="step4-check2" class="checklist-label">Immobilienangebote recherchieren</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check3" class="checklist-checkbox">
+                                            <label for="step4-check3" class="checklist-label">Matching-Kriterien definieren</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check4" class="checklist-checkbox">
+                                            <label for="step4-check4" class="checklist-label">Vorauswahl treffen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check5" class="checklist-checkbox">
+                                            <label for="step4-check5" class="checklist-label">Dokumentation der passenden Immobilien</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step4-check6" class="checklist-checkbox">
+                                            <label for="step4-check6" class="checklist-label">Beratungsunterlagen generieren</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <h4 class="mb-2">Beratungsunterlagen</h4>
+                                        <p>Erstellen Sie automatisierte Beratungsunterlagen basierend auf den Kundenbedürfnissen und Immobiliendetails. Diese PDFs analysieren automatisch die Übereinstimmung zwischen Kunden und Immobilie.</p>
+                                        <a href="property-recommendation.html" class="btn btn-primary mt-2">
+                                            <i class="fas fa-file-pdf"></i> Beratungsunterlagen erstellen
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 5. Beratung Terminvereinbarung -->
+                            <div class="process-step-card">
+                                <div class="process-step-header">
+                                    <div class="d-flex align-items-start">
+                                        <div class="process-step-number">5</div>
+                                        <div class="process-step-info">
+                                            <h3 class="process-step-title">Beratung Terminvereinbarung</h3>
+                                            <p class="process-step-description">Berater macht Termin in WhatsApp Gruppe...</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step-actions">
+                                        <button class="btn btn-sm btn-outline process-toggle" data-step="5">
+                                            <i class="fas fa-chevron-down"></i> Details
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="process-step-body" id="process-step-body-5">
+                                    <div class="responsible-persons mb-3">
+                                        <div class="responsible-person-badge">
+                                            <i class="fas fa-user"></i> Berater
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mt-3 mb-2">Checkliste</h4>
+                                    <div class="checklist-grid">
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step5-check1" class="checklist-checkbox">
+                                            <label for="step5-check1" class="checklist-label">Terminoptionen in WhatsApp Gruppe vorschlagen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step5-check2" class="checklist-checkbox">
+                                            <label for="step5-check2" class="checklist-label">Rückmeldungen einholen</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step5-check3" class="checklist-checkbox">
+                                            <label for="step5-check3" class="checklist-label">Termin fixieren</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step5-check4" class="checklist-checkbox">
+                                            <label for="step5-check4" class="checklist-label">Termindetails kommunizieren</label>
+                                        </div>
+                                        <div class="checklist-item-enhanced">
+                                            <input type="checkbox" id="step5-check5" class="checklist-checkbox">
+                                            <label for="step5-check5" class="checklist-label">Erinnerung einrichten</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Additional process steps 6-17 would be added here following the same pattern -->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar-enhanced');
+            const mainContent = document.querySelector('.admin-content-enhanced');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                });
+            }
+            
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn-enhanced');
+            const tabPanes = document.querySelectorAll('.tab-pane-enhanced');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding pane
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Process step toggles
+            const processToggles = document.querySelectorAll('.process-toggle');
+            
+            processToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const stepId = this.getAttribute('data-step');
+                    const bodyElement = document.getElementById(`process-step-body-${stepId}`);
+                    
+                    bodyElement.classList.toggle('expanded');
+                    
+                    // Update icon and text
+                    if (bodyElement.classList.contains('expanded')) {
+                        this.innerHTML = '<i class="fas fa-chevron-up"></i> Verbergen';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-chevron-down"></i> Details';
+                    }
+                });
+            });
+            
+            // Configure notifications
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+                
+                // Optional: Welcome notification
+                window.RedBirdNotify.info(
+                    'Willkommen zum Fulfillment-Prozess Management.',
+                    'Fulfillment-Prozess'
+                );
+            }
+        });
+    </script>
+</body>
+</html>

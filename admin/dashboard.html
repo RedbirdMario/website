@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/admin-responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-body {
+            background-color: #f5f5f5;
+            padding-bottom: 0;
+            display: block;
+        }
+        
+        .admin-header {
+            background-color: var(--redbird-dark);
+            color: white;
+            padding: 1rem 0;
+        }
+        
+        .admin-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-title img {
+            height: 40px;
+        }
+        
+        .admin-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-user-info span {
+            display: block;
+        }
+        
+        .admin-user-name {
+            font-weight: 500;
+        }
+        
+        .admin-user-role {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .admin-sidebar {
+            width: 250px;
+            background-color: white;
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        .admin-menu {
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+        }
+        
+        .admin-menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--redbird-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 0.75rem;
+        }
+        
+        .admin-menu-item a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .admin-menu-item.active a {
+            background-color: #f5f5f5;
+            border-left: 4px solid var(--redbird-red);
+            padding-left: calc(1.5rem - 4px);
+            color: var(--redbird-red);
+            font-weight: 500;
+        }
+        
+        .admin-content {
+            margin-left: 250px;
+            padding: 2rem;
+            max-width: 1200px;
+        }
+        
+        .admin-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .admin-section-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        .admin-section-body {
+            padding: 1.25rem;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .admin-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .admin-card-header {
+            padding: 1.25rem;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-card-header h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .admin-card-body {
+            padding: 1.25rem;
+        }
+        
+        .user-stat {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--redbird-red);
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-label {
+            color: var(--redbird-gray);
+            font-size: 0.875rem;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th,
+        .admin-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .admin-table th {
+            font-weight: 500;
+            color: var(--redbird-gray);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .admin-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .admin-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--redbird-gray);
+        }
+        
+        .admin-action-btn:hover {
+            background-color: var(--redbird-red);
+            color: white;
+        }
+        
+        .user-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .property-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .property-title {
+            font-weight: 500;
+        }
+        
+        .property-details {
+            font-size: 0.875rem;
+            color: var(--redbird-gray);
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            padding-left: 2.5rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--redbird-gray);
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <header class="admin-header">
+        <div class="admin-header-container">
+            <div class="admin-title">
+                <img src="../img/redbird-logo.png" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">System Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="dashboard.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="dashboard.html"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <aside class="admin-sidebar">
+        <ul class="admin-menu">
+            <li class="admin-menu-item active">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-users"></i> Kunden</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-home"></i> Immobilien</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="dashboard.html"><i class="fas fa-file-alt"></i> Dokumente</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="media.html"><i class="fas fa-images"></i> Medienverwaltung</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="progress.html"><i class="fas fa-tasks"></i> Projektstatus</a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="fulfillment-process.html"><i class="fas fa-clipboard-check"></i> Fulfillment Prozess</a>
+            </li>
+        </ul>
+    </aside>
+    
+    <main class="admin-content">
+        <h1>Dashboard</h1>
+        <p>Willkommen im RedBird Admin-Portal. Hier können Sie alle Kundenkonten, Immobilien, Dokumente und Medien verwalten.</p>
+        
+        <div class="admin-grid" style="margin-bottom: 2rem;">
+            <div class="admin-card">
+                <div class="admin-card-body">
+                    <div class="user-stat">24</div>
+                    <div class="user-label">Aktive Kunden</div>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-body">
+                    <div class="user-stat">38</div>
+                    <div class="user-label">Verwaltete Immobilien</div>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-body">
+                    <div class="user-stat">142</div>
+                    <div class="user-label">Dokumente</div>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-body">
+                    <div class="user-stat">12</div>
+                    <div class="user-label">Laufende Projekte</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2>Neueste Kunden</h2>
+                <a href="users.html" class="btn btn-outline">Alle Kunden</a>
+            </div>
+            <div class="admin-section-body">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Suche nach Kunden...">
+                </div>
+                
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Immobilie</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Max Mustermann</td>
+                            <td>max.mustermann@example.com</td>
+                            <td>Sunset Bay Resort, A-203</td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maria Schmidt</td>
+                            <td>maria.schmidt@example.com</td>
+                            <td>Palm View Residence, B-105</td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Klaus Weber</td>
+                            <td>klaus.weber@example.com</td>
+                            <td>Golden Bay Villas, C-301</td>
+                            <td><span class="user-status status-pending">Ausstehend</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Anna Becker</td>
+                            <td>anna.becker@example.com</td>
+                            <td>Mountain View Resort, D-102</td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Michael Schneider</td>
+                            <td>michael.schneider@example.com</td>
+                            <td>Seaside Apartments, E-405</td>
+                            <td><span class="user-status status-inactive">Inaktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <h2>Neueste Immobilien</h2>
+                <a href="properties.html" class="btn btn-outline">Alle Immobilien</a>
+            </div>
+            <div class="admin-section-body">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Immobilie</th>
+                            <th>Art</th>
+                            <th>Standort</th>
+                            <th>Kunde</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <img src="../img/apartment-preview.jpg" alt="Apartment" class="property-image">
+                                    <div>
+                                        <div class="property-title">Sunset Bay Resort, A-203</div>
+                                        <div class="property-details">2+1 Apartment</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Apartment</td>
+                            <td>Esentepe, Nordzypern</td>
+                            <td>Max Mustermann</td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <img src="../img/apartment-preview.jpg" alt="Apartment" class="property-image">
+                                    <div>
+                                        <div class="property-title">Palm View Residence, B-105</div>
+                                        <div class="property-details">1+1 Apartment</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Apartment</td>
+                            <td>Kyrenia, Nordzypern</td>
+                            <td>Maria Schmidt</td>
+                            <td><span class="user-status status-active">Aktiv</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <img src="../img/apartment-preview.jpg" alt="Villa" class="property-image">
+                                    <div>
+                                        <div class="property-title">Golden Bay Villas, C-301</div>
+                                        <div class="property-details">Villa mit Pool</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Villa</td>
+                            <td>Alsancak, Nordzypern</td>
+                            <td>Klaus Weber</td>
+                            <td><span class="user-status status-pending">Ausstehend</span></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <button class="admin-action-btn" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                                    <button class="admin-action-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                    <button class="admin-action-btn" title="Löschen"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/admin-responsive.js"></script>
+</body>
+</html>

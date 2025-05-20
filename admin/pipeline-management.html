@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pipeline Management - RedBird Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin-refined.css">
+  <style>
+    /* Pipeline specific styles */
+    .pipeline-container {
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+    
+    .pipeline {
+      display: flex;
+      min-width: 100%;
+      gap: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+    .pipeline-stage {
+      min-width: 300px;
+      width: 300px;
+      background-color: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pipeline-stage-header {
+      margin-bottom: 1rem;
+    }
+    
+    .pipeline-stage-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--neutral-700);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    
+    .pipeline-stage-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--neutral-600);
+    }
+    
+    .pipeline-stage-count {
+      display: flex;
+      align-items: center;
+    }
+    
+    .pipeline-stage-value {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .pipeline-cards {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 100px;
+    }
+    
+    .opportunity-card {
+      background-color: white;
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--primary-color);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    
+    .opportunity-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .opportunity-card.priority-high {
+      border-left-color: var(--error);
+    }
+    
+    .opportunity-card.priority-medium {
+      border-left-color: var(--warning);
+    }
+    
+    .opportunity-card.priority-low {
+      border-left-color: var(--success);
+    }
+    
+    .opportunity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .opportunity-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0;
+      color: var(--neutral-800);
+    }
+    
+    .opportunity-value {
+      font-weight: 700;
+      color: var(--neutral-800);
+      background-color: var(--neutral-100);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+    }
+    
+    .opportunity-progress {
+      margin-bottom: 0.75rem;
+    }
+    
+    .progress-container {
+      height: 6px;
+      background-color: var(--neutral-200);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 999px;
+    }
+    
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+    }
+    
+    .opportunity-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .opportunity-user {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    
+    .opportunity-meta {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+    }
+    
+    .opportunity-meta-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .opportunity-meta-item i {
+      margin-right: 0.25rem;
+    }
+    
+    /* Filter styles */
+    .filter-container {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-group {
+      display: flex;
+      background-color: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--neutral-700);
+      transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .filter-btn:hover {
+      background-color: var(--neutral-200);
+    }
+    
+    .filter-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Advanced filter dropdown */
+    .filter-dropdown {
+      position: relative;
+    }
+    
+    .filter-dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: none;
+      background-color: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      color: var(--neutral-700);
+      transition: background-color 0.2s;
+    }
+    
+    .filter-dropdown-btn:hover {
+      background-color: var(--neutral-200);
+    }
+    
+    .filter-dropdown-content {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      background-color: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      min-width: 240px;
+      z-index: 1000;
+      display: none;
+    }
+    
+    .filter-dropdown:hover .filter-dropdown-content,
+    .filter-dropdown:focus-within .filter-dropdown-content {
+      display: block;
+    }
+    
+    .filter-dropdown-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--neutral-200);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .filter-dropdown-body {
+      padding: 0.75rem 1rem;
+    }
+    
+    .filter-dropdown-footer {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--neutral-200);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+    
+    /* Placeholder for empty stages */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 150px;
+      color: var(--neutral-500);
+      text-align: center;
+      border: 2px dashed var(--neutral-300);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    
+    .empty-state i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--neutral-400);
+    }
+    
+    .empty-state-text {
+      font-size: 0.9rem;
+    }
+    
+    /* Drag and drop */
+    .opportunity-card.dragging {
+      opacity: 0.6;
+      transform: scale(0.98);
+    }
+    
+    .pipeline-stage.drag-over {
+      background-color: var(--primary-light);
+    }
+    
+    /* Dark mode support */
+    [data-theme="dark"] .opportunity-card {
+      background-color: var(--neutral-100);
+    }
+    
+    [data-theme="dark"] .opportunity-value {
+      background-color: var(--neutral-50);
+    }
+    
+    [data-theme="dark"] .pipeline-stage {
+      background-color: var(--neutral-200);
+    }
+    
+    [data-theme="dark"] .filter-group,
+    [data-theme="dark"] .filter-dropdown-btn {
+      background-color: var(--neutral-200);
+    }
+    
+    [data-theme="dark"] .filter-btn:hover,
+    [data-theme="dark"] .filter-dropdown-btn:hover {
+      background-color: var(--neutral-300);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .pipeline-stage {
+        min-width: 280px;
+        width: 280px;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .page-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body class="admin-body">
+  <!-- Admin Header -->
+  <header class="admin-nav">
+    <div class="admin-nav-container">
+      <button class="admin-menu-toggle d-none">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="logo-container">
+        <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="nav-logo">
+        <span class="admin-badge">ADMIN</span>
+      </div>
+      
+      <ul class="admin-nav-menu">
+        <li class="admin-nav-item">
+          <a href="dashboard-refined.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li class="admin-nav-item">
+          <a href="user-management-refined.html"><i class="fas fa-users"></i> Kunden</a>
+        </li>
+        <li class="admin-nav-item">
+          <a href="properties.html"><i class="fas fa-building"></i> Immobilien</a>
+        </li>
+        <li class="admin-nav-item active">
+          <a href="pipeline-management.html"><i class="fas fa-project-diagram"></i> Pipeline</a>
+        </li>
+        <li class="admin-nav-item">
+          <a href="unit-onboarding.html"><i class="fas fa-clipboard-check"></i> Unit Onboarding</a>
+        </li>
+        <li class="admin-nav-item">
+          <a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a>
+        </li>
+        <li class="admin-nav-item">
+          <a href="media.html"><i class="fas fa-images"></i> Medien</a>
+        </li>
+      </ul>
+      
+      <div class="admin-user-menu">
+        <button class="admin-theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="admin-user-info">
+          <div class="admin-user-name">Admin User</div>
+          <div class="admin-user-role">Administrator</div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="profile.html"><i class="fas fa-user-circle"></i> Profil</a>
+            <a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-section">
+        <h3>Hauptmenü</h3>
+        <ul class="sidebar-menu">
+          <li><a href="dashboard-refined.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="user-management-refined.html"><i class="fas fa-users"></i> Kundenverwaltung</a></li>
+          <li><a href="properties.html"><i class="fas fa-building"></i> Immobilien</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>CRM & Fulfillment</h3>
+        <ul class="sidebar-menu">
+          <li><a href="pipeline-management.html" class="active"><i class="fas fa-project-diagram"></i> Pipeline</a></li>
+          <li><a href="unit-onboarding.html"><i class="fas fa-clipboard-check"></i> Unit Onboarding</a></li>
+          <li><a href="customer-data.html"><i class="fas fa-database"></i> Kundendaten</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>Inhalte</h3>
+        <ul class="sidebar-menu">
+          <li><a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a></li>
+          <li><a href="media.html"><i class="fas fa-images"></i> Medienverwaltung</a></li>
+          <li><a href="progress.html"><i class="fas fa-tasks"></i> Fortschrittsvorlagen</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>Kommunikation</h3>
+        <ul class="sidebar-menu">
+          <li><a href="messaging.html"><i class="fas fa-comments"></i> Nachrichten</a></li>
+          <li><a href="notifications.html"><i class="fas fa-bell"></i> Benachrichtigungen</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>System</h3>
+        <ul class="sidebar-menu">
+          <li><a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a></li>
+          <li><a href="logs.html"><i class="fas fa-history"></i> Systemlogs</a></li>
+        </ul>
+      </div>
+    </aside>
+    
+    <!-- Sidebar Overlay for mobile -->
+    <div class="admin-sidebar-overlay"></div>
+    
+    <div class="admin-content-wrapper">
+      <div class="admin-main-content">
+        <div class="page-header">
+          <div class="header-content">
+            <h1>Pipeline Management</h1>
+            <p>Verwalten Sie Ihre Deals und überwachen Sie den Fortschritt in verschiedenen Phasen des Verkaufsprozesses.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="addOpportunityBtn">
+              <i class="fas fa-plus"></i> Neue Opportunity
+            </button>
+            <div class="dropdown">
+              <button class="btn btn-outline dropbtn">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="dropdown-content">
+                <a href="#"><i class="fas fa-file-export"></i> Exportieren</a>
+                <a href="#"><i class="fas fa-print"></i> Drucken</a>
+                <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pipeline Type Selector -->
+        <div class="card shadow mb-4">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary active" id="pipelineSalesBtn">Beratungs-Pipeline</button>
+                <button type="button" class="btn btn-outline" id="pipelineUnitBtn">Unit-Pipeline</button>
+                <button type="button" class="btn btn-outline" id="pipelineOnboardingBtn">Onboarding</button>
+              </div>
+              
+              <div class="filter-dropdown">
+                <button class="filter-dropdown-btn">
+                  <i class="fas fa-sliders-h"></i>
+                  <span>Filter & Sortierung</span>
+                </button>
+                <div class="filter-dropdown-content">
+                  <div class="filter-dropdown-header">
+                    Filter anpassen
+                  </div>
+                  <div class="filter-dropdown-body">
+                    <div class="form-group mb-3">
+                      <label for="filterAssignee" class="mb-2">Zugewiesen an</label>
+                      <select id="filterAssignee" class="form-select">
+                        <option value="">Alle Berater</option>
+                        <option value="1">John Berater</option>
+                        <option value="2">Sarah Beraterin</option>
+                        <option value="3">Thomas Experte</option>
+                      </select>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="filterValue" class="mb-2">Mindestbetrag</label>
+                      <input type="number" id="filterValue" class="form-control" placeholder="z.B. 10000">
+                    </div>
+                    <div class="form-group mb-0">
+                      <label for="filterStatus" class="mb-2">Status</label>
+                      <div class="d-flex gap-2">
+                        <div class="form-check">
+                          <input type="checkbox" id="filterStatusActive" class="form-check-input" checked>
+                          <label for="filterStatusActive" class="form-check-label">Aktiv</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" id="filterStatusPending" class="form-check-input" checked>
+                          <label for="filterStatusPending" class="form-check-label">Ausstehend</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="filter-dropdown-footer">
+                    <button class="btn btn-sm btn-outline">Zurücksetzen</button>
+                    <button class="btn btn-sm btn-primary">Anwenden</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pipeline Filters -->
+        <div class="filter-container">
+          <div class="filter-group">
+            <button class="filter-btn active">Alle</button>
+            <button class="filter-btn">Expected</button>
+            <button class="filter-btn">Fulfillment</button>
+          </div>
+          
+          <div class="filter-group">
+            <button class="filter-btn active">Alle Leads</button>
+            <button class="filter-btn">Meine Leads</button>
+          </div>
+          
+          <div class="filter-group">
+            <button class="filter-btn active">Alle Benutzer</button>
+            <button class="filter-btn">Aktive Benutzer</button>
+          </div>
+          
+          <div class="filter-group">
+            <button class="filter-btn active">Wert: Alle</button>
+            <button class="filter-btn">€ > 10k</button>
+            <button class="filter-btn">€ > 50k</button>
+          </div>
+        </div>
+        
+        <!-- Pipeline View -->
+        <div class="pipeline-container">
+          <div class="pipeline" id="pipeline">
+            <!-- BERATUNGS-DEALS ALT -->
+            <div class="pipeline-stage" data-stage="beratung-deals-alt">
+              <div class="pipeline-stage-header">
+                <div class="pipeline-stage-title">BERATUNGS-DEALS ALT</div>
+                <div class="pipeline-stage-stats">
+                  <div class="pipeline-stage-count">3 Opportunities</div>
+                  <div class="pipeline-stage-value">€119,000</div>
+                </div>
+              </div>
+              <div class="pipeline-cards">
+                <div class="opportunity-card priority-high" draggable="true" data-id="1">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Max Mustermann</h3>
+                    <div class="opportunity-value">€25,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 75%</span>
+                      <span>4/8 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">MM</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>15.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>3</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="opportunity-card priority-medium" draggable="true" data-id="2">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Anna Schmidt</h3>
+                    <div class="opportunity-value">€42,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 50%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 50%</span>
+                      <span>3/6 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">AS</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>18.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="opportunity-card priority-low" draggable="true" data-id="3">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Klaus Weber</h3>
+                    <div class="opportunity-value">€52,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 25%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 25%</span>
+                      <span>2/8 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">KW</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>20.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>1</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- ONBOARDING -->
+            <div class="pipeline-stage" data-stage="onboarding">
+              <div class="pipeline-stage-header">
+                <div class="pipeline-stage-title">ONBOARDING</div>
+                <div class="pipeline-stage-stats">
+                  <div class="pipeline-stage-count">2 Opportunities</div>
+                  <div class="pipeline-stage-value">€82,000</div>
+                </div>
+              </div>
+              <div class="pipeline-cards">
+                <div class="opportunity-card priority-high" draggable="true" data-id="4">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Sarah Johnson</h3>
+                    <div class="opportunity-value">€37,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 60%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 60%</span>
+                      <span>3/5 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">SJ</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>10.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>7</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="opportunity-card priority-medium" draggable="true" data-id="5">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Robert Meyer</h3>
+                    <div class="opportunity-value">€45,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 80%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 80%</span>
+                      <span>4/5 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">RM</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>12.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>4</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- BERATUNG -->
+            <div class="pipeline-stage" data-stage="beratung">
+              <div class="pipeline-stage-header">
+                <div class="pipeline-stage-title">BERATUNG</div>
+                <div class="pipeline-stage-stats">
+                  <div class="pipeline-stage-count">2 Opportunities</div>
+                  <div class="pipeline-stage-value">€78,000</div>
+                </div>
+              </div>
+              <div class="pipeline-cards">
+                <div class="opportunity-card priority-high" draggable="true" data-id="6">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Thomas Becker</h3>
+                    <div class="opportunity-value">€48,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 40%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 40%</span>
+                      <span>2/5 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">TB</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>14.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>2</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="opportunity-card priority-low" draggable="true" data-id="7">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Julia Fischer</h3>
+                    <div class="opportunity-value">€30,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 20%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 20%</span>
+                      <span>1/5 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">JF</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>17.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>3</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- FOLGEBERATUNG -->
+            <div class="pipeline-stage" data-stage="folgeberatung">
+              <div class="pipeline-stage-header">
+                <div class="pipeline-stage-title">FOLGEBERATUNG</div>
+                <div class="pipeline-stage-stats">
+                  <div class="pipeline-stage-count">1 Opportunity</div>
+                  <div class="pipeline-stage-value">€65,000</div>
+                </div>
+              </div>
+              <div class="pipeline-cards">
+                <div class="opportunity-card priority-medium" draggable="true" data-id="8">
+                  <div class="opportunity-header">
+                    <h3 class="opportunity-title">Michael Schulz</h3>
+                    <div class="opportunity-value">€65,000</div>
+                  </div>
+                  <div class="opportunity-progress">
+                    <div class="progress-container">
+                      <div class="progress-bar" style="width: 90%"></div>
+                    </div>
+                    <div class="progress-info">
+                      <span>Fortschritt: 90%</span>
+                      <span>9/10 Schritte</span>
+                    </div>
+                  </div>
+                  <div class="opportunity-footer">
+                    <div class="opportunity-user">
+                      <div class="user-avatar">MS</div>
+                    </div>
+                    <div class="opportunity-meta">
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>08.05.2025</span>
+                      </div>
+                      <div class="opportunity-meta-item">
+                        <i class="fas fa-comments"></i>
+                        <span>8</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- KAUFBESTÄTIGUNG -->
+            <div class="pipeline-stage" data-stage="kaufbestatigung">
+              <div class="pipeline-stage-header">
+                <div class="pipeline-stage-title">KAUFBESTÄTIGUNG</div>
+                <div class="pipeline-stage-stats">
+                  <div class="pipeline-stage-count">0 Opportunities</div>
+                  <div class="pipeline-stage-value">€0</div>
+                </div>
+              </div>
+              <div class="pipeline-cards">
+                <div class="empty-state">
+                  <i class="fas fa-inbox"></i>
+                  <div class="empty-state-text">Keine Opportunities in dieser Phase</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Opportunity Modal -->
+  <div class="modal" id="opportunityModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Neue Opportunity</h3>
+          <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="opportunityForm">
+            <div class="form-group mb-3">
+              <label for="customerName">Kundenname</label>
+              <input type="text" id="customerName" name="customerName" class="form-control" required>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-3">
+              <div class="form-group mb-0">
+                <label for="value">Wert (€)</label>
+                <input type="number" id="value" name="value" class="form-control" required>
+              </div>
+              <div class="form-group mb-0">
+                <label for="stage">Phase</label>
+                <select id="stage" name="stage" class="form-select" required>
+                  <option value="beratung-deals-alt">BERATUNGS-DEALS ALT</option>
+                  <option value="onboarding">ONBOARDING</option>
+                  <option value="beratung">BERATUNG</option>
+                  <option value="folgeberatung">FOLGEBERATUNG</option>
+                  <option value="kaufbestatigung">KAUFBESTÄTIGUNG</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-3">
+              <div class="form-group mb-0">
+                <label for="progress">Fortschritt (%)</label>
+                <input type="number" id="progress" name="progress" class="form-control" min="0" max="100" value="0" required>
+              </div>
+              <div class="form-group mb-0">
+                <label for="priority">Priorität</label>
+                <select id="priority" name="priority" class="form-select" required>
+                  <option value="low">Niedrig</option>
+                  <option value="medium" selected>Mittel</option>
+                  <option value="high">Hoch</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="steps">Schritte insgesamt</label>
+              <input type="number" id="steps" name="steps" class="form-control" min="1" value="5" required>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="completedSteps">Abgeschlossene Schritte</label>
+              <input type="number" id="completedSteps" name="completedSteps" class="form-control" min="0" value="0" required>
+            </div>
+            
+            <div class="form-group mb-0">
+              <label for="notes">Notizen</label>
+              <textarea id="notes" name="notes" class="form-control" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="cancelOpportunityBtn">Abbrechen</button>
+          <button class="btn btn-primary" id="saveOpportunityBtn">Speichern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notification Container -->
+  <div class="notification-container" id="notificationContainer"></div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Theme toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const htmlElement = document.documentElement;
+      
+      // Check for saved theme or use default
+      const savedTheme = localStorage.getItem('rb_admin_theme') || 'light';
+      htmlElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+      
+      themeToggle.addEventListener('click', function() {
+        const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('rb_admin_theme', newTheme);
+        updateThemeIcon(newTheme);
+        
+        showNotification(`${newTheme === 'dark' ? 'Dunkles' : 'Helles'} Design aktiviert`, 'info');
+      });
+      
+      // Mobile menu toggle
+      const menuToggle = document.querySelector('.admin-menu-toggle');
+      const sidebar = document.querySelector('.admin-sidebar');
+      const overlay = document.querySelector('.admin-sidebar-overlay');
+      
+      // Show menu toggle on small screens
+      if (window.innerWidth <= 768) {
+        menuToggle.classList.remove('d-none');
+      }
+      
+      window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+          menuToggle.classList.remove('d-none');
+        } else {
+          menuToggle.classList.add('d-none');
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        }
+      });
+      
+      menuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      });
+      
+      overlay.addEventListener('click', function() {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+      
+      // Pipeline Type Toggle
+      const pipelineSalesBtn = document.getElementById('pipelineSalesBtn');
+      const pipelineUnitBtn = document.getElementById('pipelineUnitBtn');
+      const pipelineOnboardingBtn = document.getElementById('pipelineOnboardingBtn');
+      
+      pipelineSalesBtn.addEventListener('click', function() {
+        pipelineSalesBtn.classList.add('active');
+        pipelineSalesBtn.classList.remove('btn-outline');
+        pipelineSalesBtn.classList.add('btn-primary');
+        
+        pipelineUnitBtn.classList.remove('active');
+        pipelineUnitBtn.classList.add('btn-outline');
+        pipelineUnitBtn.classList.remove('btn-primary');
+        
+        pipelineOnboardingBtn.classList.remove('active');
+        pipelineOnboardingBtn.classList.add('btn-outline');
+        pipelineOnboardingBtn.classList.remove('btn-primary');
+        
+        showNotification('Beratungs-Pipeline angezeigt', 'info');
+      });
+      
+      pipelineUnitBtn.addEventListener('click', function() {
+        pipelineUnitBtn.classList.add('active');
+        pipelineUnitBtn.classList.remove('btn-outline');
+        pipelineUnitBtn.classList.add('btn-primary');
+        
+        pipelineSalesBtn.classList.remove('active');
+        pipelineSalesBtn.classList.add('btn-outline');
+        pipelineSalesBtn.classList.remove('btn-primary');
+        
+        pipelineOnboardingBtn.classList.remove('active');
+        pipelineOnboardingBtn.classList.add('btn-outline');
+        pipelineOnboardingBtn.classList.remove('btn-primary');
+        
+        showNotification('Unit-Pipeline angezeigt', 'info');
+      });
+      
+      pipelineOnboardingBtn.addEventListener('click', function() {
+        pipelineOnboardingBtn.classList.add('active');
+        pipelineOnboardingBtn.classList.remove('btn-outline');
+        pipelineOnboardingBtn.classList.add('btn-primary');
+        
+        pipelineSalesBtn.classList.remove('active');
+        pipelineSalesBtn.classList.add('btn-outline');
+        pipelineSalesBtn.classList.remove('btn-primary');
+        
+        pipelineUnitBtn.classList.remove('active');
+        pipelineUnitBtn.classList.add('btn-outline');
+        pipelineUnitBtn.classList.remove('btn-primary');
+        
+        showNotification('Onboarding-Pipeline angezeigt', 'info');
+      });
+      
+      // Filter Toggle
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Find all siblings
+          const parent = this.parentElement;
+          const siblings = parent.querySelectorAll('.filter-btn');
+          
+          // Remove active class from all siblings
+          siblings.forEach(sibling => {
+            sibling.classList.remove('active');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+        });
+      });
+      
+      // Opportunity Modal
+      const opportunityModal = document.getElementById('opportunityModal');
+      const addOpportunityBtn = document.getElementById('addOpportunityBtn');
+      const modalClose = document.getElementById('modalClose');
+      const cancelOpportunityBtn = document.getElementById('cancelOpportunityBtn');
+      const saveOpportunityBtn = document.getElementById('saveOpportunityBtn');
+      const opportunityForm = document.getElementById('opportunityForm');
+      
+      addOpportunityBtn.addEventListener('click', function() {
+        openAddOpportunityModal();
+      });
+      
+      modalClose.addEventListener('click', function() {
+        closeOpportunityModal();
+      });
+      
+      cancelOpportunityBtn.addEventListener('click', function() {
+        closeOpportunityModal();
+      });
+      
+      saveOpportunityBtn.addEventListener('click', function() {
+        saveOpportunity();
+      });
+      
+      // Progress input
+      const progressInput = document.getElementById('progress');
+      const completedStepsInput = document.getElementById('completedSteps');
+      const stepsInput = document.getElementById('steps');
+      
+      // Sync progress with steps
+      progressInput.addEventListener('input', function() {
+        const progress = parseInt(this.value) || 0;
+        const totalSteps = parseInt(stepsInput.value) || 1;
+        const completedSteps = Math.round((progress / 100) * totalSteps);
+        completedStepsInput.value = completedSteps;
+      });
+      
+      completedStepsInput.addEventListener('input', function() {
+        const completedSteps = parseInt(this.value) || 0;
+        const totalSteps = parseInt(stepsInput.value) || 1;
+        const progress = Math.round((completedSteps / totalSteps) * 100);
+        progressInput.value = progress;
+      });
+      
+      stepsInput.addEventListener('input', function() {
+        const completedSteps = parseInt(completedStepsInput.value) || 0;
+        const totalSteps = parseInt(this.value) || 1;
+        const progress = Math.round((completedSteps / totalSteps) * 100);
+        progressInput.value = progress;
+      });
+      
+      // Drag and Drop Functionality
+      let draggedCard = null;
+      
+      // Add event listeners to all opportunity cards
+      const opportunityCards = document.querySelectorAll('.opportunity-card');
+      opportunityCards.forEach(card => {
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+        card.addEventListener('click', function() {
+          const opportunityId = this.dataset.id;
+          openEditOpportunityModal(opportunityId);
+        });
+      });
+      
+      // Add event listeners to all pipeline stages
+      const pipelineStages = document.querySelectorAll('.pipeline-stage');
+      pipelineStages.forEach(stage => {
+        stage.addEventListener('dragover', handleDragOver);
+        stage.addEventListener('dragenter', handleDragEnter);
+        stage.addEventListener('dragleave', handleDragLeave);
+        stage.addEventListener('drop', handleDrop);
+      });
+      
+      function handleDragStart(e) {
+        draggedCard = this;
+        this.classList.add('dragging');
+        
+        // Set the drag data
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', this.dataset.id);
+        
+        // Hide the ghost image
+        // This is not fully supported in all browsers
+        const dragGhost = document.createElement('div');
+        dragGhost.style.opacity = '0';
+        document.body.appendChild(dragGhost);
+        e.dataTransfer.setDragImage(dragGhost, 0, 0);
+        setTimeout(() => {
+          document.body.removeChild(dragGhost);
+        }, 0);
+      }
+      
+      function handleDragEnd() {
+        this.classList.remove('dragging');
+        draggedCard = null;
+        
+        // Remove drag-over class from all stages
+        document.querySelectorAll('.pipeline-stage').forEach(stage => {
+          stage.classList.remove('drag-over');
+        });
+      }
+      
+      function handleDragOver(e) {
+        if (e.preventDefault) {
+          e.preventDefault(); // Necessary to allow dropping
+        }
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+      }
+      
+      function handleDragEnter() {
+        this.classList.add('drag-over');
+      }
+      
+      function handleDragLeave() {
+        this.classList.remove('drag-over');
+      }
+      
+      function handleDrop(e) {
+        e.stopPropagation(); // Stops browser from redirecting
+        
+        // Get the dragged opportunity ID
+        const opportunityId = e.dataTransfer.getData('text/plain');
+        const targetStage = this.dataset.stage;
+        
+        // Only move if we're dropping onto a different stage
+        if (draggedCard && draggedCard.parentNode.parentNode !== this) {
+          // Move the opportunity card to the new stage
+          this.querySelector('.pipeline-cards').appendChild(draggedCard);
+          
+          // Update the opportunity data (in a real app, this would be an API call)
+          console.log(`Moving opportunity ${opportunityId} to stage: ${targetStage}`);
+          
+          // Show notification
+          showNotification(`Opportunity wurde in Phase "${targetStage}" verschoben`, 'success');
+          
+          // In a real app, you would update the stage counts and values here
+          updateStageCounts();
+        }
+        
+        this.classList.remove('drag-over');
+        return false;
+      }
+      
+      // Helper function to update stage counts and values
+      function updateStageCounts() {
+        const stages = document.querySelectorAll('.pipeline-stage');
+        
+        stages.forEach(stage => {
+          const cards = stage.querySelectorAll('.opportunity-card');
+          const countElement = stage.querySelector('.pipeline-stage-count');
+          const valueElement = stage.querySelector('.pipeline-stage-value');
+          
+          // Update count
+          countElement.textContent = `${cards.length} Opportunities`;
+          
+          // Calculate total value
+          let totalValue = 0;
+          cards.forEach(card => {
+            const valueText = card.querySelector('.opportunity-value').textContent;
+            const value = parseInt(valueText.replace(/[^0-9]/g, ''));
+            totalValue += value || 0;
+          });
+          
+          // Update value
+          valueElement.textContent = `€${totalValue.toLocaleString()}`;
+        });
+      }
+      
+      // Functions for opportunity modal
+      function openAddOpportunityModal() {
+        document.getElementById('modalTitle').textContent = 'Neue Opportunity';
+        opportunityForm.reset();
+        opportunityModal.classList.add('active');
+      }
+      
+      function openEditOpportunityModal(opportunityId) {
+        document.getElementById('modalTitle').textContent = 'Opportunity bearbeiten';
+        
+        // In a real app, you would fetch the opportunity data from the server
+        // For demo purposes, we'll just use the data from the card
+        const card = document.querySelector(`.opportunity-card[data-id="${opportunityId}"]`);
+        if (!card) return;
+        
+        const stage = card.closest('.pipeline-stage').dataset.stage;
+        const customerName = card.querySelector('.opportunity-title').textContent;
+        const valueText = card.querySelector('.opportunity-value').textContent;
+        const value = parseInt(valueText.replace(/[^0-9]/g, ''));
+        const progressText = card.querySelector('.progress-info span:first-child').textContent;
+        const progress = parseInt(progressText.match(/\d+/)[0]);
+        const stepsText = card.querySelector('.progress-info span:last-child').textContent;
+        const [completed, total] = stepsText.match(/\d+/g);
+        const priority = card.classList.contains('priority-high') ? 'high' : 
+                        card.classList.contains('priority-medium') ? 'medium' : 'low';
+        
+        // Fill form
+        document.getElementById('customerName').value = customerName;
+        document.getElementById('value').value = value;
+        document.getElementById('stage').value = stage;
+        document.getElementById('progress').value = progress;
+        document.getElementById('completedSteps').value = completed;
+        document.getElementById('steps').value = total;
+        document.getElementById('priority').value = priority;
+        
+        // Set opportunity ID to form data attribute
+        opportunityForm.dataset.opportunityId = opportunityId;
+        
+        opportunityModal.classList.add('active');
+      }
+      
+      function closeOpportunityModal() {
+        opportunityModal.classList.remove('active');
+        opportunityForm.removeAttribute('data-opportunity-id');
+      }
+      
+      function saveOpportunity() {
+        // Get form data
+        const customerName = document.getElementById('customerName').value;
+        const value = document.getElementById('value').value;
+        const stage = document.getElementById('stage').value;
+        const progress = document.getElementById('progress').value;
+        const completedSteps = document.getElementById('completedSteps').value;
+        const totalSteps = document.getElementById('steps').value;
+        const priority = document.getElementById('priority').value;
+        
+        // Validate form
+        if (!customerName || !value || !stage || !progress || !completedSteps || !totalSteps) {
+          showNotification('Bitte füllen Sie alle erforderlichen Felder aus', 'error');
+          return;
+        }
+        
+        // Check if editing or adding
+        const opportunityId = opportunityForm.dataset.opportunityId;
+        
+        if (opportunityId) {
+          // Update existing opportunity
+          const card = document.querySelector(`.opportunity-card[data-id="${opportunityId}"]`);
+          if (!card) {
+            showNotification('Opportunity nicht gefunden', 'error');
+            return;
+          }
+          
+          // Update card data
+          card.querySelector('.opportunity-title').textContent = customerName;
+          card.querySelector('.opportunity-value').textContent = `€${parseInt(value).toLocaleString()}`;
+          
+          // Update progress bar
+          card.querySelector('.progress-bar').style.width = `${progress}%`;
+          card.querySelector('.progress-info span:first-child').textContent = `Fortschritt: ${progress}%`;
+          card.querySelector('.progress-info span:last-child').textContent = `${completedSteps}/${totalSteps} Schritte`;
+          
+          // Update avatar initials
+          const initials = customerName.split(' ').map(n => n[0]).join('');
+          card.querySelector('.user-avatar').textContent = initials;
+          
+          // Update priority class
+          card.classList.remove('priority-high', 'priority-medium', 'priority-low');
+          card.classList.add(`priority-${priority}`);
+          
+          // Move to correct stage if different
+          const currentStage = card.closest('.pipeline-stage').dataset.stage;
+          if (currentStage !== stage) {
+            const targetStage = document.querySelector(`.pipeline-stage[data-stage="${stage}"]`);
+            if (targetStage) {
+              targetStage.querySelector('.pipeline-cards').appendChild(card);
+              updateStageCounts();
+            }
+          }
+          
+          showNotification('Opportunity erfolgreich aktualisiert', 'success');
+        } else {
+          // Create new opportunity
+          const newId = new Date().getTime();
+          const targetStage = document.querySelector(`.pipeline-stage[data-stage="${stage}"]`);
+          const initials = customerName.split(' ').map(n => n[0]).join('');
+          
+          // Create new card
+          const cardHTML = `
+            <div class="opportunity-card priority-${priority}" draggable="true" data-id="${newId}">
+              <div class="opportunity-header">
+                <h3 class="opportunity-title">${customerName}</h3>
+                <div class="opportunity-value">€${parseInt(value).toLocaleString()}</div>
+              </div>
+              <div class="opportunity-progress">
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: ${progress}%"></div>
+                </div>
+                <div class="progress-info">
+                  <span>Fortschritt: ${progress}%</span>
+                  <span>${completedSteps}/${totalSteps} Schritte</span>
+                </div>
+              </div>
+              <div class="opportunity-footer">
+                <div class="opportunity-user">
+                  <div class="user-avatar">${initials}</div>
+                </div>
+                <div class="opportunity-meta">
+                  <div class="opportunity-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>${new Date().toLocaleDateString('de-DE')}</span>
+                  </div>
+                  <div class="opportunity-meta-item">
+                    <i class="fas fa-comments"></i>
+                    <span>0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          // Add new card
+          if (targetStage) {
+            // Remove empty state if present
+            const emptyState = targetStage.querySelector('.empty-state');
+            if (emptyState) {
+              emptyState.remove();
+            }
+            
+            // Append card
+            targetStage.querySelector('.pipeline-cards').innerHTML += cardHTML;
+            
+            // Add event listeners
+            const newCard = targetStage.querySelector(`.opportunity-card[data-id="${newId}"]`);
+            newCard.addEventListener('dragstart', handleDragStart);
+            newCard.addEventListener('dragend', handleDragEnd);
+            newCard.addEventListener('click', function() {
+              openEditOpportunityModal(this.dataset.id);
+            });
+            
+            // Update counts
+            updateStageCounts();
+            
+            showNotification('Neue Opportunity erfolgreich erstellt', 'success');
+          } else {
+            showNotification('Zielphase nicht gefunden', 'error');
+            return;
+          }
+        }
+        
+        closeOpportunityModal();
+      }
+      
+      // Helper functions
+      function updateThemeIcon(theme) {
+        const icon = themeToggle.querySelector('i');
+        if (theme === 'dark') {
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
+        } else {
+          icon.classList.remove('fa-sun');
+          icon.classList.add('fa-moon');
+        }
+      }
+      
+      function showNotification(message, type = 'info', duration = 4000) {
+        const container = document.getElementById('notificationContainer');
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        
+        // Choose icon based on type
+        let iconClass = 'fas fa-info-circle';
+        if (type === 'success') iconClass = 'fas fa-check-circle';
+        if (type === 'error') iconClass = 'fas fa-exclamation-circle';
+        if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+        
+        notification.innerHTML = `
+          <div class="notification-icon">
+            <i class="${iconClass}"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-message">${message}</div>
+          </div>
+          <button class="notification-close">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        
+        // Add to container
+        container.appendChild(notification);
+        
+        // Close button functionality
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', function() {
+          notification.classList.add('closing');
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        });
+        
+        // Auto remove after duration
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.classList.add('closing');
+            setTimeout(() => {
+              if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+              }
+            }, 300);
+          }
+        }, duration);
+      }
+      
+      // Initial welcome notification
+      setTimeout(() => {
+        showNotification('Willkommen im Pipeline Management', 'info');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

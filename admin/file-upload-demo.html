@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedBird Admin - File Upload Demo</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-refined.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="../css/file-upload-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-title {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .demo-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .demo-section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .demo-section-desc {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .upload-options {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .file-types-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+        
+        .file-types-info ul {
+            margin: 0.5rem 0 0;
+            padding-left: 1.5rem;
+        }
+        
+        .file-types-info li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .file-types-info strong {
+            color: var(--primary-red);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-content {
+                padding: 1rem;
+            }
+            
+            .upload-options {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .upload-options button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header Component -->
+    <header class="admin-header">
+        <div class="admin-header-logo">
+            <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="admin-logo">
+            <span class="admin-title">Admin Dashboard</span>
+        </div>
+        <nav class="admin-nav">
+            <a href="dashboard-refined.html" class="admin-nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="user-management-refined.html" class="admin-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Benutzerverwaltung</span>
+            </a>
+            <a href="pipeline-management.html" class="admin-nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Pipeline</span>
+            </a>
+            <a href="file-upload-demo.html" class="admin-nav-item active">
+                <i class="fas fa-upload"></i>
+                <span>Datei-Upload</span>
+            </a>
+        </nav>
+        <div class="admin-header-actions">
+            <button class="action-button notification-button" aria-label="Benachrichtigungen">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            <button class="action-button theme-toggle" aria-label="Dunkelmodus umschalten" data-theme-toggle>
+                <i class="fas fa-moon" data-theme-icon></i>
+            </button>
+            <div class="admin-user-menu">
+                <button class="user-menu-button">
+                    <div class="user-avatar">MN</div>
+                    <span class="user-name">Marion Nakowitz</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Content Area -->
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Administration</h3>
+                    <a href="dashboard-refined.html" class="sidebar-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="user-management-refined.html" class="sidebar-link">
+                        <i class="fas fa-users"></i>
+                        <span>Benutzerverwaltung</span>
+                    </a>
+                    <a href="pipeline-management.html" class="sidebar-link">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Pipeline-Management</span>
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Formulare</h3>
+                    <a href="form-validation-demo.html" class="sidebar-link">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Formular-Validierung</span>
+                    </a>
+                    <a href="file-upload-demo.html" class="sidebar-link active">
+                        <i class="fas fa-upload"></i>
+                        <span>Datei-Upload</span>
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Einstellungen</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-content">
+            <div class="content-header">
+                <h1>Datei-Upload</h1>
+                <p class="subtitle">Erweiterter Datei-Upload mit Drag & Drop, Vorschau und Validierung</p>
+            </div>
+            
+            <!-- Image Upload Demo -->
+            <div class="demo-section">
+                <h2 class="demo-section-title">Bildupload</h2>
+                <p class="demo-section-desc">Laden Sie Bilder hoch mit Echtzeitvorschau und Validierung. Unterstützt Drag & Drop.</p>
+                
+                <div class="file-upload-enhanced" id="imageUpload">
+                    <input type="file" id="image-input" class="file-input" accept="image/*" multiple data-accept-types="image" data-max-size="5">
+                    
+                    <div class="drop-zone">
+                        <i class="fas fa-cloud-upload-alt drop-zone-icon"></i>
+                        <div class="drop-zone-text">Bilder hierher ziehen oder klicken</div>
+                        <div class="drop-zone-hint">JPG, PNG, GIF oder WebP (max. 5MB)</div>
+                    </div>
+                    
+                    <div class="file-preview-area"></div>
+                    
+                    <div class="upload-options">
+                        <button type="button" class="btn btn-primary upload-button" id="uploadImagesBtn">
+                            <i class="fas fa-upload"></i> Bilder hochladen
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetImagesBtn">
+                            <i class="fas fa-redo"></i> Zurücksetzen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Document Upload Demo -->
+            <div class="demo-section">
+                <h2 class="demo-section-title">Dokumenten-Upload</h2>
+                <p class="demo-section-desc">Laden Sie Dokumente hoch mit Validierung und Fortschrittsanzeige.</p>
+                
+                <div class="file-upload-enhanced" id="documentUpload">
+                    <input type="file" id="document-input" class="file-input" accept=".pdf,.doc,.docx" data-accept-types="document" data-max-size="10">
+                    
+                    <div class="drop-zone">
+                        <i class="fas fa-file-upload drop-zone-icon"></i>
+                        <div class="drop-zone-text">Dokumente hierher ziehen oder klicken</div>
+                        <div class="drop-zone-hint">PDF, DOC oder DOCX (max. 10MB)</div>
+                    </div>
+                    
+                    <div class="file-preview-area"></div>
+                    
+                    <div class="upload-options">
+                        <button type="button" class="btn btn-primary upload-button" id="uploadDocsBtn">
+                            <i class="fas fa-upload"></i> Dokumente hochladen
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetDocsBtn">
+                            <i class="fas fa-redo"></i> Zurücksetzen
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="file-types-info">
+                    <strong>Hinweis:</strong> Folgende Dateitypen werden unterstützt:
+                    <ul>
+                        <li><strong>Bilder:</strong> JPG, PNG, GIF, WebP (max. 5MB)</li>
+                        <li><strong>Dokumente:</strong> PDF, DOC, DOCX (max. 10MB)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Mixed File Upload Demo -->
+            <div class="demo-section">
+                <h2 class="demo-section-title">Multiple Dateien hochladen</h2>
+                <p class="demo-section-desc">Laden Sie verschiedene Dateitypen in einem Upload hoch.</p>
+                
+                <div class="file-upload-enhanced file-multiple-upload" id="mixedUpload">
+                    <input type="file" id="mixed-input" class="file-input" accept="image/*,.pdf,.doc,.docx" multiple data-accept-types="all" data-max-size="20" data-additional-data='{"userId":"demo-user","projectId":"123"}'>
+                    
+                    <div class="drop-zone">
+                        <i class="fas fa-file-import drop-zone-icon"></i>
+                        <div class="drop-zone-text">Dateien hierher ziehen oder klicken</div>
+                        <div class="drop-zone-hint">Bilder und Dokumente (max. 20MB)</div>
+                    </div>
+                    
+                    <div class="file-preview-area"></div>
+                    
+                    <div class="upload-options">
+                        <button type="button" class="btn btn-primary upload-button" id="uploadMixedBtn">
+                            <i class="fas fa-upload"></i> Alle Dateien hochladen
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetMixedBtn">
+                            <i class="fas fa-redo"></i> Zurücksetzen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/file-upload-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configure notifications
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+                
+                // Welcome notification
+                window.RedBirdNotify.info(
+                    'Willkommen zur Datei-Upload-Demo. Hier können Sie die erweiterte Datei-Upload-Komponente testen.',
+                    'Datei-Upload Demo'
+                );
+            }
+            
+            // Image Upload Demo
+            const imageUpload = document.getElementById('imageUpload');
+            const uploadImagesBtn = document.getElementById('uploadImagesBtn');
+            const resetImagesBtn = document.getElementById('resetImagesBtn');
+            
+            if (imageUpload && uploadImagesBtn && resetImagesBtn) {
+                uploadImagesBtn.addEventListener('click', () => {
+                    imageUpload.uploadFiles()
+                        .then(response => {
+                            console.log('Upload successful:', response);
+                        })
+                        .catch(error => {
+                            console.error('Upload failed:', error);
+                        });
+                });
+                
+                resetImagesBtn.addEventListener('click', () => {
+                    const input = imageUpload.querySelector('input');
+                    const previewArea = imageUpload.querySelector('.file-preview-area');
+                    
+                    if (input) input.value = '';
+                    if (previewArea) {
+                        previewArea.innerHTML = '';
+                        previewArea.style.display = 'none';
+                    }
+                    
+                    window.RedBirdNotify.info('Bildupload zurückgesetzt', 'Reset');
+                });
+            }
+            
+            // Document Upload Demo
+            const documentUpload = document.getElementById('documentUpload');
+            const uploadDocsBtn = document.getElementById('uploadDocsBtn');
+            const resetDocsBtn = document.getElementById('resetDocsBtn');
+            
+            if (documentUpload && uploadDocsBtn && resetDocsBtn) {
+                uploadDocsBtn.addEventListener('click', () => {
+                    documentUpload.uploadFiles()
+                        .then(response => {
+                            console.log('Upload successful:', response);
+                        })
+                        .catch(error => {
+                            console.error('Upload failed:', error);
+                        });
+                });
+                
+                resetDocsBtn.addEventListener('click', () => {
+                    const input = documentUpload.querySelector('input');
+                    const previewArea = documentUpload.querySelector('.file-preview-area');
+                    
+                    if (input) input.value = '';
+                    if (previewArea) {
+                        previewArea.innerHTML = '';
+                        previewArea.style.display = 'none';
+                    }
+                    
+                    window.RedBirdNotify.info('Dokumenten-Upload zurückgesetzt', 'Reset');
+                });
+            }
+            
+            // Mixed Upload Demo
+            const mixedUpload = document.getElementById('mixedUpload');
+            const uploadMixedBtn = document.getElementById('uploadMixedBtn');
+            const resetMixedBtn = document.getElementById('resetMixedBtn');
+            
+            if (mixedUpload && uploadMixedBtn && resetMixedBtn) {
+                uploadMixedBtn.addEventListener('click', () => {
+                    mixedUpload.uploadFiles()
+                        .then(response => {
+                            console.log('Upload successful:', response);
+                        })
+                        .catch(error => {
+                            console.error('Upload failed:', error);
+                        });
+                });
+                
+                resetMixedBtn.addEventListener('click', () => {
+                    const input = mixedUpload.querySelector('input');
+                    const previewArea = mixedUpload.querySelector('.file-preview-area');
+                    
+                    if (input) input.value = '';
+                    if (previewArea) {
+                        previewArea.innerHTML = '';
+                        previewArea.style.display = 'none';
+                    }
+                    
+                    window.RedBirdNotify.info('Mixed-Upload zurückgesetzt', 'Reset');
+                });
+                
+                // Listen for file selection events
+                mixedUpload.addEventListener('filesSelected', function(e) {
+                    const files = e.detail.files;
+                    const fileNames = files.map(file => file.name).join(', ');
+                    
+                    window.RedBirdNotify.success(
+                        `${files.length} Dateien ausgewählt: ${fileNames}`,
+                        'Dateien ausgewählt'
+                    );
+                });
+                
+                // Listen for file removal events
+                mixedUpload.addEventListener('fileRemoved', function(e) {
+                    const file = e.detail.file;
+                    
+                    window.RedBirdNotify.info(
+                        `Datei entfernt: ${file.name}`,
+                        'Datei entfernt'
+                    );
+                });
+                
+                // Listen for upload completion events
+                mixedUpload.addEventListener('uploadComplete', function(e) {
+                    const files = e.detail.files;
+                    const response = e.detail.response;
+                    
+                    console.log('Upload completed:', {
+                        files: files,
+                        response: response
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

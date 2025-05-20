@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Über Uns - RedBird Real Estate</title>
+    <meta name="description" content="RedBird Real Estate - Ihr Partner für Immobilien in Nordzypern. Erfahren Sie mehr über unsere Unternehmensgeschichte, Vision und Werte.">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/mobile-enhanced.css">
+    <link rel="stylesheet" href="../css/footer-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <style>
+        /* Page specific styles */
+        .page-header {
+            background-color: var(--secondary-dark);
+            color: white;
+            padding: var(--space-10) 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/about-office.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        
+        .page-header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .page-header p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumbs a {
+            color: white;
+            opacity: 0.8;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        .breadcrumbs a:hover {
+            opacity: 1;
+            color: var(--primary-red-light);
+        }
+        
+        .breadcrumbs .separator {
+            margin: 0 var(--space-2);
+            opacity: 0.6;
+        }
+        
+        .breadcrumbs .current {
+            color: var(--primary-red-light);
+            font-weight: 500;
+        }
+        
+        .section {
+            padding: var(--space-10) 0;
+        }
+        
+        .section-light {
+            background-color: var(--neutral-100);
+        }
+        
+        .section-dark {
+            background-color: var(--neutral-800);
+            color: white;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-8);
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-red);
+            transform: translateX(-50%);
+            border-radius: var(--radius-full);
+        }
+        
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--neutral-600);
+        }
+        
+        .section-dark .section-header p {
+            color: var(--neutral-300);
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+            align-items: center;
+        }
+        
+        .about-image {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            height: 500px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .about-content h3 {
+            font-size: 2rem;
+            margin-bottom: var(--space-4);
+            position: relative;
+            padding-bottom: var(--space-3);
+        }
+        
+        .about-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-red);
+            border-radius: var(--radius-full);
+        }
+        
+        .about-content p {
+            margin-bottom: var(--space-4);
+            color: var(--neutral-600);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .section-dark .about-content p {
+            color: var(--neutral-300);
+        }
+        
+        .about-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+        
+        .about-stat {
+            background-color: var(--bg-card);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .about-stat .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: var(--space-1);
+        }
+        
+        .about-stat .stat-label {
+            color: var(--neutral-600);
+            font-size: 0.9rem;
+        }
+        
+        .section-dark .about-stat {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-dark .about-stat .stat-label {
+            color: var(--neutral-300);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-6) 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-red);
+            border-radius: var(--radius-full);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-8);
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-content {
+            position: relative;
+            width: calc(50% - var(--space-4));
+            padding: var(--space-4);
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-red);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::before {
+            left: calc(50% - 10px);
+        }
+        
+        .timeline-item:nth-child(even)::before {
+            right: calc(50% - 10px);
+        }
+        
+        .timeline-year {
+            position: absolute;
+            top: 18px;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year {
+            left: calc(50% + var(--space-4));
+        }
+        
+        .timeline-item:nth-child(even) .timeline-year {
+            right: calc(50% + var(--space-4));
+            text-align: right;
+        }
+        
+        .timeline-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .timeline-text {
+            color: var(--neutral-600);
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .value-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            height: 100%;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .value-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .value-text {
+            color: var(--neutral-600);
+            line-height: 1.6;
+        }
+        
+        .awards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .award-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+        
+        .award-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .award-icon {
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: var(--space-3);
+        }
+        
+        .award-year {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--neutral-500);
+            margin-bottom: var(--space-2);
+        }
+        
+        .award-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .award-desc {
+            color: var(--neutral-600);
+            font-size: 0.95rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: var(--space-10) 0;
+            background-color: var(--primary-red);
+            color: white;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: var(--space-6);
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+        }
+        
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-image {
+                height: 400px;
+                order: 1;
+            }
+            
+            .about-content {
+                order: 2;
+            }
+            
+            .timeline::before {
+                left: 40px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px !important;
+            }
+            
+            .timeline-item::before {
+                left: 30px !important;
+                right: auto !important;
+            }
+            
+            .timeline-year {
+                left: 0 !important;
+                right: auto !important;
+                text-align: left !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-header p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="../index-enhanced.html">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="logo">
+                </a>
+            </div>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menü öffnen">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="site-nav" id="siteNav">
+                <ul class="nav-menu" role="menubar">
+                    <li class="nav-item" role="none">
+                        <a href="../index-enhanced.html" class="nav-link" role="menuitem">
+                            <span>Startseite</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../rental/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Immobilien</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../rental/index.html#buy" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Kaufen</span>
+                            </a>
+                            <a href="../rental/index.html#rent" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-key" aria-hidden="true"></i>
+                                <span>Mieten</span>
+                            </a>
+                            <a href="../rental/index.html#rental-service" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-hand-holding-usd" aria-hidden="true"></i>
+                                <span>Vermietungsservice</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../community/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Community</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../community/index.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-comments" aria-hidden="true"></i>
+                                <span>Forum</span>
+                            </a>
+                            <a href="../community/index.html#events" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                <span>Events</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item active" role="none">
+                        <a href="about.html" class="nav-link" role="menuitem" aria-haspopup="true" aria-current="page">
+                            <span>Über uns</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="about.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-building" aria-hidden="true"></i>
+                                <span>Unternehmen</span>
+                            </a>
+                            <a href="team.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                <span>Team</span>
+                            </a>
+                            <a href="contact.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>Kontakt</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Darkmodus umschalten" title="Darkmodus umschalten">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                
+                <div class="auth-buttons">
+                    <a href="../login.html" class="btn-login">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                        <span>Anmelden</span>
+                    </a>
+                    <a href="../pages/dashboard.html" class="btn-signup">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        <span>Kundenbereich</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="breadcrumbs">
+                <a href="../index-enhanced.html">Startseite</a>
+                <span class="separator">/</span>
+                <span class="current">Über uns</span>
+            </div>
+            <h1>Über RedBird Real Estate</h1>
+            <p>Entdecken Sie unsere Unternehmensgeschichte, Werte und Vision für die Immobilienbranche in Nordzypern</p>
+        </div>
+    </div>
+
+    <section class="section section-light">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Unsere Geschichte</h2>
+                <p>Wie wir zu dem wurden, was wir heute sind</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-image" data-aos="fade-right">
+                    <img src="../img/about-office.jpg" alt="RedBird Büro" loading="lazy">
+                </div>
+                <div class="about-content" data-aos="fade-left">
+                    <h3>Unsere Anfänge</h3>
+                    <p>RedBird Real Estate wurde 2010 von einer Gruppe von Immobilienexperten gegründet, die eine Lücke im Markt für ausländische Investoren in Nordzypern erkannten. Mit dem Ziel, einen transparenten und kundenorientierten Immobilienservice anzubieten, begann RedBird mit einem kleinen Büro in Berlin.</p>
+                    <p>Was als kleines Unternehmen begann, hat sich schnell zu einem führenden Anbieter für Immobilienlösungen in Nordzypern entwickelt. Heute sind wir stolz darauf, eine breite Palette von Dienstleistungen anzubieten - vom Immobilienkauf über die Vermietung bis hin zu umfassenden Investitionsanalysen.</p>
+                    
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">Jahre Erfahrung</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="stat-number">250+</div>
+                            <div class="stat-label">Vermittelte Immobilien</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">Kundenzufriedenheit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline" data-aos="fade-up">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Gründung von RedBird</h3>
+                        <p class="timeline-text">RedBird wurde von einer Gruppe von Immobilienexperten gegründet, um ausländischen Investoren den Einstieg in den nordzyptrischen Markt zu erleichtern.</p>
+                    </div>
+                    <div class="timeline-year">2010</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Eröffnung des Büros in Kyrenia</h3>
+                        <p class="timeline-text">Mit wachsendem Erfolg eröffneten wir unser erstes lokales Büro in Kyrenia, Nordzypern, um näher am Markt zu sein.</p>
+                    </div>
+                    <div class="timeline-year">2012</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Launch des Vermietungsservices</h3>
+                        <p class="timeline-text">Wir erweiterten unser Angebot um einen professionellen Vermietungsservice, um Immobilieninvestoren zu helfen, ihre Rendite zu maximieren.</p>
+                    </div>
+                    <div class="timeline-year">2015</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Digitale Transformation</h3>
+                        <p class="timeline-text">Einführung unserer digitalen Plattform mit Kundenbereich, Tools und Community-Funktionen für ein verbessertes Kundenerlebnis.</p>
+                    </div>
+                    <div class="timeline-year">2018</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">RedBird Academy</h3>
+                        <p class="timeline-text">Start unseres Bildungsprogramms für Immobilieninvestoren mit Webinaren, Workshops und einer umfangreichen Ressourcenbibliothek.</p>
+                    </div>
+                    <div class="timeline-year">2021</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Expansion & Zukunft</h3>
+                        <p class="timeline-text">Heute expandieren wir weiter und erschließen neue Märkte, während wir unsere digitalen Angebote und persönlichen Services kontinuierlich verbessern.</p>
+                    </div>
+                    <div class="timeline-year">Heute</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="philosophy" class="section section-dark">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Unsere Philosophie</h2>
+                <p>Die Grundwerte, die unsere Arbeit leiten</p>
+            </div>
+            
+            <div class="about-grid">
+                <div class="about-content" data-aos="fade-right">
+                    <h3>Was uns antreibt</h3>
+                    <p>Bei RedBird glauben wir, dass Immobilieninvestitionen mehr sind als nur finanzielle Entscheidungen. Es geht um Lebensqualität, Zukunftssicherung und die Schaffung neuer Möglichkeiten. Unsere Philosophie basiert auf der Überzeugung, dass jeder Kunde einzigartige Bedürfnisse hat und eine individuelle Betreuung verdient.</p>
+                    <p>Wir streben danach, den oft komplexen Immobilienprozess so transparent und unkompliziert wie möglich zu gestalten. Durch unseren ganzheitlichen Ansatz begleiten wir unsere Kunden von der ersten Beratung bis zur erfolgreichen Vermietung ihrer Immobilie und darüber hinaus.</p>
+                    
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Transparenz</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Kundenservice</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="stat-number">360°</div>
+                            <div class="stat-label">Betreuung</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image" data-aos="fade-left">
+                    <img src="../img/about-office.jpg" alt="RedBird Team Meeting" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="values-grid" style="margin-top: var(--space-10);">
+                <div class="value-card" data-aos="fade-up">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="value-title">Transparenz</h3>
+                    <p class="value-text">Wir glauben an vollständige Transparenz während des gesamten Immobilienprozesses. Unsere Kunden haben jederzeit Zugang zu allen relevanten Informationen und Dokumenten, um fundierte Entscheidungen treffen zu können.</p>
+                </div>
+                
+                <div class="value-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="value-icon">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="value-title">Langfristige Beziehungen</h3>
+                    <p class="value-text">Wir betrachten den Immobilienkauf nicht als einmalige Transaktion, sondern als Beginn einer langfristigen Partnerschaft. Unser Ziel ist es, Ihnen auch nach dem Kauf mit Rat und Tat zur Seite zu stehen.</p>
+                </div>
+                
+                <div class="value-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="value-icon">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="value-title">Renditeorientierung</h3>
+                    <p class="value-text">Wir unterstützen unsere Kunden dabei, nicht nur schöne Immobilien zu finden, sondern auch wirtschaftlich sinnvolle Investitionen zu tätigen. Unsere Tools und Beratung helfen Ihnen, die Rentabilität Ihrer Immobilie zu maximieren.</p>
+                </div>
+                
+                <div class="value-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="value-title">Innovation</h3>
+                    <p class="value-text">Wir sind ständig bestrebt, unsere Dienstleistungen und Prozesse zu verbessern. Durch den Einsatz moderner Technologien und kreativer Lösungen machen wir den Immobilienprozess effizienter und kundenfreundlicher.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-light">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Auszeichnungen & Anerkennungen</h2>
+                <p>Unsere Erfolge und Anerkennungen in der Branche</p>
+            </div>
+            
+            <div class="awards-grid">
+                <div class="award-card" data-aos="fade-up">
+                    <div class="award-icon">
+                        <i class="fas fa-trophy" aria-hidden="true"></i>
+                    </div>
+                    <div class="award-year">2023</div>
+                    <h3 class="award-title">Best Real Estate Agency</h3>
+                    <p class="award-desc">Ausgezeichnet als beste Immobilienagentur für ausländische Investoren in Nordzypern von International Property Awards.</p>
+                </div>
+                
+                <div class="award-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="award-icon">
+                        <i class="fas fa-medal" aria-hidden="true"></i>
+                    </div>
+                    <div class="award-year">2022</div>
+                    <h3 class="award-title">Excellence in Customer Service</h3>
+                    <p class="award-desc">Auszeichnung für herausragenden Kundenservice im Immobilienbereich von European Business Awards.</p>
+                </div>
+                
+                <div class="award-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="award-icon">
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                    </div>
+                    <div class="award-year">2021</div>
+                    <h3 class="award-title">Digital Innovation Award</h3>
+                    <p class="award-desc">Anerkannt für unsere innovative digitale Plattform und Tools für Immobilieninvestoren.</p>
+                </div>
+                
+                <div class="award-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="award-icon">
+                        <i class="fas fa-award" aria-hidden="true"></i>
+                    </div>
+                    <div class="award-year">2020</div>
+                    <h3 class="award-title">Top Employer</h3>
+                    <p class="award-desc">Ausgezeichnet als einer der besten Arbeitgeber in der Immobilienbranche mit besonderem Fokus auf Mitarbeiterentwicklung.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content" data-aos="fade-up">
+            <h2>Bereit, mit uns zu arbeiten?</h2>
+            <p>Entdecken Sie den RedBird-Unterschied und lassen Sie uns gemeinsam Ihre Immobilienträume verwirklichen</p>
+            <div class="cta-buttons">
+                <a href="team.html" class="btn btn-outline-white">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                    <span>Unser Team kennenlernen</span>
+                </a>
+                <a href="contact.html" class="btn btn-secondary">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span>Kontakt aufnehmen</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-enhanced">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-branding">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="footer-logo">
+                    <p class="footer-tagline">Ihr zuverlässiger Partner für Immobilien in Nordzypern. Wir bieten umfassende Dienstleistungen vom Kauf bis zur Vermietung.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" aria-label="Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon instagram" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon youtube" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Schnellzugriff</h4>
+                    <ul>
+                        <li><a href="../rental/index.html"><i class="fas fa-home" aria-hidden="true"></i> Immobilienangebote</a></li>
+                        <li><a href="../rental/index.html#rental-service"><i class="fas fa-key" aria-hidden="true"></i> Vermietungsservice</a></li>
+                        <li><a href="../pages/dashboard.html"><i class="fas fa-user" aria-hidden="true"></i> Kundenbereich</a></li>
+                        <li><a href="../blog/index.html"><i class="fas fa-newspaper" aria-hidden="true"></i> Blog</a></li>
+                        <li><a href="../community/index.html"><i class="fas fa-comments" aria-hidden="true"></i> Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Über uns</h4>
+                    <ul>
+                        <li><a href="about.html"><i class="fas fa-building" aria-hidden="true"></i> Unternehmen</a></li>
+                        <li><a href="team.html"><i class="fas fa-users" aria-hidden="true"></i> Team</a></li>
+                        <li><a href="careers.html"><i class="fas fa-briefcase" aria-hidden="true"></i> Karriere</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="#" class="contact-item"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Hauptstraße 123, 12345 Berlin</a></li>
+                        <li><a href="tel:+4930123456789" class="contact-item"><i class="fas fa-phone-alt" aria-hidden="true"></i> +49 30 123456789</a></li>
+                        <li><a href="mailto:info@redbird-realestate.com" class="contact-item"><i class="fas fa-envelope" aria-hidden="true"></i> info@redbird-realestate.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="language-select-footer">
+                    <select aria-label="Sprache wählen">
+                        <option value="de" selected>Deutsch</option>
+                        <option value="en">English</option>
+                        <option value="tr">Türkçe</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Navigation Toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const siteNav = document.getElementById('siteNav');
+            
+            if (mobileMenuToggle && siteNav) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    siteNav.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                        this.setAttribute('aria-label', 'Menü schließen');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                        this.setAttribute('aria-label', 'Menü öffnen');
+                    }
+                });
+            }
+            
+            // Animation on scroll (simulating AOS library)
+            const animatedElements = document.querySelectorAll('[data-aos]');
+            
+            function checkScroll() {
+                animatedElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        el.classList.add('aos-animate');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on load
+            
+            // Add a class for animations
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    [data-aos] {
+                        opacity: 0;
+                        transform: translateY(50px);
+                        transition: opacity 0.6s ease, transform 0.6s ease;
+                    }
+                    
+                    [data-aos].aos-animate {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    
+                    [data-aos-delay="100"] {
+                        transition-delay: 0.1s;
+                    }
+                    
+                    [data-aos-delay="200"] {
+                        transition-delay: 0.2s;
+                    }
+                    
+                    [data-aos-delay="300"] {
+                        transition-delay: 0.3s;
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

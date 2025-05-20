@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RedBird Real Estate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-responsive.css">
+    <style>
+        /* Custom styles that extend the main style guide */
+        body {
+            background-color: var(--redbird-light-gray);
+            color: var(--redbird-dark);
+            line-height: 1.6;
+        }
+        
+        a {
+            color: var(--redbird-red);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        a:hover {
+            color: var(--redbird-dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--redbird-dark);
+            color: var(--redbird-white);
+            padding: var(--spacing-md) 0;
+            transition: all var(--transition-normal);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .sidebar-logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-badge {
+            display: inline-block;
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu-item {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: rgba(255, 255, 255, 0.7);
+            transition: all var(--transition-normal);
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu-link:hover, .sidebar-menu-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--redbird-white);
+            text-decoration: none;
+        }
+        
+        .sidebar-menu-link.active {
+            border-left: 3px solid var(--redbird-red);
+        }
+        
+        .sidebar-menu-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: var(--spacing-md);
+            margin-left: 250px;
+            transition: all var(--transition-normal);
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--redbird-border);
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--redbird-dark);
+            font-weight: var(--font-weight-medium);
+            letter-spacing: -0.01em;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            border: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .btn-primary {
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c74e3c;
+            text-decoration: none;
+            color: var(--redbird-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--redbird-dark);
+            border: 1px solid var(--redbird-border);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--redbird-light-gray);
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        /* Dashboard Specific Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--redbird-border);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-title {
+            font-size: 1rem;
+            color: var(--redbird-gray);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .icon-users {
+            background-color: var(--status-info);
+        }
+        
+        .icon-properties {
+            background-color: var(--status-success);
+        }
+        
+        .icon-documents {
+            background-color: var(--status-warning);
+        }
+        
+        .icon-progress {
+            background-color: var(--redbird-red);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: 5px;
+            color: var(--redbird-dark);
+        }
+        
+        .stat-label {
+            color: var(--redbird-gray);
+            font-size: 0.9rem;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--redbird-border);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--redbird-dark);
+        }
+        
+        .chart-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-option {
+            padding: 5px 10px;
+            background-color: var(--redbird-light-gray);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .chart-option:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .chart-option.active {
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .activity-feed-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--redbird-border);
+        }
+        
+        .activity-feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .activity-feed-title {
+            font-size: 1.2rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--redbird-dark);
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--redbird-border);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--redbird-light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-sm);
+            color: var(--redbird-red);
+            flex-shrink: 0;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: var(--font-weight-medium);
+            margin-bottom: 5px;
+            color: var(--redbird-dark);
+        }
+        
+        .activity-subtitle {
+            color: var(--redbird-gray);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .activity-time {
+            color: var(--redbird-gray);
+            font-size: 0.8rem;
+        }
+        
+        .status-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--redbird-border);
+        }
+        
+        .status-header {
+            margin-bottom: 15px;
+        }
+        
+        .status-title {
+            font-size: 1.2rem;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: 5px;
+            color: var(--redbird-dark);
+        }
+        
+        .status-subtitle {
+            color: var(--redbird-gray);
+            font-size: 0.9rem;
+        }
+        
+        .todo-list {
+            list-style: none;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--redbird-border);
+        }
+        
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .todo-checkbox {
+            margin-right: 10px;
+        }
+        
+        .todo-text {
+            flex: 1;
+            color: var(--redbird-dark);
+        }
+        
+        .todo-date {
+            color: var(--redbird-gray);
+            font-size: 0.8rem;
+        }
+        
+        .quick-links {
+            list-style: none;
+        }
+        
+        .quick-link-item {
+            margin-bottom: 10px;
+        }
+        
+        .quick-link {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm);
+            background-color: var(--redbird-light-gray);
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-normal);
+            color: var(--redbird-dark);
+        }
+        
+        .quick-link:hover {
+            background-color: #e6e6e6;
+            transform: translateX(5px);
+            text-decoration: none;
+        }
+        
+        .quick-link i {
+            margin-right: var(--spacing-sm);
+            color: var(--redbird-red);
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Mock charts */
+        .mock-chart {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .mock-chart img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 0;
+            }
+            
+            .sidebar-header {
+                padding: 0 10px 20px;
+            }
+            
+            .sidebar-logo {
+                max-width: 40px;
+            }
+            
+            .admin-badge, .sidebar-menu-text {
+                display: none;
+            }
+            
+            .sidebar-menu-link {
+                padding: 12px 0;
+                justify-content: center;
+            }
+            
+            .sidebar-menu-link i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 0;
+                padding: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                width: 250px;
+            }
+            
+            .menu-toggle-btn {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background-color: var(--primary-red);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px;
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="sidebar-logo">
+                <span class="admin-badge">Admin Portal</span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="index.html" class="sidebar-menu-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="sidebar-menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="user-management.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i>
+                        <span class="sidebar-menu-text">User Management</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="properties.html" class="sidebar-menu-link">
+                        <i class="fas fa-building"></i>
+                        <span class="sidebar-menu-text">Properties</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="documents.html" class="sidebar-menu-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="sidebar-menu-text">Documents</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="media.html" class="sidebar-menu-link">
+                        <i class="fas fa-images"></i>
+                        <span class="sidebar-menu-text">Media</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="progress.html" class="sidebar-menu-link">
+                        <i class="fas fa-tasks"></i>
+                        <span class="sidebar-menu-text">Progress Templates</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="settings.html" class="sidebar-menu-link">
+                        <i class="fas fa-cog"></i>
+                        <span class="sidebar-menu-text">Settings</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" id="logoutBtn" class="sidebar-menu-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="sidebar-menu-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <div>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+            
+            <section class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-icon icon-users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalUsersCount">10</div>
+                    <div class="stat-label">Active users in the system</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Properties</div>
+                        <div class="stat-icon icon-properties">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalPropertiesCount">3</div>
+                    <div class="stat-label">Properties listed in the system</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Documents</div>
+                        <div class="stat-icon icon-documents">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalDocumentsCount">24</div>
+                    <div class="stat-label">Documents uploaded this month</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Progress Stages</div>
+                        <div class="stat-icon icon-progress">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalProgressStagesCount">8</div>
+                    <div class="stat-label">Property purchase stages defined</div>
+                </div>
+            </section>
+            
+            <section class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2 class="chart-title">User Activity Overview</h2>
+                        <div class="chart-options">
+                            <div class="chart-option active" data-period="week">Week</div>
+                            <div class="chart-option" data-period="month">Month</div>
+                            <div class="chart-option" data-period="quarter">Quarter</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="mock-chart">
+                            <!-- Placeholder for actual chart -->
+                            <div style="width: 100%; height: 100%; background-color: #f8f9fa; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px;">
+                                <i class="fas fa-chart-line" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
+                                <div style="font-size: 1.1rem; color: #aaa;">User Activity Chart</div>
+                                <div style="font-size: 0.9rem; color: #bbb; margin-top: 5px;">Data visualization would appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2 class="chart-title">User Types</h2>
+                    </div>
+                    <div class="chart-container">
+                        <div class="mock-chart">
+                            <!-- Placeholder for actual chart -->
+                            <div style="width: 100%; height: 100%; background-color: #f8f9fa; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px;">
+                                <i class="fas fa-chart-pie" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
+                                <div style="font-size: 1.1rem; color: #aaa;">User Distribution</div>
+                                <div style="color: #bbb; font-size: 0.9rem; text-align: center; margin-top: 10px;">
+                                    <div style="margin-bottom: 5px;">Admin: 20%</div>
+                                    <div style="margin-bottom: 5px;">Advisor: 30%</div>
+                                    <div>Client: 50%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="activity-feed-card">
+                <div class="activity-feed-header">
+                    <h2 class="activity-feed-title">Recent Activity</h2>
+                    <a href="#" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                
+                <ul class="activity-list" id="activityList">
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New User Registration</div>
+                            <div class="activity-subtitle">Lisa Miller registered as a new client</div>
+                            <div class="activity-time">Today, 10:45 AM</div>
+                        </div>
+                    </li>
+                    
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Document Upload</div>
+                            <div class="activity-subtitle">John Advisor uploaded new contract document for Sunset Bay Resort</div>
+                            <div class="activity-time">Today, 09:32 AM</div>
+                        </div>
+                    </li>
+                    
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Property Update</div>
+                            <div class="activity-subtitle">Property status updated to "Sale Completed" for Mountain View Apartments - B-101</div>
+                            <div class="activity-time">Yesterday, 4:15 PM</div>
+                        </div>
+                    </li>
+                    
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New Message</div>
+                            <div class="activity-subtitle">Sarah Johnson sent a message to Emma Consultant</div>
+                            <div class="activity-time">Yesterday, 2:45 PM</div>
+                        </div>
+                    </li>
+                    
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Progress Update</div>
+                            <div class="activity-subtitle">Robert Smith's property progressed to "Ownership Registration" phase</div>
+                            <div class="activity-time">May 18, 2025, 11:30 AM</div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            
+            <section class="status-section">
+                <div class="status-card">
+                    <div class="status-header">
+                        <h2 class="status-title">Tasks</h2>
+                        <div class="status-subtitle">Your pending administrative tasks</div>
+                    </div>
+                    
+                    <ul class="todo-list">
+                        <li class="todo-item">
+                            <input type="checkbox" class="todo-checkbox">
+                            <div class="todo-text">Review new user sign-ups</div>
+                            <div class="todo-date">Today</div>
+                        </li>
+                        <li class="todo-item">
+                            <input type="checkbox" class="todo-checkbox">
+                            <div class="todo-text">Update property listings for Sunset Bay Resort</div>
+                            <div class="todo-date">Today</div>
+                        </li>
+                        <li class="todo-item">
+                            <input type="checkbox" class="todo-checkbox">
+                            <div class="todo-text">Approve document uploads from advisors</div>
+                            <div class="todo-date">Tomorrow</div>
+                        </li>
+                        <li class="todo-item">
+                            <input type="checkbox" class="todo-checkbox">
+                            <div class="todo-text">Send monthly progress reports to clients</div>
+                            <div class="todo-date">May 21, 2025</div>
+                        </li>
+                        <li class="todo-item">
+                            <input type="checkbox" class="todo-checkbox">
+                            <div class="todo-text">Schedule system maintenance</div>
+                            <div class="todo-date">May 25, 2025</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-header">
+                        <h2 class="status-title">Quick Links</h2>
+                        <div class="status-subtitle">Frequently used admin tools</div>
+                    </div>
+                    
+                    <ul class="quick-links">
+                        <li class="quick-link-item">
+                            <a href="user-management.html" class="quick-link">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Add New User</span>
+                            </a>
+                        </li>
+                        <li class="quick-link-item">
+                            <a href="properties.html" class="quick-link">
+                                <i class="fas fa-building"></i>
+                                <span>Manage Properties</span>
+                            </a>
+                        </li>
+                        <li class="quick-link-item">
+                            <a href="documents.html" class="quick-link">
+                                <i class="fas fa-file-upload"></i>
+                                <span>Upload Documents</span>
+                            </a>
+                        </li>
+                        <li class="quick-link-item">
+                            <a href="progress.html" class="quick-link">
+                                <i class="fas fa-tasks"></i>
+                                <span>Progress Templates</span>
+                            </a>
+                        </li>
+                        <li class="quick-link-item">
+                            <a href="settings.html" class="quick-link">
+                                <i class="fas fa-cog"></i>
+                                <span>System Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for admin user in localStorage
+            const userJson = localStorage.getItem('rb_current_user');
+            if (!userJson) {
+                // No user found, redirect to login
+                window.location.href = '../improved-login.html';
+                return;
+            }
+            
+            // Parse user data
+            const user = JSON.parse(userJson);
+            
+            // Check if user is admin
+            if (user.role !== 'admin') {
+                // Not an admin, redirect to dashboard
+                window.location.href = '../simple-dashboard.html';
+                alert('You do not have permission to access the admin area.');
+                return;
+            }
+            
+            // Set current date
+            const currentDateElement = document.getElementById('currentDate');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateElement.textContent = new Date().toLocaleDateString('de-DE', options);
+            
+            // Update stats with demo data
+            updateDashboardStats();
+            
+            // Add event listeners for chart options
+            const chartOptions = document.querySelectorAll('.chart-option');
+            chartOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    chartOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // In a real app, this would update the chart data
+                    // For demo purposes, we're just toggling the active state
+                });
+            });
+            
+            // Add event listeners for todo checkboxes
+            const todoCheckboxes = document.querySelectorAll('.todo-checkbox');
+            todoCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const todoItem = this.closest('.todo-item');
+                    if (this.checked) {
+                        todoItem.style.opacity = '0.6';
+                        todoItem.style.textDecoration = 'line-through';
+                    } else {
+                        todoItem.style.opacity = '1';
+                        todoItem.style.textDecoration = 'none';
+                    }
+                });
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Clear user data
+                localStorage.removeItem('rb_current_user');
+                localStorage.removeItem('rb_auth_token');
+                localStorage.removeItem('rb_is_demo');
+                
+                // Redirect to login
+                window.location.href = '../improved-login.html';
+            });
+        });
+        
+        // Function to update dashboard stats with demo data
+        function updateDashboardStats() {
+            // In a real app, this would fetch data from the backend
+            // For demo purposes, we're using static values
+            
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('rb_demo_users')) || [];
+            document.getElementById('totalUsersCount').textContent = users.length;
+            
+            // Set other stats with demo values
+            document.getElementById('totalPropertiesCount').textContent = '3';
+            document.getElementById('totalDocumentsCount').textContent = '24';
+            document.getElementById('totalProgressStagesCount').textContent = '8';
+        }
+    </script>
+</body>
+</html>

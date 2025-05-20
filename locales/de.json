@@ -1,0 +1,344 @@
+{
+  "common": {
+    "welcome": "Willkommen",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "dashboard": "Dashboard",
+    "documents": "Dokumente",
+    "gallery": "Fotogalerie",
+    "progress": "Prozessverlauf",
+    "contact": "Kontakt",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "loading": "Laden...",
+    "success": "Erfolg",
+    "error": "Fehler",
+    "warning": "Warnung",
+    "info": "Information",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "sort": "Sortieren",
+    "view": "Anzeigen",
+    "download": "Herunterladen",
+    "upload": "Hochladen",
+    "share": "Teilen",
+    "lastUpdated": "Zuletzt aktualisiert: {{date}}"
+  },
+  "auth": {
+    "login": {
+      "title": "Kundenportal",
+      "welcome": "Willkommen im exklusiven Bereich für RedBird-Kunden. Hier können Sie den Fortschritt Ihrer Immobilieninvestition verfolgen, Dokumente einsehen und mit Ihrem persönlichen Berater in Kontakt treten.",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "emailPlaceholder": "Ihre E-Mail-Adresse",
+      "passwordPlaceholder": "Ihr Passwort",
+      "rememberMe": "Angemeldet bleiben",
+      "forgotPassword": "Passwort vergessen?",
+      "loginButton": "Anmelden",
+      "loginError": "Fehler beim Anmelden. Bitte überprüfen Sie Ihre Anmeldedaten.",
+      "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+    },
+    "passwordReset": {
+      "title": "Passwort zurücksetzen",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein, um einen Link zum Zurücksetzen Ihres Passworts zu erhalten.",
+      "email": "E-Mail",
+      "emailPlaceholder": "Ihre E-Mail-Adresse",
+      "sendButton": "Link senden",
+      "cancelButton": "Abbrechen",
+      "success": "Anweisungen zum Zurücksetzen des Passworts wurden an Ihre E-Mail-Adresse gesendet.",
+      "error": "Fehler beim Anfordern des Passwort-Resets. Bitte versuchen Sie es später erneut."
+    }
+  },
+  "dashboard": {
+    "welcome": "Willkommen zurück",
+    "lastLogin": "Letzter Login: {{date}}",
+    "property": {
+      "title": "Ihre Immobilie",
+      "details": "Details ansehen",
+      "area": "Wohnfläche",
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "balcony": "Balkon"
+    },
+    "progress": {
+      "title": "Ihr Immobilienkauf",
+      "currentPhase": "Aktuelle Phase",
+      "nextStep": "Nächster Schritt",
+      "completionDate": "Geplanter Abschluss",
+      "details": "Details"
+    },
+    "documents": {
+      "title": "Neueste Dokumente",
+      "noDocuments": "Keine Dokumente vorhanden",
+      "viewAll": "Alle Dokumente anzeigen",
+      "upload": "Dokument hochladen"
+    },
+    "contact": {
+      "title": "Ihr Ansprechpartner",
+      "position": "Ihr persönlicher Immobilienberater",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "sendEmail": "E-Mail senden",
+      "sendMessage": "Nachricht senden"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "markAllAsRead": "Alle als gelesen markieren",
+      "noNotifications": "Keine Benachrichtigungen vorhanden",
+      "filters": {
+        "all": "Alle",
+        "documents": "Dokumente",
+        "progress": "Fortschritt",
+        "appointments": "Termine"
+      }
+    },
+    "tasks": {
+      "title": "Anstehende Aufgaben",
+      "noTasks": "Keine anstehenden Aufgaben",
+      "dueIn": "Fällig in {{days}} Tagen",
+      "urgent": "Dringend"
+    },
+    "upload": {
+      "title": "Dokumente hochladen",
+      "dropzone": "Dateien hier ablegen oder klicken zum Hochladen",
+      "formats": "Unterstützte Formate: PDF, DOCX, JPG, PNG"
+    }
+  },
+  "documents": {
+    "title": "Dokumente",
+    "categories": {
+      "all": "Alle",
+      "contracts": "Verträge",
+      "floorplans": "Grundrisse",
+      "payments": "Zahlungen",
+      "progress": "Fortschrittsberichte",
+      "legal": "Rechtliches"
+    },
+    "filters": {
+      "title": "Filter",
+      "date": "Datum",
+      "type": "Typ",
+      "status": "Status"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "final": "Final",
+      "signed": "Unterschrieben",
+      "pending": "Ausstehend"
+    },
+    "upload": {
+      "button": "Dokument hochladen",
+      "title": "Dokument hochladen",
+      "selectFile": "Datei auswählen",
+      "drag": "Datei hierher ziehen",
+      "category": "Kategorie",
+      "description": "Beschreibung",
+      "success": "Dokument erfolgreich hochgeladen",
+      "error": "Fehler beim Hochladen des Dokuments"
+    },
+    "noDocuments": "Keine Dokumente gefunden",
+    "documentDate": "Hinzugefügt am {{date}}"
+  },
+  "progress": {
+    "title": "Prozessverlauf",
+    "currentPhase": "Aktuelle Phase",
+    "nextPhase": "Nächste Phase",
+    "progressPercentage": "Gesamtfortschritt",
+    "expectedCompletion": "Voraussichtlicher Abschluss",
+    "phases": {
+      "reservation": "Reservierung",
+      "deposit": "Anzahlung",
+      "contract": "Vertrag",
+      "payment": "Zahlung",
+      "registration": "Eintragung",
+      "handover": "Schlüsselübergabe",
+      "completion": "Abschluss"
+    },
+    "status": {
+      "completed": "Abgeschlossen",
+      "inProgress": "In Bearbeitung",
+      "pending": "Ausstehend"
+    },
+    "timeline": {
+      "title": "Zeitplan",
+      "phase": "Phase",
+      "date": "Datum",
+      "status": "Status",
+      "documents": "Dokumente",
+      "notes": "Anmerkungen"
+    }
+  },
+  "gallery": {
+    "title": "Fotogalerie",
+    "categories": {
+      "all": "Alle",
+      "exterior": "Außenansicht",
+      "interior": "Innenansicht",
+      "views": "Aussicht",
+      "construction": "Baufortschritt"
+    },
+    "noImages": "Keine Bilder gefunden",
+    "imageCount": "{{count}} Bilder",
+    "download": "Bild herunterladen",
+    "share": "Bild teilen",
+    "addedOn": "Hinzugefügt am {{date}}"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "yourAdvisor": "Ihr Ansprechpartner",
+    "sendMessage": "Nachricht senden",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "send": "Senden",
+    "success": "Nachricht erfolgreich gesendet",
+    "error": "Fehler beim Senden der Nachricht",
+    "phoneContact": "Telefonischer Kontakt",
+    "emailContact": "E-Mail Kontakt",
+    "officeHours": "Bürozeiten",
+    "response": "Wir werden uns innerhalb von 24 Stunden bei Ihnen melden."
+  },
+  "profile": {
+    "title": "Profil",
+    "personalInfo": "Persönliche Informationen",
+    "contactInfo": "Kontaktinformationen",
+    "preferences": "Einstellungen",
+    "fields": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "street": "Straße",
+      "city": "Stadt",
+      "postalCode": "Postleitzahl",
+      "country": "Land",
+      "language": "Sprache",
+      "timeZone": "Zeitzone"
+    },
+    "save": "Änderungen speichern",
+    "changePassword": "Passwort ändern",
+    "success": "Profil erfolgreich aktualisiert",
+    "error": "Fehler beim Aktualisieren des Profils"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "theme": {
+      "title": "Farbschema",
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "Systemeinstellung"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "email": "E-Mail Benachrichtigungen",
+      "push": "Push-Benachrichtigungen",
+      "sms": "SMS Benachrichtigungen",
+      "types": {
+        "documents": "Neue Dokumente",
+        "progress": "Fortschrittsaktualisierungen",
+        "payments": "Zahlungserinnerungen",
+        "system": "Systemankündigungen",
+        "messages": "Berater-Nachrichten"
+      },
+      "frequency": {
+        "title": "Häufigkeit",
+        "immediate": "Sofort",
+        "daily": "Täglich",
+        "weekly": "Wöchentlich"
+      }
+    },
+    "privacy": {
+      "title": "Privatsphäre und Sicherheit",
+      "twoFactor": "Zwei-Faktor-Authentifizierung",
+      "sessions": "Aktive Sitzungen",
+      "data": "Meine Daten herunterladen"
+    },
+    "save": "Einstellungen speichern",
+    "success": "Einstellungen erfolgreich aktualisiert",
+    "error": "Fehler beim Aktualisieren der Einstellungen"
+  },
+  "footer": {
+    "copyright": "© {{year}} RedBird Real Estate. Alle Rechte vorbehalten.",
+    "links": {
+      "privacy": "Datenschutz",
+      "imprint": "Impressum",
+      "terms": "AGB"
+    }
+  },
+  "errors": {
+    "general": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+    "network": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
+    "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
+    "unauthorized": "Sie sind nicht berechtigt, auf diese Ressource zuzugreifen.",
+    "forbidden": "Sie haben keine Berechtigung, auf diese Ressource zuzugreifen.",
+    "validation": "Bitte überprüfen Sie die eingegebenen Daten.",
+    "server": "Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+  },
+  "analytics": {
+    "title": "Immobilien Analytics",
+    "subtitle": "Umfassende Analyse Ihrer Immobilieninvestition und Markttrends",
+    "property": "Immobilie:",
+    "all_properties": "Alle Immobilien",
+    "timeframe": "Zeitraum:",
+    "1_month": "1 Monat",
+    "3_months": "3 Monate",
+    "6_months": "6 Monate",
+    "1_year": "1 Jahr",
+    "all_time": "Alle Zeit",
+    "comparison": "Vergleich:",
+    "none": "Keiner",
+    "region": "Region",
+    "similar_properties": "Ähnliche Immobilien",
+    "market_average": "Marktdurchschnitt",
+    "export_data": "Daten exportieren",
+    "property_value_trend": "Immobilienwertentwicklung",
+    "property_value_subtitle": "Wertschätzung basierend auf Marktdaten und vergleichbaren Verkäufen",
+    "purchase_price": "Kaufpreis",
+    "current_value": "Aktueller Wert",
+    "appreciation": "Wertsteigerung",
+    "absolute_gain": "Absoluter Gewinn",
+    "market_comparison": "Marktvergleich",
+    "market_subtitle": "Vergleich mit ähnlichen Immobilien in der Region",
+    "your_property": "Ihre Immobilie",
+    "regional_average": "Regionaler Durchschnitt",
+    "key_metrics": "Schlüsselkennzahlen",
+    "roi": "Return on Investment (ROI)",
+    "area_performance": "Bereichsleistung",
+    "area_growth": "Wachstum im Gebiet",
+    "property_status": "Immobilienstatus",
+    "status_subtitle": "Aktuelle Leistungsindikatoren für Ihre Immobilie",
+    "indicator": "Indikator",
+    "value": "Wert",
+    "performance": "Leistung",
+    "property_value": "Immobilienwert",
+    "rental_yield": "Mietrendite",
+    "occupancy_rate": "Belegungsrate",
+    "market_demand": "Marktnachfrage",
+    "cost_efficiency": "Kosteneffizienz",
+    "regional_performance": "Regionale Leistung",
+    "regional_subtitle": "Wertentwicklung nach Region",
+    "investment_summary": "Investitionsübersicht",
+    "investment_subtitle": "Zusammenfassung Ihrer Investitionen",
+    "roi_calculation": "ROI-Berechnung",
+    "roi_subtitle": "Detaillierte Renditeberechnung",
+    "component": "Komponente",
+    "change": "Änderung",
+    "capital_appreciation": "Wertsteigerung",
+    "rental_income": "Mieteinnahmen",
+    "expenses": "Ausgaben",
+    "taxes": "Steuern",
+    "net_profit": "Nettogewinn",
+    "about_data": "Über diese Daten",
+    "data_info": "Die dargestellten Daten basieren auf aktuellen Marktanalysen, historischen Transaktionen und Bewertungen durch unabhängige Gutachter. Die Wertentwicklung ist eine Schätzung und kann von tatsächlichen Verkaufspreisen abweichen.",
+    "data_sources": "Datenquellen: RedBird Immobiliendatenbank, Regionale Immobilienmarktberichte, Öffentlich zugängliche Transaktionsdaten und proprietäre Bewertungsmodelle.",
+    "last_updated": "Letztes Update: 15.05.2025"
+  }
+}

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unser Team - RedBird Real Estate</title>
+    <meta name="description" content="Lernen Sie das Team von RedBird Real Estate kennen - Immobilienexperten mit umfassender Erfahrung im Immobilienmarkt Nordzyperns.">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/mobile-enhanced.css">
+    <link rel="stylesheet" href="../css/footer-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <style>
+        /* Page specific styles */
+        .page-header {
+            background-color: var(--secondary-dark);
+            color: white;
+            padding: var(--space-10) 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/about-office.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        
+        .page-header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .page-header p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumbs a {
+            color: white;
+            opacity: 0.8;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        .breadcrumbs a:hover {
+            opacity: 1;
+            color: var(--primary-red-light);
+        }
+        
+        .breadcrumbs .separator {
+            margin: 0 var(--space-2);
+            opacity: 0.6;
+        }
+        
+        .breadcrumbs .current {
+            color: var(--primary-red-light);
+            font-weight: 500;
+        }
+        
+        .team-section {
+            padding: var(--space-10) 0;
+            background-color: var(--neutral-100);
+        }
+        
+        .team-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-10);
+        }
+        
+        .team-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .team-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-red);
+            transform: translateX(-50%);
+            border-radius: var(--radius-full);
+        }
+        
+        .team-header p {
+            font-size: 1.125rem;
+            color: var(--neutral-600);
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .team-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .team-card:hover .team-image img {
+            transform: scale(1.05);
+        }
+        
+        .team-image {
+            height: 300px;
+            overflow: hidden;
+        }
+        
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-content {
+            padding: var(--space-5);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .team-title {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+        }
+        
+        .team-name {
+            flex: 1;
+        }
+        
+        .team-name h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-1);
+        }
+        
+        .team-role {
+            color: var(--primary-red);
+            font-weight: 500;
+        }
+        
+        .team-contact-button {
+            background-color: var(--primary-red);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .team-contact-button:hover {
+            background-color: var(--primary-red-dark);
+            transform: scale(1.1);
+        }
+        
+        .team-description {
+            color: var(--neutral-600);
+            margin-bottom: var(--space-4);
+            flex-grow: 1;
+        }
+        
+        .team-specs {
+            margin-bottom: var(--space-4);
+        }
+        
+        .team-spec {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+            color: var(--neutral-700);
+        }
+        
+        .team-spec i {
+            color: var(--primary-red);
+            width: 20px;
+        }
+        
+        .team-social {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-600);
+            transition: all var(--transition-normal);
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            color: white;
+            background-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+        
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-5);
+            max-width: 1200px;
+            margin: var(--space-10) auto 0;
+            padding: 0 var(--space-4);
+            text-align: center;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto var(--space-3);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin-bottom: var(--space-1);
+        }
+        
+        .stat-label {
+            color: var(--neutral-600);
+            font-size: 1rem;
+        }
+        
+        .join-team {
+            background-color: var(--neutral-800);
+            color: white;
+            padding: var(--space-10) 0;
+            text-align: center;
+        }
+        
+        .join-team-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .join-team h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .join-team p {
+            font-size: 1.125rem;
+            margin-bottom: var(--space-6);
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-header p {
+                font-size: 1.1rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .team-stats {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="../index-enhanced.html">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="logo">
+                </a>
+            </div>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menü öffnen">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="site-nav" id="siteNav">
+                <ul class="nav-menu" role="menubar">
+                    <li class="nav-item" role="none">
+                        <a href="../index-enhanced.html" class="nav-link" role="menuitem">
+                            <span>Startseite</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../rental/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Immobilien</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../rental/index.html#buy" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Kaufen</span>
+                            </a>
+                            <a href="../rental/index.html#rent" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-key" aria-hidden="true"></i>
+                                <span>Mieten</span>
+                            </a>
+                            <a href="../rental/index.html#rental-service" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-hand-holding-usd" aria-hidden="true"></i>
+                                <span>Vermietungsservice</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../community/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Community</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../community/index.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-comments" aria-hidden="true"></i>
+                                <span>Forum</span>
+                            </a>
+                            <a href="../community/index.html#events" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                <span>Events</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item active" role="none">
+                        <a href="about.html" class="nav-link" role="menuitem" aria-haspopup="true" aria-current="page">
+                            <span>Über uns</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="about.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-building" aria-hidden="true"></i>
+                                <span>Unternehmen</span>
+                            </a>
+                            <a href="team.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                <span>Team</span>
+                            </a>
+                            <a href="contact.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>Kontakt</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Darkmodus umschalten" title="Darkmodus umschalten">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                
+                <div class="auth-buttons">
+                    <a href="../login.html" class="btn-login">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                        <span>Anmelden</span>
+                    </a>
+                    <a href="../pages/dashboard.html" class="btn-signup">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        <span>Kundenbereich</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="breadcrumbs">
+                <a href="../index-enhanced.html">Startseite</a>
+                <span class="separator">/</span>
+                <a href="about.html">Über uns</a>
+                <span class="separator">/</span>
+                <span class="current">Unser Team</span>
+            </div>
+            <h1>Unser Team</h1>
+            <p>Lernen Sie die Experten hinter RedBird Real Estate kennen - Immobilienprofis mit Leidenschaft für Nordzypern</p>
+        </div>
+    </div>
+
+    <section class="team-section">
+        <div class="team-header" data-aos="fade-up">
+            <h2>Wir sind RedBird</h2>
+            <p>Unser Team aus erfahrenen Immobilienexperten mit umfassender lokaler Marktkenntnis und internationalen Verbindungen steht Ihnen bei Ihrem Immobilienprojekt in Nordzypern zur Seite.</p>
+        </div>
+
+        <div class="team-grid">
+            <!-- Management Team -->
+            <div class="team-card" data-aos="fade-up">
+                <div class="team-image">
+                    <img src="../img/team/max-mustermann.jpg" alt="Max Mustermann" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <div class="team-title">
+                        <div class="team-name">
+                            <h3>Max Mustermann</h3>
+                            <div class="team-role">Gründer & CEO</div>
+                        </div>
+                        <button class="team-contact-button" aria-label="Kontakt">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="team-description">
+                        <p>Mit über 15 Jahren Erfahrung im internationalen Immobiliengeschäft leitet Max das RedBird-Team. Seine Vision und Expertise haben RedBird zu einem führenden Anbieter für Immobilien in Nordzypern gemacht.</p>
+                    </div>
+                    <div class="team-specs">
+                        <div class="team-spec">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>MBA in Real Estate Management</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Deutsch, Englisch, Türkisch</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>15+ Jahre Immobilienerfahrung</span>
+                        </div>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="mailto:max@redbird-realestate.com" class="social-link" aria-label="E-Mail">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="team-image">
+                    <img src="../img/team/anna-schmidt.jpg" alt="Anna Schmidt" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <div class="team-title">
+                        <div class="team-name">
+                            <h3>Anna Schmidt</h3>
+                            <div class="team-role">Leiterin Kundenservice</div>
+                        </div>
+                        <button class="team-contact-button" aria-label="Kontakt">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="team-description">
+                        <p>Anna sorgt dafür, dass unsere Kunden während des gesamten Immobilienprozesses bestens betreut werden. Ihr Fokus auf Kundenzufriedenheit und ihre umfassende Kenntnis des Immobilienmarktes machen sie zu einer wertvollen Ansprechpartnerin.</p>
+                    </div>
+                    <div class="team-specs">
+                        <div class="team-spec">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>BA in Customer Relations</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Deutsch, Englisch, Französisch</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>8+ Jahre im Kundenservice</span>
+                        </div>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="mailto:anna@redbird-realestate.com" class="social-link" aria-label="E-Mail">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="team-image">
+                    <img src="../img/team/kemal-yilmaz.jpg" alt="Kemal Yilmaz" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <div class="team-title">
+                        <div class="team-name">
+                            <h3>Kemal Yilmaz</h3>
+                            <div class="team-role">Lokaler Immobilienexperte</div>
+                        </div>
+                        <button class="team-contact-button" aria-label="Kontakt">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="team-description">
+                        <p>Als gebürtiger Nordzypriote kennt Kemal jeden Winkel der Insel. Seine lokalen Verbindungen und sein tiefes Verständnis des Marktes sind entscheidend für die Identifizierung der besten Immobilienmöglichkeiten für unsere Kunden.</p>
+                    </div>
+                    <div class="team-specs">
+                        <div class="team-spec">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>MSc in Real Estate Development</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Türkisch, Englisch, Deutsch</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>12+ Jahre auf dem lokalen Markt</span>
+                        </div>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="mailto:kemal@redbird-realestate.com" class="social-link" aria-label="E-Mail">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="team-image">
+                    <img src="../img/team/sophie-wagner.jpg" alt="Sophie Wagner" loading="lazy">
+                </div>
+                <div class="team-content">
+                    <div class="team-title">
+                        <div class="team-name">
+                            <h3>Sophie Wagner</h3>
+                            <div class="team-role">Vermietungsmanagerin</div>
+                        </div>
+                        <button class="team-contact-button" aria-label="Kontakt">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="team-description">
+                        <p>Sophie ist unsere Expertin für Vermietung und Renditeoptimierung. Sie hilft Immobilieninvestoren, das volle Potenzial ihrer Objekte auszuschöpfen, sei es durch Langzeit- oder lukrative Kurzzeitvermietung.</p>
+                    </div>
+                    <div class="team-specs">
+                        <div class="team-spec">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>BSc in Hospitality Management</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Deutsch, Englisch, Spanisch</span>
+                        </div>
+                        <div class="team-spec">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>10+ Jahre im Vermietungsmanagement</span>
+                        </div>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="mailto:sophie@redbird-realestate.com" class="social-link" aria-label="E-Mail">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-stats" data-aos="fade-up">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-tie" aria-hidden="true"></i>
+                </div>
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Team Mitglieder</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-globe-europe" aria-hidden="true"></i>
+                </div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">Gesprochene Sprachen</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-award" aria-hidden="true"></i>
+                </div>
+                <div class="stat-number">12+</div>
+                <div class="stat-label">Jahre Erfahrung</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-certificate" aria-hidden="true"></i>
+                </div>
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Zertifizierungen</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="join-team">
+        <div class="join-team-content" data-aos="fade-up">
+            <h2>Werden Sie Teil unseres Teams</h2>
+            <p>Wir sind ständig auf der Suche nach talentierten und motivierten Mitarbeitern, die unsere Leidenschaft für Immobilien und exzellenten Kundenservice teilen. Wenn Sie daran interessiert sind, Teil eines dynamischen und wachsenden Unternehmens zu werden, schauen Sie sich unsere offenen Stellen an.</p>
+            <a href="careers.html" class="btn btn-primary">
+                <i class="fas fa-briefcase" aria-hidden="true"></i>
+                <span>Karriere bei RedBird</span>
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer-enhanced">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-branding">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="footer-logo">
+                    <p class="footer-tagline">Ihr zuverlässiger Partner für Immobilien in Nordzypern. Wir bieten umfassende Dienstleistungen vom Kauf bis zur Vermietung.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" aria-label="Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon instagram" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon youtube" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Schnellzugriff</h4>
+                    <ul>
+                        <li><a href="../rental/index.html"><i class="fas fa-home" aria-hidden="true"></i> Immobilienangebote</a></li>
+                        <li><a href="../rental/index.html#rental-service"><i class="fas fa-key" aria-hidden="true"></i> Vermietungsservice</a></li>
+                        <li><a href="../pages/dashboard.html"><i class="fas fa-user" aria-hidden="true"></i> Kundenbereich</a></li>
+                        <li><a href="../blog/index.html"><i class="fas fa-newspaper" aria-hidden="true"></i> Blog</a></li>
+                        <li><a href="../community/index.html"><i class="fas fa-comments" aria-hidden="true"></i> Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Über uns</h4>
+                    <ul>
+                        <li><a href="about.html"><i class="fas fa-building" aria-hidden="true"></i> Unternehmen</a></li>
+                        <li><a href="team.html"><i class="fas fa-users" aria-hidden="true"></i> Team</a></li>
+                        <li><a href="careers.html"><i class="fas fa-briefcase" aria-hidden="true"></i> Karriere</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="#" class="contact-item"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Hauptstraße 123, 12345 Berlin</a></li>
+                        <li><a href="tel:+4930123456789" class="contact-item"><i class="fas fa-phone-alt" aria-hidden="true"></i> +49 30 123456789</a></li>
+                        <li><a href="mailto:info@redbird-realestate.com" class="contact-item"><i class="fas fa-envelope" aria-hidden="true"></i> info@redbird-realestate.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="language-select-footer">
+                    <select aria-label="Sprache wählen">
+                        <option value="de" selected>Deutsch</option>
+                        <option value="en">English</option>
+                        <option value="tr">Türkçe</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Navigation Toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const siteNav = document.getElementById('siteNav');
+            
+            if (mobileMenuToggle && siteNav) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    siteNav.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                        this.setAttribute('aria-label', 'Menü schließen');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                        this.setAttribute('aria-label', 'Menü öffnen');
+                    }
+                });
+            }
+            
+            // Team contact buttons
+            const contactButtons = document.querySelectorAll('.team-contact-button');
+            contactButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const teamName = this.closest('.team-content').querySelector('.team-name h3').textContent;
+                    const teamEmail = teamName.toLowerCase().replace(' ', '.') + '@redbird-realestate.com';
+                    window.location.href = 'mailto:' + teamEmail;
+                });
+            });
+            
+            // Animation on scroll (simulating AOS library)
+            const animatedElements = document.querySelectorAll('[data-aos]');
+            
+            function checkScroll() {
+                animatedElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        el.classList.add('aos-animate');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on load
+            
+            // Add a class for animations
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    [data-aos] {
+                        opacity: 0;
+                        transform: translateY(50px);
+                        transition: opacity 0.6s ease, transform 0.6s ease;
+                    }
+                    
+                    [data-aos].aos-animate {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    
+                    [data-aos-delay="100"] {
+                        transition-delay: 0.1s;
+                    }
+                    
+                    [data-aos-delay="200"] {
+                        transition-delay: 0.2s;
+                    }
+                    
+                    [data-aos-delay="300"] {
+                        transition-delay: 0.3s;
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

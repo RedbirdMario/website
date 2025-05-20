@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+        <i class="fas fa-moon" data-theme-icon></i>
+    </button>
+    
+    <!-- Header -->
+    <header class="admin-header-enhanced">
+        <div class="admin-header-container-enhanced">
+            <div class="admin-title-enhanced">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-controls-enhanced">
+                <div class="admin-search-enhanced">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Suche...">
+                </div>
+                <div class="admin-notifications-enhanced dropdown-enhanced">
+                    <button class="notification-btn-enhanced" aria-label="Benachrichtigungen">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="dropdown-content-enhanced notification-dropdown">
+                        <div class="notification-header">
+                            <h3>Benachrichtigungen</h3>
+                            <button class="text-btn">Alle markieren</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-success-soft">
+                                    <i class="fas fa-check text-success"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1064 wurde aktualisiert</p>
+                                    <span class="notification-time">Vor 10 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-primary-soft">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Neuer Kunde registriert: Maria Schmidt</p>
+                                    <span class="notification-time">Vor 30 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-warning-soft">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1058 benötigt Ihre Aufmerksamkeit</p>
+                                    <span class="notification-time">Vor 1 Stunde</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" class="text-btn">Alle Benachrichtigungen ansehen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-user-enhanced dropdown-enhanced">
+                    <button class="user-btn-enhanced">
+                        <div class="user-avatar-enhanced">
+                            <span>AS</span>
+                        </div>
+                        <div class="user-info-enhanced d-none d-md-block">
+                            <span class="user-name-enhanced">Admin User</span>
+                            <span class="user-role-enhanced">Administrator</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content-enhanced">
+                        <a href="#"><i class="fas fa-user-circle"></i> Mein Profil</a>
+                        <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> Hilfe & Support</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar-enhanced">
+        <div class="sidebar-header-enhanced">
+            <img src="../img/redbird-logo.svg" alt="RedBird" class="sidebar-logo-enhanced">
+            <button class="sidebar-toggle-enhanced" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-user-enhanced">
+            <div class="user-avatar-enhanced">
+                <span>AS</span>
+            </div>
+            <div class="user-info-enhanced">
+                <span class="user-name-enhanced">Admin User</span>
+                <span class="user-role-enhanced">Administrator</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav-enhanced">
+            <ul class="sidebar-menu-enhanced">
+                <li class="sidebar-item-enhanced active">
+                    <a href="dashboard-enhanced.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-users"></i>
+                        <span>Kunden</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        <span>Immobilien</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Dokumente</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="media-refined.html">
+                        <i class="fas fa-images"></i>
+                        <span>Medienverwaltung</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="progress-enhanced.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Projektstatus</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="fulfillment-process-enhanced.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Fulfillment Prozess</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Berichte</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Einstellungen</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-content-enhanced">
+        <div class="content-header-enhanced">
+            <div>
+                <h1 class="mb-2">Dashboard</h1>
+                <p class="text-muted">Willkommen im RedBird Admin-Portal. Hier können Sie alle Kundenkonten, Immobilien, Dokumente und Medien verwalten.</p>
+            </div>
+            <div class="content-actions-enhanced">
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-calendar"></i> Heute
+                </button>
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-file-export"></i> Exportieren
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Neuer Kunde
+                </button>
+            </div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Kunden insgesamt</h3>
+                    <div class="stat-icon icon-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <p class="stat-value">245</p>
+                <div class="stat-change change-positive">
+                    <i class="fas fa-arrow-up"></i> 12% im letzten Monat
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Aktive Projekte</h3>
+                    <div class="stat-icon icon-warning">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                </div>
+                <p class="stat-value">38</p>
+                <div class="stat-change change-positive">
+                    <i class="fas fa-arrow-up"></i> 5% im letzten Monat
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Verkaufte Immobilien</h3>
+                    <div class="stat-icon icon-success">
+                        <i class="fas fa-home"></i>
+                    </div>
+                </div>
+                <p class="stat-value">125</p>
+                <div class="stat-change change-positive">
+                    <i class="fas fa-arrow-up"></i> 8% im letzten Monat
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">Umsatz</h3>
+                    <div class="stat-icon icon-info">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                </div>
+                <p class="stat-value">3.5M €</p>
+                <div class="stat-change change-positive">
+                    <i class="fas fa-arrow-up"></i> 15% im letzten Monat
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="dashboard-content-grid">
+            <!-- Recent Activity Feed -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Aktivitäten</h2>
+                    <div>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success-soft">
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text"><span class="text-primary">Max Mustermann</span> hat die Zahlung für <span class="text-primary">Sunset Bay Resort, A-203</span> abgeschlossen</p>
+                                <span class="activity-time">Vor 10 Minuten</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary-soft">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">Neuer Kunde <span class="text-primary">Maria Schmidt</span> hat sich registriert</p>
+                                <span class="activity-time">Vor 30 Minuten</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning-soft">
+                                <i class="fas fa-exclamation-circle text-warning"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">Projekt <span class="text-primary">#1058</span> benötigt Ihre Aufmerksamkeit</p>
+                                <span class="activity-time">Vor 1 Stunde</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-info-soft">
+                                <i class="fas fa-file-contract text-info"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">Vertrag für <span class="text-primary">Palm View Residence, B-105</span> wurde unterzeichnet</p>
+                                <span class="activity-time">Vor 3 Stunden</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary-soft">
+                                <i class="fas fa-image text-primary"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text"><span class="text-primary">Admin User</span> hat 12 neue Bilder zu <span class="text-primary">Golden Bay Villas</span> hinzugefügt</p>
+                                <span class="activity-time">Vor 5 Stunden</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="#" class="text-btn">Alle Aktivitäten ansehen</a>
+                </div>
+            </div>
+            
+            <!-- Task List & Calendar -->
+            <div class="tasks-calendar-container">
+                <!-- Tasks Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Aufgaben</h2>
+                        <div>
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-plus"></i> Neu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox-container">
+                                    <input type="checkbox" id="task1" class="task-checkbox">
+                                    <label for="task1" class="task-checkbox-label"></label>
+                                </div>
+                                <div class="task-content">
+                                    <h4>Immobilien-Präsentation für Max Mustermann vorbereiten</h4>
+                                    <div class="task-meta">
+                                        <span class="task-priority high">Hoch</span>
+                                        <span class="task-due">Fällig in 2 Tagen</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox-container">
+                                    <input type="checkbox" id="task2" class="task-checkbox">
+                                    <label for="task2" class="task-checkbox-label"></label>
+                                </div>
+                                <div class="task-content">
+                                    <h4>Besichtigungstermin mit Klaus Weber vereinbaren</h4>
+                                    <div class="task-meta">
+                                        <span class="task-priority medium">Mittel</span>
+                                        <span class="task-due">Fällig heute</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox-container">
+                                    <input type="checkbox" id="task3" class="task-checkbox">
+                                    <label for="task3" class="task-checkbox-label"></label>
+                                </div>
+                                <div class="task-content">
+                                    <h4>Vertragsunterlagen für Maria Schmidt vorbereiten</h4>
+                                    <div class="task-meta">
+                                        <span class="task-priority high">Hoch</span>
+                                        <span class="task-due">Fällig in 1 Tag</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox-container">
+                                    <input type="checkbox" id="task4" class="task-checkbox" checked>
+                                    <label for="task4" class="task-checkbox-label"></label>
+                                </div>
+                                <div class="task-content">
+                                    <h4>Eigentumsurkunde für Anna Becker einscannen</h4>
+                                    <div class="task-meta">
+                                        <span class="task-priority low">Niedrig</span>
+                                        <span class="task-due completed">Abgeschlossen</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="#" class="text-btn">Alle Aufgaben ansehen</a>
+                    </div>
+                </div>
+                
+                <!-- Progress Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Fortschritt</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <h4>Gesamtfortschritt</h4>
+                                <span>72%</span>
+                            </div>
+                            <div class="progress-bar-enhanced large">
+                                <div class="progress-fill-enhanced" style="width: 72%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <h4>Palm View Residence</h4>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress-bar-enhanced">
+                                <div class="progress-fill-enhanced" style="width: 45%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <h4>Sunset Bay Resort</h4>
+                                <span>90%</span>
+                            </div>
+                            <div class="progress-bar-enhanced">
+                                <div class="progress-fill-enhanced success-fill" style="width: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-item-header">
+                                <h4>Golden Bay Villas</h4>
+                                <span>15%</span>
+                            </div>
+                            <div class="progress-bar-enhanced">
+                                <div class="progress-fill-enhanced warning-fill" style="width: 15%;"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <a href="progress-enhanced.html" class="btn btn-outline">Details anzeigen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Customers -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Neueste Kunden</h2>
+                <div>
+                    <button class="btn btn-outline btn-sm">
+                        <i class="fas fa-download"></i> Exportieren
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="search-container-enhanced mb-4">
+                    <i class="fas fa-search search-icon-enhanced"></i>
+                    <input type="text" class="search-input-enhanced" placeholder="Suche nach Kunden...">
+                </div>
+                
+                <div class="projects-table-responsive">
+                    <table class="table-enhanced">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>E-Mail</th>
+                                <th>Immobilie</th>
+                                <th>Status</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <span>Max Mustermann</span>
+                                    </div>
+                                </td>
+                                <td>max.mustermann@example.com</td>
+                                <td>Sunset Bay Resort, A-203</td>
+                                <td><span class="status-badge status-active">Aktiv</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Löschen">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <span>Maria Schmidt</span>
+                                    </div>
+                                </td>
+                                <td>maria.schmidt@example.com</td>
+                                <td>Palm View Residence, B-105</td>
+                                <td><span class="status-badge status-active">Aktiv</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Löschen">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <span>Klaus Weber</span>
+                                    </div>
+                                </td>
+                                <td>klaus.weber@example.com</td>
+                                <td>Golden Bay Villas, C-301</td>
+                                <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Löschen">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <span>Anna Becker</span>
+                                    </div>
+                                </td>
+                                <td>anna.becker@example.com</td>
+                                <td>Mountain View Resort, D-102</td>
+                                <td><span class="status-badge status-active">Aktiv</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Löschen">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <span>Michael Schneider</span>
+                                    </div>
+                                </td>
+                                <td>michael.schneider@example.com</td>
+                                <td>Seaside Apartments, E-405</td>
+                                <td><span class="status-badge status-inactive">Inaktiv</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Löschen">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-footer-enhanced">
+                    <div class="table-info">Zeige 1 bis 5 von 24 Einträgen</div>
+                    <div class="pagination-enhanced">
+                        <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar-enhanced');
+            const mainContent = document.querySelector('.admin-content-enhanced');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                });
+            }
+            
+            // Task checkbox behavior
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskItem = this.closest('.task-item');
+                    if (this.checked) {
+                        taskItem.classList.add('completed');
+                    } else {
+                        taskItem.classList.remove('completed');
+                    }
+                });
+                
+                // Initialize on load
+                const taskItem = checkbox.closest('.task-item');
+                if (checkbox.checked) {
+                    taskItem.classList.add('completed');
+                }
+            });
+            
+            // Initialize notifications if available
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+                
+                // Welcome notification
+                window.RedBirdNotify.info(
+                    'Willkommen im RedBird Admin Dashboard.',
+                    'Dashboard'
+                );
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - RedBird Kundenportal</title>
+    <meta name="description" content="Verwalten Sie Ihre persönlichen Informationen und Einstellungen im RedBird Kundenportal.">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E72E2E">
+    <link rel="apple-touch-icon" href="../img/icons/icon-192x192.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .profile-header {
+            margin-bottom: 2rem;
+        }
+        
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+        
+        .profile-sidebar {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+        
+        .profile-image-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-red);
+            background-color: var(--bg-soft);
+        }
+        
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .edit-profile-image {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-red);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--bg-card);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .edit-profile-image:hover {
+            background-color: var(--primary-red-dark);
+            transform: scale(1.1);
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .profile-property {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-soft);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--bg-soft);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-red);
+            color: white;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .profile-tabs {
+            margin-bottom: 2rem;
+        }
+        
+        .profile-tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-tab-btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: all var(--transition-normal);
+        }
+        
+        .profile-tab-btn:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-red);
+            transform: scaleX(0);
+            transition: transform var(--transition-normal);
+        }
+        
+        .profile-tab-btn.active {
+            color: var(--primary-red);
+        }
+        
+        .profile-tab-btn.active:after {
+            transform: scaleX(1);
+        }
+        
+        .profile-tab-content {
+            display: none;
+        }
+        
+        .profile-tab-content.active {
+            display: block;
+        }
+        
+        .profile-tab-section {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .profile-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .profile-section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-section-header h2 i {
+            margin-right: 0.75rem;
+            color: var(--primary-red);
+        }
+        
+        .profile-section-body {
+            padding: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .notification-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .notification-setting:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-setting-info h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+        }
+        
+        .notification-setting-info p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .property-card-enhanced {
+            display: flex;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-soft);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+        
+        .property-card-enhanced:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .property-image-enhanced {
+            width: 200px;
+            height: 150px;
+            flex-shrink: 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-right: 1.5rem;
+        }
+        
+        .property-image-enhanced img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .property-details-enhanced {
+            flex: 1;
+        }
+        
+        .property-title-enhanced {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+        
+        .property-location-enhanced {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .property-location-enhanced i {
+            margin-right: 0.5rem;
+            color: var(--primary-red);
+        }
+        
+        .property-features-enhanced {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .property-feature {
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-feature i {
+            margin-right: 0.5rem;
+            color: var(--primary-red);
+        }
+        
+        .property-progress-enhanced {
+            margin-top: 1rem;
+        }
+        
+        .property-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar-enhanced {
+            height: 8px;
+            width: 100%;
+            background-color: var(--bg-card);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        
+        .progress-fill-enhanced {
+            height: 100%;
+            background-color: var(--primary-red);
+            border-radius: var(--radius-full);
+            transition: width var(--transition-normal);
+        }
+        
+        .property-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .security-section h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .password-rules {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: var(--bg-soft);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+        
+        .password-rules ul {
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
+        }
+        
+        .password-rules li {
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .sidebar-menu {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-tab-header {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.5rem;
+            }
+            
+            .profile-tab-btn {
+                padding: 0.75rem 1rem;
+            }
+            
+            .property-card-enhanced {
+                flex-direction: column;
+            }
+            
+            .property-image-enhanced {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .property-features-enhanced {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    <nav class="main-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li class="nav-item" role="none"><a href="dashboard.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Dashboard</a></li>
+                <li class="nav-item" role="none"><a href="documents.html" role="menuitem"><i class="fas fa-file-alt" aria-hidden="true"></i> Dokumente</a></li>
+                <li class="nav-item" role="none"><a href="gallery.html" role="menuitem"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a></li>
+                <li class="nav-item" role="none"><a href="progress.html" role="menuitem"><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</a></li>
+                <li class="nav-item" role="none"><a href="contact.html" role="menuitem"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="language-switcher"></div>
+                <button class="theme-toggle" data-theme-toggle aria-label="Dark Mode umschalten" aria-pressed="false">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Laden...</span>
+                    <span class="user-role" id="userProperty">Laden...</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn" aria-label="Benutzermenü öffnen" aria-expanded="false" aria-haspopup="true" aria-controls="user-menu-dropdown"><i class="fas fa-user-circle" aria-hidden="true"></i></button>
+                    <div class="dropdown-content" id="user-menu-dropdown" role="menu">
+                        <a href="profile.html" role="menuitem" aria-current="page"><i class="fas fa-user-cog" aria-hidden="true"></i> Profil</a>
+                        <a href="settings.html" role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container" id="main-content" role="main">
+        <div class="profile-header">
+            <h1>Mein Profil</h1>
+            <p class="lead">Verwalten Sie Ihre persönlichen Informationen und Einstellungen</p>
+        </div>
+        
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div class="profile-image-container">
+                    <div class="profile-image">
+                        <img src="../img/user-placeholder.jpg" alt="Profilbild" id="profileImage">
+                    </div>
+                    <button class="edit-profile-image" id="changeProfileImage" aria-label="Profilbild ändern">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                    </button>
+                </div>
+                
+                <h2 class="profile-name" id="profileName">Max Mustermann</h2>
+                <div class="profile-property" id="profileProperty">Villa Marina, A-203</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">65%</div>
+                        <div class="stat-label">Fortschritt</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Dokumente</div>
+                    </div>
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="#personal-info" class="tab-link active" data-tab="personal-info"><i class="fas fa-user" aria-hidden="true"></i> Persönliche Daten</a></li>
+                    <li><a href="#properties" class="tab-link" data-tab="properties"><i class="fas fa-home" aria-hidden="true"></i> Meine Immobilien</a></li>
+                    <li><a href="#notifications" class="tab-link" data-tab="notifications"><i class="fas fa-bell" aria-hidden="true"></i> Benachrichtigungen</a></li>
+                    <li><a href="#security" class="tab-link" data-tab="security"><i class="fas fa-lock" aria-hidden="true"></i> Sicherheit & Login</a></li>
+                </ul>
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab-header">
+                    <button class="profile-tab-btn active" data-tab="personal-info">Persönliche Daten</button>
+                    <button class="profile-tab-btn" data-tab="properties">Meine Immobilien</button>
+                    <button class="profile-tab-btn" data-tab="notifications">Benachrichtigungen</button>
+                    <button class="profile-tab-btn" data-tab="security">Sicherheit & Login</button>
+                </div>
+                
+                <div id="personal-info" class="profile-tab-content active">
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-user" aria-hidden="true"></i> Persönliche Informationen</h2>
+                        </div>
+                        <div class="profile-section-body">
+                            <form id="personalInfoForm" class="form-enhanced">
+                                <div class="form-grid">
+                                    <div class="form-group-enhanced">
+                                        <label for="firstName">Vorname</label>
+                                        <input type="text" id="firstName" class="form-control-enhanced" value="Max">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="lastName">Nachname</label>
+                                        <input type="text" id="lastName" class="form-control-enhanced" value="Mustermann">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="email">E-Mail-Adresse</label>
+                                        <input type="email" id="email" class="form-control-enhanced" value="max.mustermann@example.com">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="phone">Telefonnummer</label>
+                                        <input type="tel" id="phone" class="form-control-enhanced" value="+49 123 456789">
+                                    </div>
+                                </div>
+                                
+                                <h3 class="mt-4 mb-3">Adresse</h3>
+                                <div class="form-grid">
+                                    <div class="form-group-enhanced">
+                                        <label for="address">Straße und Hausnummer</label>
+                                        <input type="text" id="address" class="form-control-enhanced" value="Musterstraße 123">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="city">Stadt</label>
+                                        <input type="text" id="city" class="form-control-enhanced" value="Berlin">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="postalCode">Postleitzahl</label>
+                                        <input type="text" id="postalCode" class="form-control-enhanced" value="12345">
+                                    </div>
+                                    
+                                    <div class="form-group-enhanced">
+                                        <label for="country">Land</label>
+                                        <select id="country" class="form-control-enhanced">
+                                            <option value="DE" selected>Deutschland</option>
+                                            <option value="AT">Österreich</option>
+                                            <option value="CH">Schweiz</option>
+                                            <option value="UK">Vereinigtes Königreich</option>
+                                            <option value="US">Vereinigte Staaten</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions-enhanced">
+                                    <button type="button" class="btn btn-secondary">Zurücksetzen</button>
+                                    <button type="submit" class="btn btn-primary">Speichern</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-language" aria-hidden="true"></i> Sprache und Region</h2>
+                        </div>
+                        <div class="profile-section-body">
+                            <div class="form-grid">
+                                <div class="form-group-enhanced">
+                                    <label for="language">Bevorzugte Sprache</label>
+                                    <select id="language" class="form-control-enhanced">
+                                        <option value="de" selected>Deutsch</option>
+                                        <option value="en">English</option>
+                                        <option value="fr">Français</option>
+                                        <option value="es">Español</option>
+                                        <option value="it">Italiano</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group-enhanced">
+                                    <label for="timezone">Zeitzone</label>
+                                    <select id="timezone" class="form-control-enhanced">
+                                        <option value="Europe/Berlin" selected>Berlin (UTC+01:00)</option>
+                                        <option value="Europe/London">London (UTC+00:00)</option>
+                                        <option value="America/New_York">New York (UTC-05:00)</option>
+                                        <option value="Asia/Tokyo">Tokyo (UTC+09:00)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group-enhanced">
+                                    <label for="dateFormat">Datumsformat</label>
+                                    <select id="dateFormat" class="form-control-enhanced">
+                                        <option value="DD.MM.YYYY" selected>31.12.2025 (DD.MM.YYYY)</option>
+                                        <option value="MM/DD/YYYY">12/31/2025 (MM/DD/YYYY)</option>
+                                        <option value="YYYY-MM-DD">2025-12-31 (YYYY-MM-DD)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group-enhanced">
+                                    <label for="timeFormat">Zeitformat</label>
+                                    <select id="timeFormat" class="form-control-enhanced">
+                                        <option value="24h" selected>24-Stunden (14:30)</option>
+                                        <option value="12h">12-Stunden (2:30 PM)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions-enhanced">
+                                <button type="button" class="btn btn-secondary">Zurücksetzen</button>
+                                <button type="button" class="btn btn-primary">Speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="properties" class="profile-tab-content">
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-home" aria-hidden="true"></i> Meine Immobilien</h2>
+                        </div>
+                        <div class="profile-section-body">
+                            <div class="property-card-enhanced">
+                                <div class="property-image-enhanced">
+                                    <img src="../img/apartment-preview.jpg" alt="Immobilie">
+                                </div>
+                                <div class="property-details-enhanced">
+                                    <h3 class="property-title-enhanced">Villa Marina, A-203</h3>
+                                    <div class="property-location-enhanced">
+                                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Esentepe, Nordzypern
+                                    </div>
+                                    
+                                    <div class="property-features-enhanced">
+                                        <div class="property-feature">
+                                            <i class="fas fa-ruler-combined" aria-hidden="true"></i> 180 m²
+                                        </div>
+                                        <div class="property-feature">
+                                            <i class="fas fa-bed" aria-hidden="true"></i> 3 Schlafzimmer
+                                        </div>
+                                        <div class="property-feature">
+                                            <i class="fas fa-bath" aria-hidden="true"></i> 2 Badezimmer
+                                        </div>
+                                        <div class="property-feature">
+                                            <i class="fas fa-swimming-pool" aria-hidden="true"></i> Privater Pool
+                                        </div>
+                                    </div>
+                                    
+                                    <p>Luxuriöse Villa mit 3 Schlafzimmern und privatem Pool, nur 5 Minuten vom Strand entfernt.</p>
+                                    
+                                    <div class="property-progress-enhanced">
+                                        <div class="property-progress-header">
+                                            <span>Kaufprozess: <strong>65% abgeschlossen</strong></span>
+                                            <span>Phase: <strong>Eigentumseintragung</strong></span>
+                                        </div>
+                                        <div class="progress-bar-enhanced">
+                                            <div class="progress-fill-enhanced" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="property-actions">
+                                        <a href="progress.html" class="btn btn-outline"><i class="fas fa-tasks" aria-hidden="true"></i> Fortschritt ansehen</a>
+                                        <a href="gallery.html" class="btn btn-primary"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-primary-soft p-4 rounded mt-4">
+                                <h3><i class="fas fa-info-circle" aria-hidden="true"></i> Hinweis</h3>
+                                <p>Um weitere Immobilien zu Ihrem Profil hinzuzufügen, kontaktieren Sie bitte Ihren persönlichen Berater. Wir kümmern uns um alle Details für Sie.</p>
+                                <a href="contact.html" class="btn btn-primary mt-2"><i class="fas fa-envelope" aria-hidden="true"></i> Berater kontaktieren</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="notifications" class="profile-tab-content">
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-bell" aria-hidden="true"></i> Benachrichtigungseinstellungen</h2>
+                        </div>
+                        <div class="profile-section-body">
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>E-Mail-Benachrichtigungen</h3>
+                                    <p>Erhalten Sie wichtige Updates und Nachrichten per E-Mail</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="email-notifications" class="toggle-input" checked>
+                                    <label for="email-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>SMS-Benachrichtigungen</h3>
+                                    <p>Erhalten Sie Echtzeit-Updates per SMS</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="sms-notifications" class="toggle-input">
+                                    <label for="sms-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>WhatsApp-Benachrichtigungen</h3>
+                                    <p>Erhalten Sie wichtige Updates per WhatsApp</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="whatsapp-notifications" class="toggle-input" checked>
+                                    <label for="whatsapp-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Push-Benachrichtigungen</h3>
+                                    <p>Erhalten Sie Benachrichtigungen direkt in Ihrem Browser</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="push-notifications" class="toggle-input" checked>
+                                    <label for="push-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-envelope-open" aria-hidden="true"></i> Benachrichtigungsarten</h2>
+                        </div>
+                        <div class="profile-section-body">
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Fortschrittsupdates</h3>
+                                    <p>Benachrichtigungen bei Änderungen im Kaufprozess</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="progress-notifications" class="toggle-input" checked>
+                                    <label for="progress-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Dokumentenupdates</h3>
+                                    <p>Benachrichtigungen bei neuen oder aktualisierten Dokumenten</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="document-notifications" class="toggle-input" checked>
+                                    <label for="document-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Zahlungserinnerungen</h3>
+                                    <p>Erinnerungen für anstehende Zahlungen</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="payment-notifications" class="toggle-input" checked>
+                                    <label for="payment-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Marketing-E-Mails</h3>
+                                    <p>Erhalten Sie Angebote, Newsletter und andere Informationen</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="marketing-notifications" class="toggle-input">
+                                    <label for="marketing-notifications" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions-enhanced">
+                                <button type="button" class="btn btn-primary">Einstellungen speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="security" class="profile-tab-content">
+                    <div class="profile-tab-section">
+                        <div class="profile-section-header">
+                            <h2><i class="fas fa-lock" aria-hidden="true"></i> Sicherheitseinstellungen</h2>
+                        </div>
+                        <div class="profile-section-body security-section">
+                            <h3>Passwort ändern</h3>
+                            <form id="passwordChangeForm" class="form-enhanced">
+                                <div class="form-group-enhanced">
+                                    <label for="currentPassword">Aktuelles Passwort</label>
+                                    <input type="password" id="currentPassword" class="form-control-enhanced" placeholder="Aktuelles Passwort eingeben">
+                                </div>
+                                
+                                <div class="form-group-enhanced">
+                                    <label for="newPassword">Neues Passwort</label>
+                                    <input type="password" id="newPassword" class="form-control-enhanced" placeholder="Neues Passwort eingeben">
+                                </div>
+                                
+                                <div class="form-group-enhanced">
+                                    <label for="confirmPassword">Passwort bestätigen</label>
+                                    <input type="password" id="confirmPassword" class="form-control-enhanced" placeholder="Neues Passwort bestätigen">
+                                </div>
+                                
+                                <div class="password-rules">
+                                    <strong>Passwortregeln:</strong>
+                                    <ul>
+                                        <li>Mindestens 8 Zeichen</li>
+                                        <li>Mindestens eine Zahl (0-9)</li>
+                                        <li>Mindestens ein Großbuchstabe (A-Z)</li>
+                                        <li>Mindestens ein Kleinbuchstabe (a-z)</li>
+                                        <li>Mindestens ein Sonderzeichen (!, @, #, etc.)</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="form-actions-enhanced">
+                                    <button type="submit" class="btn btn-primary">Passwort ändern</button>
+                                </div>
+                            </form>
+                            
+                            <h3 class="mt-5">Zwei-Faktor-Authentifizierung</h3>
+                            <p>Erhöhen Sie die Sicherheit Ihres Kontos mit Zwei-Faktor-Authentifizierung.</p>
+                            
+                            <div class="notification-setting">
+                                <div class="notification-setting-info">
+                                    <h3>Zwei-Faktor-Authentifizierung aktivieren</h3>
+                                    <p>Bei jedem Login wird ein zusätzlicher Sicherheitscode benötigt</p>
+                                </div>
+                                <div class="form-toggle-enhanced">
+                                    <input type="checkbox" id="two-factor-auth" class="toggle-input">
+                                    <label for="two-factor-auth" class="toggle-label">Aktivieren</label>
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="mt-5">Sitzungsverwaltung</h3>
+                            <p>Hier können Sie Ihre aktuellen Sitzungen einsehen und verwalten.</p>
+                            
+                            <div class="bg-primary-soft p-4 rounded mt-3">
+                                <h4><i class="fas fa-desktop" aria-hidden="true"></i> Aktuelle Sitzung</h4>
+                                <p><strong>Gerät:</strong> Chrome auf Windows</p>
+                                <p><strong>Ort:</strong> Berlin, Deutschland</p>
+                                <p><strong>Letzter Login:</strong> Heute, 14:35 Uhr</p>
+                            </div>
+                            
+                            <button type="button" class="btn btn-danger mt-3">
+                                <i class="fas fa-power-off" aria-hidden="true"></i> Alle anderen Sitzungen beenden
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add API client and auth service before main.js -->
+    <script src="../js/config.js" type="module"></script>
+<script src="../js/api-client.js" type="module"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/forms-enhanced.js"></script>
+    <script src="../js/keyboard-nav.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/language-switcher.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language switcher
+            if (window.LanguageSwitcher) {
+                const languageSwitcher = new LanguageSwitcher({
+                    containerId: 'language-switcher',
+                    i18nService: window.i18n
+                });
+            }
+            
+            // Check authentication
+            if (!window.authService.isAuthenticated() && 
+                (!window.demoAuthService || !window.demoAuthService.isAuthenticated())) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Get current user from local storage (while API loads)
+            const currentUser = window.authService.getCurrentUser() || 
+                               (window.demoAuthService ? window.demoAuthService.getCurrentUser() : null);
+            
+            if (currentUser) {
+                // Display initial user info from localStorage
+                document.getElementById('userName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+                document.getElementById('profileName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+                
+                // Pre-fill form fields if available
+                if (document.getElementById('firstName')) {
+                    document.getElementById('firstName').value = currentUser.first_name || '';
+                }
+                
+                if (document.getElementById('lastName')) {
+                    document.getElementById('lastName').value = currentUser.last_name || '';
+                }
+                
+                if (document.getElementById('email')) {
+                    document.getElementById('email').value = currentUser.email || '';
+                }
+            }
+            
+            // Set up logout functionality
+            document.getElementById('logoutLink').addEventListener('click', async function(e) {
+                e.preventDefault();
+                // Check which auth service to use
+                if (localStorage.getItem('rb_is_demo') === 'true') {
+                    window.demoAuthService.logout();
+                } else {
+                    await window.authService.logout();
+                }
+                window.location.href = '../login.html';
+            });
+            
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.profile-tab-btn, .tab-link');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update tab buttons
+                    document.querySelectorAll('.profile-tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-tab') === tabId) {
+                            btn.classList.add('active');
+                        }
+                    });
+                    
+                    // Update sidebar links
+                    document.querySelectorAll('.tab-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('data-tab') === tabId) {
+                            link.classList.add('active');
+                        }
+                    });
+                    
+                    // Update tab content
+                    document.querySelectorAll('.profile-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Handle form submissions
+            const personalInfoForm = document.getElementById('personalInfoForm');
+            if (personalInfoForm) {
+                personalInfoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Collect form data
+                    const userData = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        address: document.getElementById('address').value,
+                        city: document.getElementById('city').value,
+                        postalCode: document.getElementById('postalCode').value,
+                        country: document.getElementById('country').value
+                    };
+                    
+                    // Log data (in a real app, this would be sent to the server)
+                    console.log('Saving user data:', userData);
+                    
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            'Ihre persönlichen Daten wurden erfolgreich aktualisiert.',
+                            'Daten gespeichert'
+                        );
+                    } else {
+                        alert('Ihre persönlichen Daten wurden erfolgreich aktualisiert.');
+                    }
+                    
+                    // Update display name
+                    document.getElementById('profileName').textContent = 
+                        `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('userName').textContent = 
+                        `${userData.firstName} ${userData.lastName}`;
+                });
+            }
+            
+            // Handle password change form
+            const passwordChangeForm = document.getElementById('passwordChangeForm');
+            if (passwordChangeForm) {
+                passwordChangeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    // Simple validation
+                    if (!currentPassword || !newPassword || !confirmPassword) {
+                        if (window.RedBirdNotify) {
+                            window.RedBirdNotify.danger(
+                                'Bitte füllen Sie alle Passwortfelder aus.',
+                                'Validierungsfehler'
+                            );
+                        } else {
+                            alert('Bitte füllen Sie alle Passwortfelder aus.');
+                        }
+                        return;
+                    }
+                    
+                    if (newPassword !== confirmPassword) {
+                        if (window.RedBirdNotify) {
+                            window.RedBirdNotify.danger(
+                                'Die neuen Passwörter stimmen nicht überein.',
+                                'Validierungsfehler'
+                            );
+                        } else {
+                            alert('Die neuen Passwörter stimmen nicht überein.');
+                        }
+                        return;
+                    }
+                    
+                    // Password strength check (simple example)
+                    const hasUpperCase = /[A-Z]/.test(newPassword);
+                    const hasLowerCase = /[a-z]/.test(newPassword);
+                    const hasNumbers = /\d/.test(newPassword);
+                    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+                    const isLongEnough = newPassword.length >= 8;
+                    
+                    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecial || !isLongEnough) {
+                        if (window.RedBirdNotify) {
+                            window.RedBirdNotify.danger(
+                                'Das neue Passwort erfüllt nicht alle Sicherheitsanforderungen.',
+                                'Validierungsfehler'
+                            );
+                        } else {
+                            alert('Das neue Passwort erfüllt nicht alle Sicherheitsanforderungen.');
+                        }
+                        return;
+                    }
+                    
+                    // Success (in a real app, this would involve API calls)
+                    console.log('Password change requested');
+                    
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            'Ihr Passwort wurde erfolgreich geändert.',
+                            'Passwort aktualisiert'
+                        );
+                    } else {
+                        alert('Ihr Passwort wurde erfolgreich geändert.');
+                    }
+                    
+                    // Reset form
+                    this.reset();
+                });
+            }
+            
+            // Handle profile image change
+            const changeProfileImageBtn = document.getElementById('changeProfileImage');
+            if (changeProfileImageBtn) {
+                changeProfileImageBtn.addEventListener('click', function() {
+                    // In a real app, this would open a file picker
+                    // For demo purposes, just show a notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.info(
+                            'In der vollständigen Version können Sie hier Ihr Profilbild ändern.',
+                            'Demo-Funktionalität'
+                        );
+                    } else {
+                        alert('Diese Funktion ist in der Demo-Version nicht verfügbar.');
+                    }
+                });
+            }
+            
+            // Handle notification toggles
+            const toggles = document.querySelectorAll('.toggle-input');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const settingName = this.id;
+                    const isEnabled = this.checked;
+                    
+                    console.log(`Setting ${settingName} changed to ${isEnabled}`);
+                    
+                    // Show notification
+                    if (window.RedBirdNotify) {
+                        const status = isEnabled ? 'aktiviert' : 'deaktiviert';
+                        window.RedBirdNotify.info(
+                            `Benachrichtigungseinstellung erfolgreich ${status}.`,
+                            'Einstellung aktualisiert'
+                        );
+                    }
+                });
+            });
+            
+            // Try to load user data from API (if available)
+            try {
+                const response = await window.api.get('/user/profile');
+                
+                if (response && response.user) {
+                    const user = response.user;
+                    
+                    // Update display name
+                    document.getElementById('profileName').textContent = `${user.first_name} ${user.last_name}`;
+                    document.getElementById('userName').textContent = `${user.first_name} ${user.last_name}`;
+                    
+                    // Update property info if available
+                    if (user.property) {
+                        document.getElementById('profileProperty').textContent = user.property.name || '';
+                        document.getElementById('userProperty').textContent = user.property.name || '';
+                    }
+                    
+                    // Update form fields
+                    if (document.getElementById('firstName')) {
+                        document.getElementById('firstName').value = user.first_name || '';
+                    }
+                    
+                    if (document.getElementById('lastName')) {
+                        document.getElementById('lastName').value = user.last_name || '';
+                    }
+                    
+                    if (document.getElementById('email')) {
+                        document.getElementById('email').value = user.email || '';
+                    }
+                    
+                    if (document.getElementById('phone')) {
+                        document.getElementById('phone').value = user.phone || '';
+                    }
+                    
+                    if (user.address) {
+                        if (document.getElementById('address')) {
+                            document.getElementById('address').value = user.address.street || '';
+                        }
+                        
+                        if (document.getElementById('city')) {
+                            document.getElementById('city').value = user.address.city || '';
+                        }
+                        
+                        if (document.getElementById('postalCode')) {
+                            document.getElementById('postalCode').value = user.address.postal_code || '';
+                        }
+                        
+                        if (document.getElementById('country')) {
+                            document.getElementById('country').value = user.address.country || 'DE';
+                        }
+                    }
+                    
+                    // Update profile image if available
+                    if (user.avatar_url) {
+                        document.getElementById('profileImage').src = user.avatar_url;
+                    }
+                }
+                
+                // Show welcome notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Willkommen in Ihrem Profil. Hier können Sie Ihre persönlichen Einstellungen verwalten.',
+                        'Profil geladen'
+                    );
+                }
+                
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                
+                // Show error notification (only if actual API call was attempted)
+                if (error.message !== 'Not implemented') {
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.warning(
+                            'Es gab ein Problem beim Laden Ihrer Profildaten. Einige Informationen könnten nicht aktuell sein.',
+                            'Verbindungsproblem'
+                        );
+                    }
+                }
+            }
+            
+            // Update page with current language if i18n is available
+            if (window.i18n) {
+                window.i18n.translatePage();
+                
+                // Listen for language changes
+                document.addEventListener('languageChanged', function(event) {
+                    // Update the page with new translations
+                    window.i18n.translatePage();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

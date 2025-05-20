@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumente - RedBird Kundenportal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+        
+        .theme-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            color: var(--primary-red-light);
+        }
+        
+        /* Body style for transition */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Theme initialized class to prevent FOUC */
+        .theme-initialized {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item active"><a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a></li>
+                <li class="nav-item"><a href="gallery.html"><i class="fas fa-images"></i> Fotogalerie</a></li>
+                <li class="nav-item"><a href="progress.html"><i class="fas fa-tasks"></i> Prozessverlauf</a></li>
+                <li class="nav-item"><a href="contact.html"><i class="fas fa-envelope"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" data-theme-icon></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name">Max Mustermann</span>
+                    <span class="user-role">Apartment #A-203</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div class="content-header">
+            <h1><i class="fas fa-file-alt"></i> Dokumente</h1>
+            <p>Alle wichtigen Unterlagen zu Ihrer Immobilie an einem Ort</p>
+        </div>
+
+        <div class="documents-container">
+            <div class="documents-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Dokumente durchsuchen..." class="search-input">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filter-container">
+                    <select class="filter-select">
+                        <option value="all">Alle Kategorien</option>
+                        <option value="contracts">Verträge</option>
+                        <option value="legal">Rechtsdokumente</option>
+                        <option value="financial">Finanzunterlagen</option>
+                        <option value="technical">Technische Dokumente</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary upload-btn"><i class="fas fa-upload"></i> Dokument hochladen</button>
+            </div>
+
+            <div class="document-upload-area" id="uploadArea" style="display: none;">
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <h3>Dokument hochladen</h3>
+                        <button class="close-btn" onclick="toggleUploadArea()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="upload-body">
+                        <div class="upload-dropzone" id="dropzone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Dateien hierher ziehen oder <span class="browse-link">durchsuchen</span></p>
+                            <input type="file" id="fileInput" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="docTitle">Dokumenttitel</label>
+                            <input type="text" id="docTitle" placeholder="z.B. Kaufvertrag, Grundriss, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="docCategory">Kategorie</label>
+                            <select id="docCategory">
+                                <option value="contracts">Verträge</option>
+                                <option value="legal">Rechtsdokumente</option>
+                                <option value="financial">Finanzunterlagen</option>
+                                <option value="technical">Technische Dokumente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="docDescription">Beschreibung (optional)</label>
+                            <textarea id="docDescription" rows="3" placeholder="Kurze Beschreibung des Dokuments..."></textarea>
+                        </div>
+                        <div class="upload-actions">
+                            <button class="btn btn-outline" onclick="toggleUploadArea()">Abbrechen</button>
+                            <button class="btn btn-primary">Hochladen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document-categories">
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2>Verträge</h2>
+                        <span class="doc-count">3 Dokumente</span>
+                    </div>
+                    <div class="document-list">
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Kaufvertrag_final.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">2.4 MB</span>
+                                    <span class="doc-date">Hochgeladen am 10.05.2025</span>
+                                </div>
+                                <p class="doc-description">Finaler Kaufvertrag für Apartment A-203 im Sunset Bay Resort.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Kaufvertrag_Entwurf.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">2.3 MB</span>
+                                    <span class="doc-date">Hochgeladen am 25.04.2025</span>
+                                </div>
+                                <p class="doc-description">Entwurf des Kaufvertrags vor finaler Prüfung.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Reservierungsvereinbarung.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">1.1 MB</span>
+                                    <span class="doc-date">Hochgeladen am 15.03.2025</span>
+                                </div>
+                                <p class="doc-description">Vereinbarung zur Reservierung des Apartments.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2>Rechtsdokumente</h2>
+                        <span class="doc-count">2 Dokumente</span>
+                    </div>
+                    <div class="document-list">
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Grundbuchauszug.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">3.6 MB</span>
+                                    <span class="doc-date">Hochgeladen am 02.05.2025</span>
+                                </div>
+                                <p class="doc-description">Grundbuchauszug für die Immobilie.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Vollmacht_Grundbucheintragung.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">1.2 MB</span>
+                                    <span class="doc-date">Hochgeladen am 05.05.2025</span>
+                                </div>
+                                <p class="doc-description">Vollmacht für die Eintragung im Grundbuch.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2>Finanzunterlagen</h2>
+                        <span class="doc-count">2 Dokumente</span>
+                    </div>
+                    <div class="document-list">
+                        <div class="document-card">
+                            <div class="doc-icon excel">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Kostenaufstellung.xlsx</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">0.8 MB</span>
+                                    <span class="doc-date">Hochgeladen am 28.04.2025</span>
+                                </div>
+                                <p class="doc-description">Detaillierte Aufstellung aller Kosten inkl. Nebenkosten.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Zahlungsbestätigung.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">0.5 MB</span>
+                                    <span class="doc-date">Hochgeladen am 26.04.2025</span>
+                                </div>
+                                <p class="doc-description">Bestätigung der geleisteten Zahlungen.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2>Technische Dokumente</h2>
+                        <span class="doc-count">3 Dokumente</span>
+                    </div>
+                    <div class="document-list">
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Grundriss_A-203.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">4.2 MB</span>
+                                    <span class="doc-date">Hochgeladen am 20.03.2025</span>
+                                </div>
+                                <p class="doc-description">Detaillierter Grundriss des Apartments A-203.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Baubeschreibung.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">5.7 MB</span>
+                                    <span class="doc-date">Hochgeladen am 20.03.2025</span>
+                                </div>
+                                <p class="doc-description">Technische Beschreibung des Gebäudes und der verwendeten Materialien.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-details">
+                                <h3>Ausstattungsliste.pdf</h3>
+                                <div class="doc-meta">
+                                    <span class="doc-size">1.8 MB</span>
+                                    <span class="doc-date">Hochgeladen am 22.03.2025</span>
+                                </div>
+                                <p class="doc-description">Liste aller Ausstattungsmerkmale des Apartments.</p>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="action-btn view-btn" title="Anzeigen"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn download-btn" title="Herunterladen"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        function toggleUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            if (uploadArea.style.display === 'none') {
+                uploadArea.style.display = 'block';
+            } else {
+                uploadArea.style.display = 'none';
+            }
+        }
+        
+        document.querySelector('.upload-btn').addEventListener('click', toggleUploadArea);
+        
+        document.querySelector('.browse-link').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+        
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                document.getElementById('dropzone').classList.add('file-selected');
+                document.getElementById('dropzone').innerHTML = `
+                    <i class="fas fa-file-alt"></i>
+                    <p>${e.target.files[0].name}</p>
+                    <span class="file-size">${(e.target.files[0].size / 1024 / 1024).toFixed(2)} MB</span>
+                `;
+            }
+        });
+    </script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                AuthService.logout();
+                window.location.href = '../login.html';
+            });
+        });
+    </script>
+</body>
+</html>

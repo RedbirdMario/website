@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotogalerie - RedBird Kundenportal</title>
+    <meta name="description" content="Fotogalerie Ihrer Immobilie im RedBird Kundenportal. Sehen Sie Innen- und Außenaufnahmen sowie Bilder der Umgebung.">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E72E2E">
+    <link rel="apple-touch-icon" href="../img/icons/icon-192x192.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .gallery-header {
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .filter-btn {
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn:hover {
+            background-color: var(--bg-soft);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-red);
+            color: white;
+        }
+        
+        .filter-btn i {
+            font-size: 1rem;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-card {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .gallery-image {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+        
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+        
+        .gallery-card:hover .gallery-image img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .gallery-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .gallery-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary-red);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .gallery-action-btn:hover {
+            background-color: var(--primary-red);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .gallery-info {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .gallery-title {
+            font-size: 1.1rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+        
+        .gallery-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .gallery-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+        
+        .gallery-category {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--bg-soft);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .gallery-category i {
+            margin-right: 0.35rem;
+            font-size: 0.75rem;
+        }
+        
+        .gallery-date {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: var(--z-modal);
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: -2rem;
+            right: -2rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .lightbox-close:hover {
+            transform: scale(1.1);
+            color: var(--primary-red);
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3rem;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .lightbox-nav:hover {
+            background-color: var(--primary-red);
+        }
+        
+        .lightbox-prev {
+            left: -4rem;
+        }
+        
+        .lightbox-next {
+            right: -4rem;
+        }
+        
+        .lightbox-image-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 80vh;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .lightbox-image-container img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        
+        .lightbox-info {
+            color: white;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .lightbox-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            color: white;
+        }
+        
+        .lightbox-info p {
+            margin: 0;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .lightbox-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .lightbox-action-btn {
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .lightbox-action-btn:hover {
+            background-color: var(--primary-red);
+        }
+        
+        .no-media-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .no-media-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        
+        .no-media-message h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .no-media-message p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .lightbox-content {
+                max-width: 95%;
+            }
+            
+            .lightbox-nav {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1.2rem;
+            }
+            
+            .lightbox-prev {
+                left: 1rem;
+            }
+            
+            .lightbox-next {
+                right: 1rem;
+            }
+            
+            .lightbox-close {
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    <nav class="main-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li class="nav-item" role="none"><a href="dashboard.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Dashboard</a></li>
+                <li class="nav-item" role="none"><a href="documents.html" role="menuitem"><i class="fas fa-file-alt" aria-hidden="true"></i> Dokumente</a></li>
+                <li class="nav-item active" role="none"><a href="gallery.html" role="menuitem" aria-current="page"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a></li>
+                <li class="nav-item" role="none"><a href="progress.html" role="menuitem"><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</a></li>
+                <li class="nav-item" role="none"><a href="contact.html" role="menuitem"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="language-switcher"></div>
+                <button class="theme-toggle" data-theme-toggle aria-label="Dark Mode umschalten" aria-pressed="false">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Laden...</span>
+                    <span class="user-role" id="userProperty">Laden...</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn" aria-label="Benutzermenü öffnen" aria-expanded="false" aria-haspopup="true" aria-controls="user-menu-dropdown"><i class="fas fa-user-circle" aria-hidden="true"></i></button>
+                    <div class="dropdown-content" id="user-menu-dropdown" role="menu">
+                        <a href="profile.html" role="menuitem"><i class="fas fa-user-cog" aria-hidden="true"></i> Profil</a>
+                        <a href="settings.html" role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="gallery-container" id="main-content" role="main">
+        <div class="gallery-header">
+            <h1>Fotogalerie</h1>
+            <p class="lead" id="property-description">Bilder Ihrer Immobilie im Sunset Bay Resort</p>
+        </div>
+        
+        <div class="gallery-filter" role="tablist" aria-label="Bildkategorien">
+            <button class="filter-btn active" data-category="all" role="tab" aria-selected="true" aria-controls="gallery-grid">
+                <i class="fas fa-border-all" aria-hidden="true"></i> Alle Fotos
+            </button>
+            <button class="filter-btn" data-category="exterior" role="tab" aria-selected="false" aria-controls="gallery-grid">
+                <i class="fas fa-building" aria-hidden="true"></i> Außenansicht
+            </button>
+            <button class="filter-btn" data-category="interior" role="tab" aria-selected="false" aria-controls="gallery-grid">
+                <i class="fas fa-couch" aria-hidden="true"></i> Innenansicht
+            </button>
+            <button class="filter-btn" data-category="amenities" role="tab" aria-selected="false" aria-controls="gallery-grid">
+                <i class="fas fa-swimming-pool" aria-hidden="true"></i> Ausstattung
+            </button>
+            <button class="filter-btn" data-category="area" role="tab" aria-selected="false" aria-controls="gallery-grid">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Umgebung
+            </button>
+        </div>
+        
+        <div class="gallery-grid" id="gallery-grid" role="tabpanel" aria-labelledby="gallery-filter">
+            <!-- Gallery items will be dynamically loaded here -->
+            <div class="gallery-card" data-category="exterior">
+                <div class="gallery-image">
+                    <img src="../img/gallery/exterior-1.jpg" alt="Außenansicht des Resorts">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(0)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Außenansicht des Resorts</h3>
+                    <p class="gallery-description">Vorderansicht des Sunset Bay Resort mit Blick auf das Hauptgebäude und den Eingangsbereich.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-building" aria-hidden="true"></i> Außenansicht
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 15.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-card" data-category="exterior">
+                <div class="gallery-image">
+                    <img src="../img/gallery/exterior-2.jpg" alt="Poolbereich">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(1)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Gemeinschaftspool</h3>
+                    <p class="gallery-description">Der große Gemeinschaftspool mit Blick auf das Mittelmeer.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-building" aria-hidden="true"></i> Außenansicht
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 15.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-card" data-category="interior">
+                <div class="gallery-image">
+                    <img src="../img/gallery/interior-1.jpg" alt="Wohnzimmer">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(2)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Wohnzimmer</h3>
+                    <p class="gallery-description">Das geräumige Wohnzimmer mit modernen Möbeln und direktem Zugang zur Terrasse.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-couch" aria-hidden="true"></i> Innenansicht
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 20.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-card" data-category="interior">
+                <div class="gallery-image">
+                    <img src="../img/gallery/interior-3.jpg" alt="Hauptschlafzimmer">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(3)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Hauptschlafzimmer</h3>
+                    <p class="gallery-description">Geräumiges Hauptschlafzimmer mit Kingsize-Bett und eingebauten Schränken.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-couch" aria-hidden="true"></i> Innenansicht
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 20.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-card" data-category="amenities">
+                <div class="gallery-image">
+                    <img src="../img/gallery/amenities-1.jpg" alt="Fitnesscenter">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(4)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Fitnesscenter</h3>
+                    <p class="gallery-description">Modernes Fitnesscenter mit verschiedenen Geräten und Blick auf den Pool.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-swimming-pool" aria-hidden="true"></i> Ausstattung
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 18.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-card" data-category="area">
+                <div class="gallery-image">
+                    <img src="../img/gallery/area-1.jpg" alt="Strand">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(5)" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">Naher Strand</h3>
+                    <p class="gallery-description">Der öffentliche Strand ist nur 5 Gehminuten vom Resort entfernt.</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Umgebung
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> 16.03.2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Bildanzeige">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()" aria-label="Bildansicht schließen">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+            <button class="lightbox-nav lightbox-prev" onclick="changeImage(-1)" aria-label="Vorheriges Bild">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <div class="lightbox-image-container">
+                <img src="" alt="" id="lightbox-image">
+            </div>
+            <button class="lightbox-nav lightbox-next" onclick="changeImage(1)" aria-label="Nächstes Bild">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </button>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-description"></p>
+            </div>
+            <div class="lightbox-actions">
+                <button class="lightbox-action-btn" id="download-image" aria-label="Bild herunterladen">
+                    <i class="fas fa-download" aria-hidden="true"></i> Herunterladen
+                </button>
+                <button class="lightbox-action-btn" id="share-image" aria-label="Bild teilen">
+                    <i class="fas fa-share-alt" aria-hidden="true"></i> Teilen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add API client and auth service before main.js -->
+    <script src="../js/config.js" type="module"></script>
+<script src="../js/api-client.js" type="module"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/keyboard-nav.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/language-switcher.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        // Global variables
+        let galleryImages = [];
+        let currentImageIndex = 0;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language switcher
+            if (window.LanguageSwitcher) {
+                const languageSwitcher = new LanguageSwitcher({
+                    containerId: 'language-switcher',
+                    i18nService: window.i18n
+                });
+            }
+            
+            // Initialize accessibility features
+            initAccessibility();
+            
+            // Check authentication
+            if (!window.authService.isAuthenticated() && 
+                (!window.demoAuthService || !window.demoAuthService.isAuthenticated())) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Get current user from local storage (while API loads)
+            const currentUser = window.authService.getCurrentUser() || 
+                               (window.demoAuthService ? window.demoAuthService.getCurrentUser() : null);
+            
+            if (currentUser) {
+                // Display initial user info from localStorage
+                document.getElementById('userName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+                if (currentUser.property) {
+                    document.getElementById('userProperty').textContent = currentUser.property.name || '';
+                    document.getElementById('property-description').textContent = 
+                        `Bilder Ihrer Immobilie im ${currentUser.property.name || 'Sunset Bay Resort'}`;
+                }
+            }
+            
+            // Set up category filtering
+            setupGalleryFilters();
+            
+            // Set up lightbox functionality
+            setupLightbox();
+            
+            // Set up logout functionality
+            document.getElementById('logoutLink').addEventListener('click', async function(e) {
+                e.preventDefault();
+                // Check which auth service to use
+                if (localStorage.getItem('rb_is_demo') === 'true') {
+                    window.demoAuthService.logout();
+                } else {
+                    await window.authService.logout();
+                }
+                window.location.href = '../login.html';
+            });
+            
+            try {
+                // Fetch gallery images from API
+                const response = await window.api.get('/gallery/images');
+                
+                if (response && response.images && response.images.length > 0) {
+                    // Update global galleryImages array for lightbox
+                    galleryImages = response.images.map(image => ({
+                        src: image.url,
+                        title: image.title,
+                        description: image.description,
+                        category: image.category,
+                        date: formatDate(image.date)
+                    }));
+                    
+                    // Create gallery cards for each image
+                    const galleryGrid = document.getElementById('gallery-grid');
+                    galleryGrid.innerHTML = ''; // Clear existing cards
+                    
+                    response.images.forEach((image, index) => {
+                        const galleryCard = createGalleryCard(image, index);
+                        galleryGrid.appendChild(galleryCard);
+                    });
+                    
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            `${response.images.length} Bilder wurden geladen.`,
+                            'Galerie geladen'
+                        );
+                    }
+                } else {
+                    // Show no images message
+                    showNoImagesMessage();
+                }
+                
+            } catch (error) {
+                console.error('Error fetching gallery images:', error);
+                
+                // Use existing images in the DOM
+                const galleryItems = document.querySelectorAll('.gallery-card');
+                
+                if (galleryItems.length === 0) {
+                    // Show no images message
+                    showNoImagesMessage();
+                } else {
+                    // Create galleryImages array from existing DOM elements
+                    galleryItems.forEach((item, index) => {
+                        const imgElement = item.querySelector('img');
+                        const titleElement = item.querySelector('.gallery-title');
+                        const descriptionElement = item.querySelector('.gallery-description');
+                        const dateElement = item.querySelector('.gallery-date');
+                        const categoryElement = item.querySelector('.gallery-category');
+                        
+                        if (imgElement && titleElement && descriptionElement) {
+                            galleryImages.push({
+                                src: imgElement.src,
+                                title: titleElement.textContent,
+                                description: descriptionElement.textContent,
+                                category: item.getAttribute('data-category'),
+                                date: dateElement ? dateElement.textContent.replace('Aufgenommen am ', '') : ''
+                            });
+                        }
+                    });
+                }
+                
+                // Show error notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.warning(
+                        'Es gab ein Problem beim Laden der Galerie-Daten. Einige Bilder könnten nicht verfügbar sein.',
+                        'Verbindungsproblem'
+                    );
+                }
+            }
+            
+            // Update page with current language if i18n is available
+            if (window.i18n) {
+                window.i18n.translatePage();
+                
+                // Listen for language changes
+                document.addEventListener('languageChanged', function(event) {
+                    // Update the page with new translations
+                    window.i18n.translatePage();
+                });
+            }
+        });
+        
+        // Function to initialize accessibility features
+        function initAccessibility() {
+            // Update theme toggle state based on current theme
+            const themeToggle = document.querySelector('[data-theme-toggle]');
+            if (themeToggle) {
+                const currentTheme = localStorage.getItem('redbird_theme') || 'light';
+                themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
+                
+                // Update aria-pressed when theme changes
+                themeToggle.addEventListener('click', function() {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    this.setAttribute('aria-pressed', isDark);
+                });
+            }
+            
+            // Add keyboard support for dropdown menu
+            const dropdownBtn = document.querySelector('.dropbtn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            
+            if (dropdownBtn && dropdownContent) {
+                // Toggle dropdown on click
+                dropdownBtn.addEventListener('click', function() {
+                    const expanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !expanded);
+                    dropdownContent.style.display = expanded ? 'none' : 'block';
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn') && !e.target.closest('.dropdown-content')) {
+                        dropdownBtn.setAttribute('aria-expanded', 'false');
+                        dropdownContent.style.display = 'none';
+                    }
+                });
+                
+                // Handle keyboard navigation within dropdown
+                const menuItems = dropdownContent.querySelectorAll('[role="menuitem"]');
+                menuItems.forEach((item, index) => {
+                    item.addEventListener('keydown', function(e) {
+                        let nextItem = null;
+                        
+                        // Arrow down: go to next item
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            nextItem = menuItems[(index + 1) % menuItems.length];
+                        }
+                        // Arrow up: go to previous item
+                        else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            nextItem = menuItems[(index - 1 + menuItems.length) % menuItems.length];
+                        }
+                        // Escape: close dropdown
+                        else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            dropdownBtn.setAttribute('aria-expanded', 'false');
+                            dropdownContent.style.display = 'none';
+                            dropdownBtn.focus();
+                            return;
+                        }
+                        
+                        if (nextItem) {
+                            nextItem.focus();
+                        }
+                    });
+                });
+            }
+            
+            // Add keyboard support for category filters
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            if (filterButtons.length) {
+                filterButtons.forEach((btn, index) => {
+                    btn.addEventListener('keydown', function(e) {
+                        let nextButton = null;
+                        
+                        // Arrow right: go to next button
+                        if (e.key === 'ArrowRight') {
+                            e.preventDefault();
+                            nextButton = filterButtons[(index + 1) % filterButtons.length];
+                        }
+                        // Arrow left: go to previous button
+                        else if (e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            nextButton = filterButtons[(index - 1 + filterButtons.length) % filterButtons.length];
+                        }
+                        // Space or Enter: activate button
+                        else if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault();
+                            btn.click();
+                            return;
+                        }
+                        
+                        if (nextButton) {
+                            nextButton.focus();
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Function to set up gallery filters
+        function setupGalleryFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active class on buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
+                    
+                    // Apply filter
+                    const category = this.getAttribute('data-category');
+                    applyFilter(category);
+                    
+                    // Announce filter change to screen readers
+                    const announcement = `Zeige ${category === 'all' ? 'alle Bilder' : 'Bilder in Kategorie ' + category}`;
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.info(announcement, 'Kategorie geändert');
+                    }
+                });
+            });
+        }
+        
+        // Function to apply category filter
+        function applyFilter(category) {
+            const galleryItems = document.querySelectorAll('.gallery-card');
+            
+            galleryItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Function to set up lightbox
+        function setupLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            
+            // Close lightbox when clicking outside the image
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+            
+            // Keyboard navigation for lightbox
+            document.addEventListener('keydown', function(e) {
+                if (lightbox.style.display === 'flex') {
+                    if (e.key === 'ArrowLeft') {
+                        changeImage(-1);
+                    } else if (e.key === 'ArrowRight') {
+                        changeImage(1);
+                    } else if (e.key === 'Escape') {
+                        closeLightbox();
+                    }
+                }
+            });
+            
+            // Download button functionality
+            document.getElementById('download-image').addEventListener('click', function() {
+                if (galleryImages.length === 0 || currentImageIndex >= galleryImages.length) return;
+                
+                const image = galleryImages[currentImageIndex];
+                const link = document.createElement('a');
+                link.href = image.src;
+                link.download = image.title.replace(/\s+/g, '_').toLowerCase() + '.jpg';
+                link.click();
+                
+                // Show notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Das Bild wird heruntergeladen.',
+                        'Download gestartet'
+                    );
+                }
+            });
+            
+            // Share button functionality
+            document.getElementById('share-image').addEventListener('click', function() {
+                if (galleryImages.length === 0 || currentImageIndex >= galleryImages.length) return;
+                
+                // In a real app, this would use the Web Share API
+                // For demo purposes, just show a notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.info(
+                        'In der vollständigen Version können Sie hier Bilder direkt teilen.',
+                        'Demo-Funktionalität'
+                    );
+                }
+            });
+        }
+        
+        // Open lightbox with specific image
+        function openLightbox(index) {
+            const lightbox = document.getElementById('lightbox');
+            
+            currentImageIndex = index;
+            updateLightboxImage();
+            
+            lightbox.style.display = 'flex';
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close lightbox
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            
+            lightbox.style.display = 'none';
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Change lightbox image
+        function changeImage(direction) {
+            if (galleryImages.length === 0) return;
+            
+            currentImageIndex += direction;
+            
+            // Wrap around if needed
+            if (currentImageIndex < 0) {
+                currentImageIndex = galleryImages.length - 1;
+            } else if (currentImageIndex >= galleryImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            updateLightboxImage();
+        }
+        
+        // Update lightbox image and info
+        function updateLightboxImage() {
+            if (galleryImages.length === 0 || currentImageIndex >= galleryImages.length) return;
+            
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxTitle = document.getElementById('lightbox-title');
+            const lightboxDescription = document.getElementById('lightbox-description');
+            
+            const image = galleryImages[currentImageIndex];
+            
+            lightboxImage.src = image.src;
+            lightboxImage.alt = image.title;
+            lightboxTitle.textContent = image.title;
+            lightboxDescription.textContent = image.description;
+        }
+        
+        // Helper function to create a gallery card
+        function createGalleryCard(image, index) {
+            const galleryCard = document.createElement('div');
+            galleryCard.className = 'gallery-card';
+            galleryCard.setAttribute('data-category', image.category);
+            
+            // Set category icon based on image category
+            let categoryIcon = 'fa-image';
+            if (image.category === 'exterior') categoryIcon = 'fa-building';
+            else if (image.category === 'interior') categoryIcon = 'fa-couch';
+            else if (image.category === 'amenities') categoryIcon = 'fa-swimming-pool';
+            else if (image.category === 'area') categoryIcon = 'fa-map-marker-alt';
+            
+            // Format category label
+            let categoryLabel = image.category.charAt(0).toUpperCase() + image.category.slice(1);
+            
+            // Format date
+            const formattedDate = formatDate(image.date);
+            
+            galleryCard.innerHTML = `
+                <div class="gallery-image">
+                    <img src="${image.url}" alt="${image.title}">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button class="gallery-action-btn" onclick="openLightbox(${index})" aria-label="Bild vergrößern">
+                                <i class="fas fa-expand" aria-hidden="true"></i>
+                            </button>
+                            <button class="gallery-action-btn" aria-label="Bild herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 class="gallery-title">${image.title}</h3>
+                    <p class="gallery-description">${image.description}</p>
+                    <div class="gallery-meta">
+                        <div class="gallery-category">
+                            <i class="fas ${categoryIcon}" aria-hidden="true"></i> ${categoryLabel}
+                        </div>
+                        <div class="gallery-date">
+                            <i class="far fa-calendar-alt" aria-hidden="true"></i> ${formattedDate}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return galleryCard;
+        }
+        
+        // Helper function to show a message when no images are available
+        function showNoImagesMessage() {
+            const galleryGrid = document.getElementById('gallery-grid');
+            galleryGrid.innerHTML = `
+                <div class="no-media-message">
+                    <div class="no-media-icon">
+                        <i class="fas fa-images" aria-hidden="true"></i>
+                    </div>
+                    <h3>Keine Bilder gefunden</h3>
+                    <p>Es wurden noch keine Bilder für Ihre Immobilie hochgeladen.</p>
+                    <p>Bitte kontaktieren Sie Ihren persönlichen Berater für weitere Informationen.</p>
+                    <a href="contact.html" class="btn btn-primary">Berater kontaktieren</a>
+                </div>
+            `;
+        }
+        
+        // Helper function to format a date string
+        function formatDate(dateString) {
+            if (!dateString) return 'Unbekanntes Datum';
+            
+            try {
+                // Try to parse the date
+                const date = new Date(dateString);
+                
+                // Check if date is valid
+                if (isNaN(date.getTime())) {
+                    return dateString;
+                }
+                
+                // Format date as DD.MM.YYYY
+                return date.toLocaleDateString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (error) {
+                return dateString;
+            }
+        }
+    </script>
+</body>
+</html>

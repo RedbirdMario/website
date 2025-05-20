@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotogalerie - RedBird Kundenportal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+        
+        .theme-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            color: var(--primary-red-light);
+        }
+        
+        /* Body style for transition */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Theme initialized class to prevent FOUC */
+        .theme-initialized {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a></li>
+                <li class="nav-item active"><a href="gallery.html"><i class="fas fa-images"></i> Fotogalerie</a></li>
+                <li class="nav-item"><a href="progress.html"><i class="fas fa-tasks"></i> Prozessverlauf</a></li>
+                <li class="nav-item"><a href="contact.html"><i class="fas fa-envelope"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" data-theme-icon></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name">Max Mustermann</span>
+                    <span class="user-role">Apartment #A-203</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div class="content-header">
+            <h1><i class="fas fa-images"></i> Fotogalerie</h1>
+            <p>Bilder Ihrer Immobilie im Sunset Bay Resort</p>
+        </div>
+
+        <div class="gallery-container">
+            <div class="gallery-navigation">
+                <button class="btn btn-outline active" data-category="all">Alle Fotos</button>
+                <button class="btn btn-outline" data-category="exterior">Außenansicht</button>
+                <button class="btn btn-outline" data-category="interior">Innenansicht</button>
+                <button class="btn btn-outline" data-category="amenities">Ausstattung</button>
+                <button class="btn btn-outline" data-category="area">Umgebung</button>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="exterior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/exterior-1.jpg" alt="Außenansicht des Resorts">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(0)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Außenansicht des Resorts</h3>
+                        <p>Vorderansicht des Sunset Bay Resort mit Blick auf das Hauptgebäude und den Eingangsbereich.</p>
+                        <span class="gallery-date">Aufgenommen am 15.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="exterior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/exterior-2.jpg" alt="Poolbereich">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(1)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Gemeinschaftspool</h3>
+                        <p>Der große Gemeinschaftspool mit Blick auf das Mittelmeer.</p>
+                        <span class="gallery-date">Aufgenommen am 15.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="exterior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/exterior-3.jpg" alt="Meerblick vom Resort">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(2)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Meerblick</h3>
+                        <p>Panoramablick auf das Mittelmeer von der Gartenanlage des Resorts.</p>
+                        <span class="gallery-date">Aufgenommen am 15.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-1.jpg" alt="Wohnzimmer">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(3)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Wohnzimmer</h3>
+                        <p>Das geräumige Wohnzimmer mit modernen Möbeln und direktem Zugang zur Terrasse.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-2.jpg" alt="Küche">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(4)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Voll ausgestattete Küche</h3>
+                        <p>Moderne Küche mit Qualitätsgeräten und ausreichend Stauraum.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-3.jpg" alt="Hauptschlafzimmer">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(5)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Hauptschlafzimmer</h3>
+                        <p>Geräumiges Hauptschlafzimmer mit Kingsize-Bett und eingebauten Schränken.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-4.jpg" alt="Badezimmer">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(6)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Modernes Badezimmer</h3>
+                        <p>Luxuriöses Badezimmer mit Regendusche und hochwertigen Armaturen.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-5.jpg" alt="Gästezimmer">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(7)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Zweites Schlafzimmer</h3>
+                        <p>Komfortables Gästezimmer mit zwei Einzelbetten.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="interior">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/interior-6.jpg" alt="Terrasse">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(8)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Terrasse mit Meerblick</h3>
+                        <p>Geräumige Terrasse mit Sitzgelegenheiten und atemberaubendem Blick auf das Mittelmeer.</p>
+                        <span class="gallery-date">Aufgenommen am 20.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="amenities">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/amenities-1.jpg" alt="Fitnesscenter">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(9)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Fitnesscenter</h3>
+                        <p>Modernes Fitnesscenter mit verschiedenen Geräten und Blick auf den Pool.</p>
+                        <span class="gallery-date">Aufgenommen am 18.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="amenities">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/amenities-2.jpg" alt="Spa-Bereich">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(10)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Spa & Wellness</h3>
+                        <p>Entspannender Spa-Bereich mit Sauna, Dampfbad und Massagemöglichkeiten.</p>
+                        <span class="gallery-date">Aufgenommen am 18.03.2025</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="area">
+                    <div class="gallery-image">
+                        <img src="../img/gallery/area-1.jpg" alt="Strand">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(11)"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>Naher Strand</h3>
+                        <p>Der öffentliche Strand ist nur 5 Gehminuten vom Resort entfernt.</p>
+                        <span class="gallery-date">Aufgenommen am 16.03.2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+            <button class="lightbox-nav lightbox-prev" onclick="changeImage(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="lightbox-image-container">
+                <img src="" alt="" id="lightbox-image">
+            </div>
+            <button class="lightbox-nav lightbox-next" onclick="changeImage(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-description"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/data-store.js"></script>
+    <script src="../js/demo-utils.js"></script>
+    <script>
+        // Global variables
+        let userMediaItems = [];
+        let currentUser = null;
+        
+        // Gallery filtering
+        const filterButtons = document.querySelectorAll('.gallery-navigation button');
+        const galleryContainer = document.querySelector('.gallery-grid');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const category = button.getAttribute('data-category');
+                applyFilter(category);
+            });
+        });
+
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxDescription = document.getElementById('lightbox-description');
+        let currentImageIndex = 0;
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the current user
+            currentUser = RedBirdDB.getCurrentUser();
+            if (!currentUser) {
+                console.error('No user found');
+                return;
+            }
+            
+            // Update user information in the nav menu
+            updateUserInfo();
+            
+            // Load media items for the current user
+            loadUserMedia();
+            
+            // Apply initial filtering
+            applyFilter('all');
+        });
+        
+        // Update user info in the UI
+        function updateUserInfo() {
+            if (!currentUser) return;
+            
+            const userNameElement = document.querySelector('.user-name');
+            const userRoleElement = document.querySelector('.user-role');
+            
+            if (userNameElement) {
+                userNameElement.textContent = currentUser.name;
+            }
+            
+            if (userRoleElement) {
+                userRoleElement.textContent = currentUser.property;
+            }
+            
+            // Update gallery title with user's property
+            const galleryTitle = document.querySelector('.content-header p');
+            if (galleryTitle) {
+                galleryTitle.textContent = `Bilder Ihrer Immobilie im ${currentUser.property.split(',')[0]}`;
+            }
+        }
+        
+        // Load media items for current user
+        function loadUserMedia() {
+            if (!currentUser) return;
+            
+            // Get media items assigned to current user
+            userMediaItems = RedBirdDB.getMediaForCustomer(currentUser.id);
+            
+            // Filter out non-image items
+            userMediaItems = userMediaItems.filter(item => item.type === 'image');
+            
+            // Clear gallery container
+            galleryContainer.innerHTML = '';
+            
+            // Create gallery items
+            userMediaItems.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.setAttribute('data-category', item.category);
+                
+                galleryItem.innerHTML = `
+                    <div class="gallery-image">
+                        <img src="${item.fileUrl}" alt="${item.title}">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <button class="gallery-action-btn" onclick="openLightbox(${index})"><i class="fas fa-expand"></i></button>
+                                <button class="gallery-action-btn"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <span class="gallery-date">Aufgenommen am ${item.uploadDate}</span>
+                    </div>
+                `;
+                
+                galleryContainer.appendChild(galleryItem);
+            });
+            
+            // If no items, show a message
+            if (userMediaItems.length === 0) {
+                galleryContainer.innerHTML = `
+                    <div class="no-media-message" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                        <i class="fas fa-image" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">Keine Bilder gefunden</h3>
+                        <p>Es wurden noch keine Bilder für Ihre Immobilie hochgeladen.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Apply category filter
+        function applyFilter(category) {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Use the user's media items for lightbox
+        let galleryImages = [];
+        
+        function openLightbox(index) {
+            // Make sure we have the updated gallery images array
+            galleryImages = userMediaItems.map(item => ({
+                src: item.fileUrl,
+                title: item.title,
+                description: item.description
+            }));
+            
+            currentImageIndex = index;
+            updateLightboxImage();
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            
+            if (currentImageIndex < 0) {
+                currentImageIndex = galleryImages.length - 1;
+            } else if (currentImageIndex >= galleryImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            updateLightboxImage();
+        }
+        
+        function updateLightboxImage() {
+            if (galleryImages.length === 0) return;
+            
+            const image = galleryImages[currentImageIndex];
+            lightboxImage.src = image.src;
+            lightboxImage.alt = image.title;
+            lightboxTitle.textContent = image.title;
+            lightboxDescription.textContent = image.description;
+        }
+        
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+        
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') {
+                    changeImage(-1);
+                } else if (e.key === 'ArrowRight') {
+                    changeImage(1);
+                } else if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            }
+        });
+    </script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                AuthService.logout();
+                window.location.href = '../login.html';
+            });
+        });
+    </script>
+</body>
+</html>

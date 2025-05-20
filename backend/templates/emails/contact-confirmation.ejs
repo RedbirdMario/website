@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontaktanfrage bestätigt - RedBird Real Estate</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eeeeee;
+    }
+    .logo {
+      width: 160px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #e72e2e;
+      font-size: 24px;
+      margin: 0;
+      font-weight: 600;
+    }
+    .content {
+      padding: 20px 0;
+    }
+    .message {
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .button {
+      display: inline-block;
+      background-color: #e72e2e;
+      color: white !important;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eeeeee;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+    }
+    .social-links {
+      margin: 20px 0;
+    }
+    .social-link {
+      display: inline-block;
+      margin: 0 10px;
+    }
+    @media only screen and (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://redbird-realestate.com/img/redbird-logo.png" alt="RedBird Logo" class="logo">
+      <h1><%= title %></h1>
+    </div>
+    
+    <div class="content">
+      <p>Hallo <%= name %>,</p>
+      
+      <div class="message">
+        <p><%= message %></p>
+      </div>
+      
+      <p>Hier ist eine Zusammenfassung Ihrer Anfrage:</p>
+      <ul>
+        <li><strong>Name:</strong> <%= name %></li>
+        <li><strong>E-Mail:</strong> <%= to %></li>
+        <li><strong>Datum:</strong> <%= new Date().toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) %></li>
+      </ul>
+      
+      <p>Wir werden uns so schnell wie möglich bei Ihnen melden. Normalerweise antworten wir innerhalb von 24 Stunden an Werktagen.</p>
+      
+      <div class="button-container">
+        <a href="<%= actionUrl %>" class="button"><%= actionText %></a>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="social-links">
+        <a href="https://facebook.com/redbirdrealestate" class="social-link">Facebook</a>
+        <a href="https://instagram.com/redbirdrealestate" class="social-link">Instagram</a>
+        <a href="https://linkedin.com/company/redbirdrealestate" class="social-link">LinkedIn</a>
+      </div>
+      
+      <p>RedBird Real Estate GmbH<br>
+      Hauptstraße 123, 12345 Berlin, Deutschland<br>
+      Tel: +49 30 123456789 | Email: info@redbird-realestate.com</p>
+      
+      <p>&copy; <%= new Date().getFullYear() %> RedBird Real Estate. Alle Rechte vorbehalten.</p>
+    </div>
+  </div>
+</body>
+</html>

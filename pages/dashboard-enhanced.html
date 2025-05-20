@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RedBird Kundenportal</title>
+    <meta name="description" content="Übersichtsseite des RedBird Kundenportals mit Ihren Immobiliendaten, Dokumenten und Prozessfortschritt.">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Dashboard enhanced specific styles */
+        .content {
+            background-color: var(--neutral-100);
+            min-height: calc(100vh - 70px);
+            padding-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+        
+        .dashboard-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+        
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) var(--space-5);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .card-header h2 i {
+            color: var(--primary-red);
+        }
+        
+        .card-body {
+            padding: var(--space-4) var(--space-5);
+        }
+        
+        /* Card sizes */
+        .dashboard-card.full-width {
+            grid-column: span 12;
+        }
+        
+        .dashboard-card.half-width {
+            grid-column: span 6;
+        }
+        
+        .dashboard-card.third-width {
+            grid-column: span 4;
+        }
+        
+        .dashboard-card.two-thirds-width {
+            grid-column: span 8;
+        }
+        
+        /* Welcome Section */
+        .welcome-card {
+            grid-column: span 12;
+            background-color: var(--primary-red);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            padding: var(--space-6) var(--space-5);
+        }
+        
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url('../img/welcome-pattern.svg');
+            background-size: cover;
+            opacity: 0.1;
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-heading {
+            font-size: 1.75rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .welcome-message {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 70%;
+        }
+        
+        /* Property Overview Card */
+        .property-overview-card {
+            grid-column: span 6;
+        }
+        
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .property-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+        
+        .property-gallery {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--radius-md);
+            margin: var(--space-4) 0;
+        }
+        
+        .property-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .property-gallery:hover img {
+            transform: scale(1.05);
+        }
+        
+        .property-gallery-nav {
+            position: absolute;
+            bottom: var(--space-3);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .gallery-dot.active {
+            background-color: white;
+            transform: scale(1.25);
+        }
+        
+        .property-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-4);
+        }
+        
+        .property-stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--neutral-600);
+        }
+        
+        .property-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-4);
+        }
+        
+        /* Progress Card */
+        .progress-card {
+            grid-column: span 6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .progress-overview {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        
+        .progress-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .progress-circle-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .progress-circle-bg {
+            fill: none;
+            stroke: var(--neutral-200);
+            stroke-width: 8;
+        }
+        
+        .progress-circle-fill {
+            fill: none;
+            stroke: var(--primary-red);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2; /* Circumference = 2πr = 2π*40 = 251.2 */
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s ease;
+        }
+        
+        .progress-percent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .progress-details {
+            flex: 1;
+        }
+        
+        .progress-status {
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+        
+        .milestone-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-4);
+            position: relative;
+        }
+        
+        .milestone-timeline::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--neutral-200);
+            z-index: 0;
+        }
+        
+        .milestone-timeline-fill {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 2px;
+            background-color: var(--primary-red);
+            z-index: 1;
+            width: 65%; /* Will be set dynamically */
+        }
+        
+        .milestone {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30px;
+        }
+        
+        .milestone-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--neutral-200);
+            border: 2px solid var(--neutral-100);
+            margin-bottom: var(--space-2);
+        }
+        
+        .milestone.completed .milestone-dot {
+            background-color: var(--primary-red);
+        }
+        
+        .milestone.active .milestone-dot {
+            background-color: var(--primary-red);
+            box-shadow: 0 0 0 4px rgba(231, 46, 46, 0.2);
+        }
+        
+        .milestone-label {
+            font-size: 0.7rem;
+            text-align: center;
+            color: var(--neutral-600);
+            width: max-content;
+            transform: rotate(-20deg);
+            position: absolute;
+            bottom: -20px;
+            left: -10px;
+        }
+        
+        .milestone.completed .milestone-label,
+        .milestone.active .milestone-label {
+            color: var(--neutral-800);
+            font-weight: 500;
+        }
+        
+        /* Recent Documents Card */
+        .documents-card {
+            grid-column: span 6;
+        }
+        
+        .document-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--neutral-200);
+            gap: var(--space-3);
+        }
+        
+        .document-item:last-child {
+            border-bottom: none;
+        }
+        
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background-color: rgba(231, 46, 46, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-size: 1.25rem;
+        }
+        
+        .document-info {
+            flex: 1;
+        }
+        
+        .document-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .document-date {
+            font-size: 0.85rem;
+            color: var(--neutral-600);
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .document-actions a {
+            color: var(--neutral-600);
+            transition: all var(--transition-normal);
+        }
+        
+        .document-actions a:hover {
+            color: var(--primary-red);
+        }
+        
+        /* Advisor Card */
+        .advisor-card {
+            grid-column: span 6;
+        }
+        
+        .advisor-profile {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .advisor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-red-light);
+        }
+        
+        .advisor-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .advisor-info {
+            flex: 1;
+        }
+        
+        .advisor-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .advisor-role {
+            color: var(--neutral-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .advisor-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            margin-top: var(--space-3);
+        }
+        
+        .advisor-contact-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--neutral-700);
+        }
+        
+        .advisor-contact-item i {
+            color: var(--primary-red);
+        }
+        
+        .advisor-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        /* Notifications Card */
+        .notifications-card {
+            grid-column: span 6;
+        }
+        
+        .notification-filters {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+            padding-bottom: var(--space-2);
+        }
+        
+        .notification-filter {
+            padding: var(--space-2) var(--space-3);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-normal);
+            font-size: 0.9rem;
+        }
+        
+        .notification-filter:hover {
+            background-color: var(--neutral-100);
+        }
+        
+        .notification-filter.active {
+            color: var(--primary-red);
+            background-color: rgba(231, 46, 46, 0.1);
+            font-weight: 500;
+        }
+        
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .notification-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-normal);
+            position: relative;
+        }
+        
+        .notification-item:hover {
+            background-color: var(--neutral-100);
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(231, 46, 46, 0.05);
+        }
+        
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-red);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-700);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .notification-item.unread .notification-icon {
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .notification-item.unread .notification-title {
+            color: var(--primary-red);
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            margin-bottom: var(--space-2);
+            color: var(--neutral-700);
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+        }
+        
+        /* Next Steps Card */
+        .next-steps-card {
+            grid-column: span 6;
+        }
+        
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+        
+        .step-list::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            left: 16px;
+            width: 2px;
+            background-color: var(--neutral-200);
+        }
+        
+        .step-item {
+            display: flex;
+            padding: var(--space-3) 0;
+            position: relative;
+        }
+        
+        .step-indicator {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-600);
+            font-size: 1rem;
+            margin-right: var(--space-3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-item.completed .step-indicator {
+            background-color: var(--status-success-light);
+            color: var(--status-success);
+        }
+        
+        .step-item.active .step-indicator {
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+            box-shadow: 0 0 0 4px rgba(231, 46, 46, 0.05);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .step-description {
+            font-size: 0.9rem;
+            color: var(--neutral-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .step-date {
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+        }
+        
+        /* Tasks Card */
+        .tasks-card {
+            grid-column: span 6;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .task-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            background-color: var(--neutral-100);
+            transition: all var(--transition-normal);
+        }
+        
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .task-item.urgent {
+            border-left: 3px solid var(--status-danger);
+        }
+        
+        .task-checkbox {
+            margin-top: 4px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .task-item.urgent .task-title::before {
+            content: '!';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background-color: var(--status-danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .task-description {
+            font-size: 0.9rem;
+            color: var(--neutral-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .task-due {
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+        }
+        
+        .task-item.urgent .task-due {
+            color: var(--status-danger);
+            font-weight: 500;
+        }
+        
+        /* Quick Upload Section */
+        .quick-upload-card {
+            grid-column: span 6;
+        }
+        
+        .upload-dropzone {
+            border: 2px dashed var(--neutral-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-6) var(--space-4);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .upload-dropzone:hover {
+            border-color: var(--primary-red-light);
+            background-color: rgba(231, 46, 46, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--neutral-400);
+            margin-bottom: var(--space-3);
+            transition: all var(--transition-normal);
+        }
+        
+        .upload-dropzone:hover .upload-icon {
+            color: var(--primary-red);
+            transform: translateY(-5px);
+        }
+        
+        .upload-message {
+            margin-bottom: var(--space-3);
+            font-weight: 500;
+        }
+        
+        .upload-formats {
+            font-size: 0.85rem;
+            color: var(--neutral-500);
+        }
+        
+        .upload-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+        }
+        
+        .upload-category {
+            padding: var(--space-2) var(--space-3);
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .upload-category:hover {
+            background-color: var(--primary-red-light);
+            color: white;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                gap: var(--space-3);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .property-overview-card,
+            .progress-card,
+            .documents-card,
+            .advisor-card,
+            .notifications-card,
+            .next-steps-card,
+            .tasks-card,
+            .quick-upload-card {
+                grid-column: span 12;
+            }
+            
+            .welcome-message {
+                max-width: 90%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .milestone-label {
+                display: none;
+            }
+            
+            .progress-overview {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .advisor-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .advisor-actions {
+                justify-content: center;
+            }
+            
+            .welcome-card::before {
+                display: none;
+            }
+            
+            .welcome-message {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Navigation -->
+    <div id="nav-placeholder"></div>
+    
+    <!-- Main Content -->
+    <main class="content">
+        <div class="container">
+            <!-- Page Header -->
+            <div id="header-placeholder"></div>
+            
+            <!-- Dashboard Content -->
+            <div id="loadingIndicator" style="text-align: center; padding: 2rem;" role="status" aria-live="polite">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-red);" aria-hidden="true"></i>
+                <p>Daten werden geladen...</p>
+            </div>
+            
+            <div class="dashboard-grid" id="dashboardGrid" style="display: none;">
+                <!-- Welcome Card -->
+                <div class="dashboard-card welcome-card">
+                    <div class="welcome-content">
+                        <h1 class="welcome-heading" id="welcomeHeading">Willkommen zurück, Max!</h1>
+                        <p class="welcome-message">Hier ist Ihr aktueller Status zum Immobilienkauf. Alle wichtigen Informationen und anstehenden Aufgaben finden Sie auf dieser Übersichtsseite.</p>
+                        <p class="welcome-login" id="lastLogin">Letzter Login: 15.05.2025, 14:30 Uhr</p>
+                    </div>
+                </div>
+                
+                <!-- Property Overview Card -->
+                <div class="dashboard-card property-overview-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-home"></i> Ihre Immobilie</h2>
+                        <div class="property-price">€150,000</div>
+                    </div>
+                    <div class="card-body">
+                        <h3 id="propertyName">Sunset Bay Resort, Apartment A-203</h3>
+                        <p id="propertyLocation">Esentepe, Nordzypern</p>
+                        
+                        <div class="property-gallery">
+                            <img src="../img/apartment-preview.jpg" alt="Property" id="propertyImage">
+                            <div class="property-gallery-nav">
+                                <div class="gallery-dot active"></div>
+                                <div class="gallery-dot"></div>
+                                <div class="gallery-dot"></div>
+                                <div class="gallery-dot"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="property-stats">
+                            <div class="property-stat">
+                                <div class="stat-value">85 m²</div>
+                                <div class="stat-label">Wohnfläche</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">2</div>
+                                <div class="stat-label">Schlafzimmer</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">1</div>
+                                <div class="stat-label">Badezimmer</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">15 m²</div>
+                                <div class="stat-label">Balkon</div>
+                            </div>
+                        </div>
+                        
+                        <div class="property-actions">
+                            <a href="gallery-enhanced.html" class="btn btn-primary">Fotogalerie ansehen</a>
+                            <a href="documents-enhanced.html" class="btn btn-outline">Dokumente</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Card -->
+                <div class="dashboard-card progress-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-tasks"></i> Ihr Kaufprozess</h2>
+                        <a href="progress-enhanced.html" class="btn btn-outline btn-sm">Details</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-overview">
+                            <div class="progress-circle" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+                                <svg class="progress-circle-svg" viewBox="0 0 100 100">
+                                    <circle class="progress-circle-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="progress-circle-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 88px;"></circle>
+                                </svg>
+                                <div class="progress-percent">65%</div>
+                            </div>
+                            
+                            <div class="progress-details">
+                                <div class="progress-status">
+                                    <strong>Aktuelle Phase:</strong> <span id="currentPhase">Eigentumseintragung</span>
+                                </div>
+                                <p>Die Eintragung ins Grundbuch wird derzeit bearbeitet. Dieser Prozess dauert ca. 4-6 Wochen.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="milestone-timeline">
+                            <div class="milestone-timeline-fill" style="width: 65%;"></div>
+                            <div class="milestone completed">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Reservierung</div>
+                            </div>
+                            <div class="milestone completed">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Anzahlung</div>
+                            </div>
+                            <div class="milestone completed">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Vertrag</div>
+                            </div>
+                            <div class="milestone completed">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Zahlung</div>
+                            </div>
+                            <div class="milestone active">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Eintragung</div>
+                            </div>
+                            <div class="milestone">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Schlüssel</div>
+                            </div>
+                            <div class="milestone">
+                                <div class="milestone-dot"></div>
+                                <div class="milestone-label">Abschluss</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Documents Card -->
+                <div class="dashboard-card documents-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-file-alt"></i> Neueste Dokumente</h2>
+                        <a href="documents-enhanced.html" class="btn btn-outline btn-sm">Alle anzeigen</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="document-list">
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">Kaufvertrag_final.pdf</div>
+                                    <div class="document-date">Hinzugefügt am 10.05.2025</div>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="#" aria-label="Dokument herunterladen"><i class="fas fa-download"></i></a>
+                                    <a href="#" aria-label="Dokument ansehen"><i class="fas fa-eye"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">Grundbuchauszug.pdf</div>
+                                    <div class="document-date">Hinzugefügt am 02.05.2025</div>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="#" aria-label="Dokument herunterladen"><i class="fas fa-download"></i></a>
+                                    <a href="#" aria-label="Dokument ansehen"><i class="fas fa-eye"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-title">Kostenaufstellung.xlsx</div>
+                                    <div class="document-date">Hinzugefügt am 28.04.2025</div>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="#" aria-label="Dokument herunterladen"><i class="fas fa-download"></i></a>
+                                    <a href="#" aria-label="Dokument ansehen"><i class="fas fa-eye"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advisor Card -->
+                <div class="dashboard-card advisor-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user-tie"></i> Ihr Ansprechpartner</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="advisor-profile">
+                            <div class="advisor-avatar">
+                                <img src="../img/contact-person.jpg" alt="Advisor" id="advisorImage">
+                            </div>
+                            <div class="advisor-info">
+                                <div class="advisor-name" id="advisorName">Anna Müller</div>
+                                <div class="advisor-role">Senior Immobilienberaterin</div>
+                                
+                                <div class="advisor-contact">
+                                    <div class="advisor-contact-item" id="advisorPhone">
+                                        <i class="fas fa-phone"></i>
+                                        <span>+49 30 123456789</span>
+                                    </div>
+                                    <div class="advisor-contact-item" id="advisorEmail">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>anna.mueller@redbird-realestate.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="advisor-actions">
+                            <a href="#" id="emailAdvisorBtn" class="btn btn-outline"><i class="fas fa-envelope"></i> E-Mail senden</a>
+                            <a href="contact-enhanced.html" class="btn btn-primary"><i class="fas fa-comment"></i> Nachricht</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications Card -->
+                <div class="dashboard-card notifications-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bell"></i> Benachrichtigungen</h2>
+                        <a href="#" class="btn-link">Alle als gelesen markieren</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="notification-filters" role="tablist">
+                            <div class="notification-filter active" role="tab" data-filter="all">Alle</div>
+                            <div class="notification-filter" role="tab" data-filter="document">Dokumente</div>
+                            <div class="notification-filter" role="tab" data-filter="progress">Fortschritt</div>
+                            <div class="notification-filter" role="tab" data-filter="task">Aufgaben</div>
+                        </div>
+                        
+                        <div class="notification-list" id="notificationsList">
+                            <div class="notification-item unread" data-type="document">
+                                <div class="notification-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Neues Dokument verfügbar</div>
+                                    <div class="notification-message">Der Kaufvertrag (final) wurde hochgeladen und steht zur Ansicht bereit.</div>
+                                    <div class="notification-time">vor 8 Tagen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item unread" data-type="task">
+                                <div class="notification-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Termin für Schlüsselübergabe</div>
+                                    <div class="notification-message">Die Schlüsselübergabe wurde für den 15.07.2025 um 10:00 Uhr geplant.</div>
+                                    <div class="notification-time">vor 10 Tagen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item" data-type="progress">
+                                <div class="notification-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Prozessstatus aktualisiert</div>
+                                    <div class="notification-message">Die Phase "Eigentumseintragung" hat begonnen. Die Dokumente wurden beim Grundbuchamt eingereicht.</div>
+                                    <div class="notification-time">vor 14 Tagen</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Next Steps Card -->
+                <div class="dashboard-card next-steps-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list-ol"></i> Nächste Schritte</h2>
+                        <a href="progress-enhanced.html" class="btn-link">Vollständigen Prozess anzeigen</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="step-list">
+                            <div class="step-item completed">
+                                <div class="step-indicator">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-content">
+                                    <div class="step-title">Zahlungsbestätigung</div>
+                                    <div class="step-description">Ihre Zahlung wurde erfolgreich bestätigt.</div>
+                                    <div class="step-date">Abgeschlossen am 25.04.2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item completed">
+                                <div class="step-indicator">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="step-content">
+                                    <div class="step-title">Vertragsprüfung durch Anwalt</div>
+                                    <div class="step-description">Der Vertrag wurde von unserem Anwalt geprüft und für korrekt befunden.</div>
+                                    <div class="step-date">Abgeschlossen am 02.05.2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item active">
+                                <div class="step-indicator">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="step-content">
+                                    <div class="step-title">Eigentumseintragung</div>
+                                    <div class="step-description">Die Eintragung des Eigentums ins Grundbuch ist in Bearbeitung.</div>
+                                    <div class="step-date">In Bearbeitung seit 12.05.2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-indicator">
+                                    <i class="fas fa-hourglass-start"></i>
+                                </div>
+                                <div class="step-content">
+                                    <div class="step-title">Schlüsselübergabe</div>
+                                    <div class="step-description">Die Schlüsselübergabe wird nach abgeschlossener Eigentumseintragung stattfinden.</div>
+                                    <div class="step-date">Geplant für 15.07.2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tasks Card -->
+                <div class="dashboard-card tasks-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clipboard-list"></i> Anstehende Aufgaben</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="task-list">
+                            <div class="task-item urgent">
+                                <div class="task-checkbox">
+                                    <input type="checkbox" id="task1" class="styled-checkbox">
+                                    <label for="task1"></label>
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Eigentumsdokumente unterschreiben</div>
+                                    <div class="task-description">Die vorläufigen Eigentumsdokumente wurden zur Unterschrift bereitgestellt.</div>
+                                    <div class="task-due">Fällig in 3 Tagen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox" id="task2" class="styled-checkbox">
+                                    <label for="task2"></label>
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Termin zur Schlüsselübergabe planen</div>
+                                    <div class="task-description">Bitte vereinbaren Sie einen Termin zur Schlüsselübergabe.</div>
+                                    <div class="task-due">Fällig in 14 Tagen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox" id="task3" class="styled-checkbox">
+                                    <label for="task3"></label>
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Versicherungsunterlagen einreichen</div>
+                                    <div class="task-description">Reichen Sie die Hausratsversicherung für Ihre neue Immobilie ein.</div>
+                                    <div class="task-due">Fällig in 21 Tagen</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Upload Card -->
+                <div class="dashboard-card quick-upload-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-cloud-upload-alt"></i> Dokumente hochladen</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-dropzone" role="button" tabindex="0" aria-label="Dateien hier ablegen oder klicken zum Hochladen">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <p class="upload-message">Dateien hier ablegen oder klicken zum Hochladen</p>
+                            <p class="upload-formats">Unterstützte Formate: PDF, DOCX, JPG, PNG</p>
+                        </div>
+                        
+                        <div class="upload-categories">
+                            <div class="upload-category">Vertrag</div>
+                            <div class="upload-category">Identifikation</div>
+                            <div class="upload-category">Zahlung</div>
+                            <div class="upload-category">Grundbuch</div>
+                            <div class="upload-category">Sonstiges</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Enhanced Footer -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Notification Container -->
+    <div id="notification-container" class="notifications-container top-right"></div>
+    
+    <!-- Required Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/config.js" type="module"></script>
+    <script src="../js/api-client.js" type="module"></script>
+    <script src="../js/api-mock.js"></script>
+    <script src="../js/api-service-enhanced.js"></script>
+    <script src="../js/dashboard-enhanced.js"></script>
+    <script src="../js/i18n.js"></script>
+    
+    <!-- Component Loading Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load navigation
+            fetch('../components/nav-enhanced.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('nav-placeholder').innerHTML = data;
+                    
+                    // Set active menu item
+                    document.querySelectorAll('.nav-item-enhanced').forEach(item => {
+                        const link = item.querySelector('a');
+                        if (link.getAttribute('href') === 'dashboard.html') {
+                            item.classList.add('active');
+                            link.setAttribute('aria-current', 'page');
+                        }
+                    });
+                    
+                    // Initialize logout functionality
+                    document.getElementById('logoutLink').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (window.authService) {
+                            window.authService.logout();
+                        }
+                        window.location.href = '../login.html';
+                    });
+                });
+            
+            // Load header
+            fetch('../components/header-enhanced.html')
+                .then(response => response.text())
+                .then(data => {
+                    data = data.replace('{{page_icon}}', 'fas fa-home')
+                               .replace('{{page_title}}', 'Dashboard')
+                               .replace('{{page_description}}', 'Übersicht über Ihre Immobilie und den aktuellen Status');
+                    
+                    document.getElementById('header-placeholder').innerHTML = data;
+                });
+            
+            // Load footer
+            fetch('../components/footer-enhanced.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-placeholder').innerHTML = data;
+                });
+            
+            // Initialize progress circle
+            const progressCircle = document.querySelector('.progress-circle-fill');
+            if (progressCircle) {
+                const percent = 65;
+                // Circumference = 2πr = 2 * π * 40 = 251.2
+                const circumference = 2 * Math.PI * 40;
+                const offset = circumference - (percent / 100) * circumference;
+                progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+                progressCircle.style.strokeDashoffset = offset;
+            }
+            
+            // Handle notification filters
+            const notificationFilters = document.querySelectorAll('.notification-filter');
+            const notificationItems = document.querySelectorAll('.notification-item');
+            
+            notificationFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all filters
+                    notificationFilters.forEach(f => f.classList.remove('active'));
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    const filterType = this.getAttribute('data-filter');
+                    
+                    // Show all notifications if filter is 'all'
+                    if (filterType === 'all') {
+                        notificationItems.forEach(item => {
+                            item.style.display = 'flex';
+                        });
+                        return;
+                    }
+                    
+                    // Filter notifications based on type
+                    notificationItems.forEach(item => {
+                        if (item.getAttribute('data-type') === filterType) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Show dashboard content with delay for demonstration
+            setTimeout(() => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('dashboardGrid').style.display = 'grid';
+                
+                // Show welcome notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Alle Daten wurden erfolgreich geladen.',
+                        'Willkommen zurück'
+                    );
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

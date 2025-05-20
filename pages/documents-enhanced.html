@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumente - RedBird Kundenportal</title>
+    <meta name="description" content="Verwalten Sie Ihre Immobiliendokumente im RedBird Kundenportal. Verträge, rechtliche Dokumente und mehr.">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E72E2E">
+    <link rel="apple-touch-icon" href="../img/icons/icon-192x192.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="../css/upload-toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .documents-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .documents-header {
+            margin-bottom: 2rem;
+        }
+        
+        .documents-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+        
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            transition: all var(--transition-normal);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(231, 46, 46, 0.15);
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        
+        .filter-container {
+            position: relative;
+        }
+        
+        .filter-select {
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            appearance: none;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .filter-select:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(231, 46, 46, 0.15);
+            outline: none;
+        }
+        
+        .filter-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            background-color: var(--bg-soft);
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            gap: 0.5rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .filter-tag:hover {
+            background-color: var(--bg-soft-hover);
+        }
+        
+        .filter-tag.active {
+            background-color: var(--primary-red);
+            color: white;
+        }
+        
+        .filter-tag-close {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.1);
+            font-size: 10px;
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-tag-close:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .filter-tag.active .filter-tag-close {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .filter-tag.active .filter-tag-close:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .document-upload-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: var(--z-modal);
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .upload-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        
+        .upload-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .upload-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+        }
+        
+        .upload-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        
+        .upload-close:hover {
+            background-color: var(--bg-soft);
+            color: var(--primary-red);
+        }
+        
+        .upload-body {
+            padding: 1.5rem;
+        }
+        
+        .upload-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all var(--transition-normal);
+            background-color: var(--bg-soft);
+            cursor: pointer;
+        }
+        
+        .upload-dropzone:hover {
+            border-color: var(--primary-red);
+            background-color: var(--bg-soft-hover);
+        }
+        
+        .upload-dropzone i {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .upload-dropzone p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        .browse-link {
+            color: var(--primary-red);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .upload-dropzone.file-selected {
+            border-style: solid;
+            border-color: var(--primary-red);
+            background-color: var(--primary-red-light-bg);
+        }
+        
+        .upload-dropzone.file-selected i {
+            color: var(--primary-red);
+        }
+        
+        .file-size {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .document-tabs {
+            margin-bottom: 2rem;
+        }
+        
+        .tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-header::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: all var(--transition-normal);
+        }
+        
+        .tab-button:focus {
+            outline: none;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-red);
+            transform: scaleX(0);
+            transition: transform var(--transition-normal);
+        }
+        
+        .tab-button.active {
+            color: var(--primary-red);
+        }
+        
+        .tab-button.active::after {
+            transform: scaleX(1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn var(--transition-normal);
+        }
+        
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .document-card {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+        
+        .document-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .doc-icon {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1.25rem;
+        }
+        
+        .doc-icon.pdf {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        
+        .doc-icon.word {
+            background-color: rgba(41, 128, 185, 0.1);
+            color: #2980b9;
+        }
+        
+        .doc-icon.excel {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        
+        .doc-icon.image {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+        
+        .doc-icon.zip {
+            background-color: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+        
+        .doc-details {
+            flex-grow: 1;
+        }
+        
+        .doc-details h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .doc-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .doc-status.new {
+            background-color: var(--status-info-light);
+            color: var(--status-info);
+        }
+        
+        .doc-status.important {
+            background-color: var(--status-danger-light);
+            color: var(--status-danger);
+        }
+        
+        .doc-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doc-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .doc-description {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .doc-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: 1.25rem;
+            align-items: center;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--bg-soft);
+            color: var(--text-secondary);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .action-btn:hover {
+            background-color: var(--primary-red);
+            color: white;
+        }
+        
+        .category-empty {
+            background-color: var(--bg-soft);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .category-empty i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .category-empty h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .category-empty p {
+            margin: 0 auto 1.5rem;
+            max-width: 500px;
+        }
+        
+        .document-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: var(--z-modal);
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .preview-container {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .preview-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+        
+        .preview-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        
+        .preview-close:hover {
+            background-color: var(--bg-soft);
+            color: var(--primary-red);
+        }
+        
+        .preview-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .preview-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .document-iframe {
+            width: 100%;
+            height: 600px;
+            max-height: calc(90vh - 150px);
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .documents-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                max-width: none;
+            }
+            
+            .document-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .doc-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .doc-actions {
+                margin-left: 0;
+                margin-top: 1rem;
+                align-self: flex-end;
+            }
+            
+            .tab-button {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    <nav class="main-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li class="nav-item" role="none"><a href="dashboard.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Dashboard</a></li>
+                <li class="nav-item active" role="none"><a href="documents.html" role="menuitem" aria-current="page"><i class="fas fa-file-alt" aria-hidden="true"></i> Dokumente</a></li>
+                <li class="nav-item" role="none"><a href="gallery.html" role="menuitem"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a></li>
+                <li class="nav-item" role="none"><a href="progress.html" role="menuitem"><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</a></li>
+                <li class="nav-item" role="none"><a href="contact.html" role="menuitem"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="language-switcher"></div>
+                <button class="theme-toggle" data-theme-toggle aria-label="Dark Mode umschalten" aria-pressed="false">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Laden...</span>
+                    <span class="user-role" id="userProperty">Laden...</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn" aria-label="Benutzermenü öffnen" aria-expanded="false" aria-haspopup="true" aria-controls="user-menu-dropdown"><i class="fas fa-user-circle" aria-hidden="true"></i></button>
+                    <div class="dropdown-content" id="user-menu-dropdown" role="menu">
+                        <a href="profile.html" role="menuitem"><i class="fas fa-user-cog" aria-hidden="true"></i> Profil</a>
+                        <a href="settings.html" role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="documents-container" id="main-content" role="main">
+        <div class="documents-header">
+            <h1>Dokumente</h1>
+            <p class="lead">Alle wichtigen Unterlagen zu Ihrer Immobilie an einem Ort</p>
+        </div>
+        
+        <div class="documents-actions">
+            <div class="search-container">
+                <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                <input type="text" id="documentSearch" class="search-input" placeholder="Dokumente durchsuchen..." aria-label="Dokumente durchsuchen">
+            </div>
+            
+            <div class="filter-container">
+                <select id="categoryFilter" class="filter-select" aria-label="Kategoriefilter">
+                    <option value="all">Alle Kategorien</option>
+                    <option value="contracts">Verträge</option>
+                    <option value="legal">Rechtsdokumente</option>
+                    <option value="financial">Finanzunterlagen</option>
+                    <option value="technical">Technische Dokumente</option>
+                    <option value="recommendations">Beratungsunterlagen</option>
+                </select>
+                <i class="fas fa-chevron-down filter-icon" aria-hidden="true"></i>
+            </div>
+            
+            <button class="btn btn-primary upload-btn" id="showUploadModal" aria-label="Dokument hochladen">
+                <i class="fas fa-upload" aria-hidden="true"></i> Dokument hochladen
+            </button>
+        </div>
+        
+        <div class="filter-tags" id="activeTags" role="region" aria-label="Aktive Filter">
+            <!-- Active filters will be dynamically added here -->
+        </div>
+        
+        <div class="document-tabs">
+            <div class="tab-header" role="tablist" aria-label="Dokumentkategorien">
+                <button class="tab-button active" data-tab="all" role="tab" aria-selected="true" aria-controls="tab-all">Alle Dokumente (12)</button>
+                <button class="tab-button" data-tab="contracts" role="tab" aria-selected="false" aria-controls="tab-contracts">Verträge (3)</button>
+                <button class="tab-button" data-tab="legal" role="tab" aria-selected="false" aria-controls="tab-legal">Rechtsdokumente (2)</button>
+                <button class="tab-button" data-tab="financial" role="tab" aria-selected="false" aria-controls="tab-financial">Finanzunterlagen (2)</button>
+                <button class="tab-button" data-tab="technical" role="tab" aria-selected="false" aria-controls="tab-technical">Technische Dokumente (3)</button>
+                <button class="tab-button" data-tab="recommendations" role="tab" aria-selected="false" aria-controls="tab-recommendations">Beratungsunterlagen (2)</button>
+            </div>
+            
+            <div id="tab-all" class="tab-content active" role="tabpanel" aria-labelledby="all-tab">
+                <div class="document-list">
+                    <div class="document-card" data-category="contracts">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>
+                                Kaufvertrag_final.pdf
+                                <span class="doc-status important">Wichtig</span>
+                            </h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Verträge</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 2.4 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 10.05.2025</span>
+                            </div>
+                            <p class="doc-description">Finaler Kaufvertrag für Apartment A-203 im Sunset Bay Resort.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Kaufvertrag_final.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="contracts">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Kaufvertrag_Entwurf.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Verträge</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 2.3 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 25.04.2025</span>
+                            </div>
+                            <p class="doc-description">Entwurf des Kaufvertrags vor finaler Prüfung.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Kaufvertrag_Entwurf.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="contracts">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Reservierungsvereinbarung.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Verträge</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 1.1 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 15.03.2025</span>
+                            </div>
+                            <p class="doc-description">Vereinbarung zur Reservierung des Apartments.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Reservierungsvereinbarung.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="legal">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>
+                                Grundbuchauszug.pdf
+                                <span class="doc-status new">Neu</span>
+                            </h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Rechtsdokumente</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 3.6 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 02.05.2025</span>
+                            </div>
+                            <p class="doc-description">Grundbuchauszug für die Immobilie.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Grundbuchauszug.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="legal">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Vollmacht_Grundbucheintragung.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Rechtsdokumente</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 1.2 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 05.05.2025</span>
+                            </div>
+                            <p class="doc-description">Vollmacht für die Eintragung im Grundbuch.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Vollmacht_Grundbucheintragung.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="financial">
+                        <div class="doc-icon excel">
+                            <i class="fas fa-file-excel" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Kostenaufstellung.xlsx</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Finanzunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 0.8 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 28.04.2025</span>
+                            </div>
+                            <p class="doc-description">Detaillierte Aufstellung aller Kosten inkl. Nebenkosten.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Kostenaufstellung.xlsx')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="financial">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>
+                                Zahlungsbestätigung.pdf
+                                <span class="doc-status important">Wichtig</span>
+                            </h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Finanzunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 0.5 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 26.04.2025</span>
+                            </div>
+                            <p class="doc-description">Bestätigung der geleisteten Zahlungen.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Zahlungsbestätigung.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="technical">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Grundriss_A-203.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Technische Dokumente</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 4.2 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 20.03.2025</span>
+                            </div>
+                            <p class="doc-description">Detaillierter Grundriss des Apartments A-203.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Grundriss_A-203.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="technical">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Baubeschreibung.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Technische Dokumente</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 5.7 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 20.03.2025</span>
+                            </div>
+                            <p class="doc-description">Technische Beschreibung des Gebäudes und der verwendeten Materialien.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Baubeschreibung.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="technical">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Ausstattungsliste.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Technische Dokumente</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 1.8 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 22.03.2025</span>
+                            </div>
+                            <p class="doc-description">Liste aller Ausstattungsmerkmale des Apartments.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Ausstattungsliste.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="recommendations">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>
+                                Immobilien-Empfehlung_A-203.pdf
+                                <span class="doc-status new">Neu</span>
+                            </h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Beratungsunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 3.8 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 12.05.2025</span>
+                            </div>
+                            <p class="doc-description">Maßgeschneiderte Immobilienempfehlung für Apartment A-203 im Sunset Bay Resort mit 94% Übereinstimmung zu Ihren Anforderungen.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Immobilien-Empfehlung_A-203.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="recommendations">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Immobilien-Empfehlung_B-107.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Beratungsunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 3.2 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 08.05.2025</span>
+                            </div>
+                            <p class="doc-description">Maßgeschneiderte Immobilienempfehlung für Apartment B-107 im Mediterranean Heights mit 82% Übereinstimmung zu Ihren Anforderungen.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Immobilien-Empfehlung_B-107.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-contracts" class="tab-content" role="tabpanel" aria-labelledby="contracts-tab">
+                <div class="document-list">
+                    <!-- Contract documents will be cloned here by JavaScript -->
+                </div>
+            </div>
+            
+            <div id="tab-legal" class="tab-content" role="tabpanel" aria-labelledby="legal-tab">
+                <div class="document-list">
+                    <!-- Legal documents will be cloned here by JavaScript -->
+                </div>
+            </div>
+            
+            <div id="tab-financial" class="tab-content" role="tabpanel" aria-labelledby="financial-tab">
+                <div class="document-list">
+                    <!-- Financial documents will be cloned here by JavaScript -->
+                </div>
+            </div>
+            
+            <div id="tab-technical" class="tab-content" role="tabpanel" aria-labelledby="technical-tab">
+                <div class="document-list">
+                    <!-- Technical documents will be cloned here by JavaScript -->
+                </div>
+            </div>
+            
+            <div id="tab-recommendations" class="tab-content" role="tabpanel" aria-labelledby="recommendations-tab">
+                <div class="document-list">
+                    <!-- Recommendations documents will be displayed here -->
+                    <div class="document-card" data-category="recommendations">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>
+                                Immobilien-Empfehlung_A-203.pdf
+                                <span class="doc-status new">Neu</span>
+                            </h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Beratungsunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 3.8 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 12.05.2025</span>
+                            </div>
+                            <p class="doc-description">Maßgeschneiderte Immobilienempfehlung für Apartment A-203 im Sunset Bay Resort mit 94% Übereinstimmung zu Ihren Anforderungen.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Immobilien-Empfehlung_A-203.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card" data-category="recommendations">
+                        <div class="doc-icon pdf">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        </div>
+                        <div class="doc-details">
+                            <h3>Immobilien-Empfehlung_B-107.pdf</h3>
+                            <div class="doc-meta">
+                                <span><i class="fas fa-folder" aria-hidden="true"></i> Beratungsunterlagen</span>
+                                <span><i class="fas fa-file-alt" aria-hidden="true"></i> 3.2 MB</span>
+                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> 08.05.2025</span>
+                            </div>
+                            <p class="doc-description">Maßgeschneiderte Immobilienempfehlung für Apartment B-107 im Mediterranean Heights mit 82% Übereinstimmung zu Ihren Anforderungen.</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="action-btn view-btn" title="Anzeigen" onclick="previewDocument('Immobilien-Empfehlung_B-107.pdf')" aria-label="Dokument anzeigen">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn download-btn" title="Herunterladen" aria-label="Dokument herunterladen">
+                                <i class="fas fa-download" aria-hidden="true"></i>
+                            </button>
+                            <button class="action-btn share-btn" title="Teilen" aria-label="Dokument teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Upload Modal -->
+    <div class="document-upload-modal" id="uploadModal" aria-hidden="true" role="dialog" aria-labelledby="upload-title">
+        <div class="upload-card">
+            <div class="upload-header">
+                <h3 id="upload-title">Dokument hochladen</h3>
+                <button class="upload-close" id="closeUploadBtn" aria-label="Schließen">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="upload-body">
+                <form id="uploadForm" class="form-enhanced">
+                    <div class="upload-dropzone" id="dropzone" tabindex="0" role="button" aria-label="Dateien hierher ziehen oder klicken zum Auswählen">
+                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                        <p>Dateien hierher ziehen oder <span class="browse-link">durchsuchen</span></p>
+                        <input type="file" id="fileInput" hidden aria-hidden="true">
+                    </div>
+                    
+                    <div class="form-group-enhanced">
+                        <label for="docTitle">Dokumenttitel</label>
+                        <input type="text" id="docTitle" class="form-control-enhanced" placeholder="z.B. Kaufvertrag, Grundriss, etc." required>
+                    </div>
+                    
+                    <div class="form-group-enhanced">
+                        <label for="docCategory">Kategorie</label>
+                        <select id="docCategory" class="form-control-enhanced" required>
+                            <option value="contracts">Verträge</option>
+                            <option value="legal">Rechtsdokumente</option>
+                            <option value="financial">Finanzunterlagen</option>
+                            <option value="technical">Technische Dokumente</option>
+                            <option value="recommendations">Beratungsunterlagen</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group-enhanced">
+                        <label for="docDescription">Beschreibung (optional)</label>
+                        <textarea id="docDescription" class="form-control-enhanced" rows="3" placeholder="Kurze Beschreibung des Dokuments..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions-enhanced">
+                        <button type="button" class="btn btn-secondary" id="cancelUploadBtn">Abbrechen</button>
+                        <button type="submit" class="btn btn-primary">Hochladen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Preview Modal -->
+    <div class="document-preview-modal" id="previewModal" aria-hidden="true" role="dialog" aria-labelledby="preview-title">
+        <div class="preview-container">
+            <div class="preview-header">
+                <h3 id="preview-title">Dokumentvorschau</h3>
+                <button class="preview-close" id="closePreviewBtn" aria-label="Schließen">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="preview-content" id="previewContent">
+                <!-- Document preview will be shown here -->
+                <iframe class="document-iframe" id="documentFrame" title="Dokumentvorschau" src="about:blank"></iframe>
+            </div>
+            <div class="preview-actions">
+                <button class="btn btn-outline" id="printDocumentBtn">
+                    <i class="fas fa-print" aria-hidden="true"></i> Drucken
+                </button>
+                <button class="btn btn-primary" id="downloadDocumentBtn">
+                    <i class="fas fa-download" aria-hidden="true"></i> Herunterladen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add API client and auth service before main.js -->
+    <script src="../js/config.js" type="module"></script>
+<script src="../js/api-client.js" type="module"></script>
+    <script src="../js/api-service.js"></script>
+    <script src="../js/api-service-enhanced.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/forms-enhanced.js"></script>
+    <script src="../js/keyboard-nav.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/language-switcher.js"></script>
+    <script src="../js/documents-controller.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language switcher
+            if (window.LanguageSwitcher) {
+                const languageSwitcher = new LanguageSwitcher({
+                    containerId: 'language-switcher',
+                    i18nService: window.i18n
+                });
+            }
+            
+            // Initialize accessibility features
+            initAccessibility();
+            
+            // Check authentication
+            if (!window.authService.isAuthenticated() && 
+                (!window.demoAuthService || !window.demoAuthService.isAuthenticated())) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Get current user from local storage (while API loads)
+            const currentUser = window.authService.getCurrentUser() || 
+                               (window.demoAuthService ? window.demoAuthService.getCurrentUser() : null);
+            
+            if (currentUser) {
+                // Display initial user info from localStorage
+                document.getElementById('userName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+                if (currentUser.property) {
+                    document.getElementById('userProperty').textContent = currentUser.property.name || '';
+                }
+            }
+            
+            // Set up logout functionality
+            document.getElementById('logoutLink').addEventListener('click', async function(e) {
+                e.preventDefault();
+                // Check which auth service to use
+                if (localStorage.getItem('rb_is_demo') === 'true') {
+                    window.demoAuthService.logout();
+                } else {
+                    await window.authService.logout();
+                }
+                window.location.href = '../login.html';
+            });
+            
+            // Initialize tabs, document list, search, filtering, and modals
+            initializeTabs();
+            populateCategoryTabs();
+            setupDocumentSearch();
+            setupCategoryFilter();
+            setupUploadModal();
+            setupPreviewModal();
+            
+            // Try to fetch documents from API
+            try {
+                const response = await window.api.get('/documents');
+                if (response && response.success) {
+                    // In a real app, we would update the document list with API response
+                    // For demo purposes, we'll just show a success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            'Dokumente wurden erfolgreich geladen.',
+                            'Daten geladen'
+                        );
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+                // For demo purposes, we're using static content, so no need to show an error
+            }
+            
+            // Update page with current language if i18n is available
+            if (window.i18n) {
+                window.i18n.translatePage();
+                
+                // Listen for language changes
+                document.addEventListener('languageChanged', function(event) {
+                    // Update the page with new translations
+                    window.i18n.translatePage();
+                });
+            }
+        });
+        
+        // Function to initialize accessibility features
+        function initAccessibility() {
+            // Update theme toggle state based on current theme
+            const themeToggle = document.querySelector('[data-theme-toggle]');
+            if (themeToggle) {
+                const currentTheme = localStorage.getItem('redbird_theme') || 'light';
+                themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
+                
+                // Update aria-pressed when theme changes
+                themeToggle.addEventListener('click', function() {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    this.setAttribute('aria-pressed', isDark);
+                });
+            }
+            
+            // Add keyboard support for dropdown menu
+            const dropdownBtn = document.querySelector('.dropbtn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            
+            if (dropdownBtn && dropdownContent) {
+                // Toggle dropdown on click
+                dropdownBtn.addEventListener('click', function() {
+                    const expanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !expanded);
+                    dropdownContent.style.display = expanded ? 'none' : 'block';
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn') && !e.target.closest('.dropdown-content')) {
+                        dropdownBtn.setAttribute('aria-expanded', 'false');
+                        dropdownContent.style.display = 'none';
+                    }
+                });
+                
+                // Handle keyboard navigation within dropdown
+                const menuItems = dropdownContent.querySelectorAll('[role="menuitem"]');
+                menuItems.forEach((item, index) => {
+                    item.addEventListener('keydown', function(e) {
+                        let nextItem = null;
+                        
+                        // Arrow down: go to next item
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            nextItem = menuItems[(index + 1) % menuItems.length];
+                        }
+                        // Arrow up: go to previous item
+                        else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            nextItem = menuItems[(index - 1 + menuItems.length) % menuItems.length];
+                        }
+                        // Escape: close dropdown
+                        else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            dropdownBtn.setAttribute('aria-expanded', 'false');
+                            dropdownContent.style.display = 'none';
+                            dropdownBtn.focus();
+                            return;
+                        }
+                        
+                        if (nextItem) {
+                            nextItem.focus();
+                        }
+                    });
+                });
+            }
+            
+            // Add keyboard support for tabs
+            const tabButtons = document.querySelectorAll('.tab-button');
+            if (tabButtons.length) {
+                tabButtons.forEach((button, index) => {
+                    button.addEventListener('keydown', function(e) {
+                        let nextButton = null;
+                        
+                        // Arrow right: go to next tab
+                        if (e.key === 'ArrowRight') {
+                            e.preventDefault();
+                            nextButton = tabButtons[(index + 1) % tabButtons.length];
+                        }
+                        // Arrow left: go to previous tab
+                        else if (e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            nextButton = tabButtons[(index - 1 + tabButtons.length) % tabButtons.length];
+                        }
+                        // Space or Enter: activate tab
+                        else if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault();
+                            button.click();
+                            return;
+                        }
+                        
+                        if (nextButton) {
+                            nextButton.focus();
+                        }
+                    });
+                });
+            }
+            
+            // Make dropzone keyboard accessible
+            const dropzone = document.getElementById('dropzone');
+            if (dropzone) {
+                dropzone.addEventListener('keydown', function(e) {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('fileInput').click();
+                    }
+                });
+            }
+        }
+        
+        // Function to initialize tabs
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state on buttons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
+                    
+                    // Show corresponding tab content
+                    const tabId = this.getAttribute('data-tab');
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                    
+                    // Announce tab change to screen readers
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.info(
+                            `Zeige ${tabId === 'all' ? 'alle Dokumente' : tabId + ' Dokumente'}`,
+                            'Kategorie geändert'
+                        );
+                    }
+                });
+            });
+        }
+        
+        // Function to populate category tabs with documents from the 'all' tab
+        function populateCategoryTabs() {
+            const categories = ['contracts', 'legal', 'financial', 'technical', 'recommendations'];
+            
+            categories.forEach(category => {
+                const tabContent = document.getElementById(`tab-${category}`);
+                const documentList = tabContent.querySelector('.document-list');
+                const allDocs = document.querySelectorAll(`#tab-all .document-card[data-category="${category}"]`);
+                
+                // Clone documents from 'all' tab to their respective category tabs
+                allDocs.forEach(doc => {
+                    const clone = doc.cloneNode(true);
+                    
+                    // Fix onclick handlers in the cloned documents
+                    const viewBtn = clone.querySelector('.view-btn');
+                    if (viewBtn) {
+                        const originalOnClick = viewBtn.getAttribute('onclick');
+                        if (originalOnClick) {
+                            viewBtn.onclick = new Function(originalOnClick.replace('previewDocument(', 'return previewDocument('));
+                        }
+                    }
+                    
+                    documentList.appendChild(clone);
+                });
+                
+                // If no documents in this category, show empty message
+                if (allDocs.length === 0) {
+                    const emptyMessage = document.createElement('div');
+                    emptyMessage.className = 'category-empty';
+                    emptyMessage.innerHTML = `
+                        <i class="fas fa-folder-open" aria-hidden="true"></i>
+                        <h3>Keine Dokumente gefunden</h3>
+                        <p>In dieser Kategorie wurden noch keine Dokumente hochgeladen.</p>
+                        <button class="btn btn-primary" id="uploadBtn-${category}">
+                            <i class="fas fa-upload" aria-hidden="true"></i> Dokument hochladen
+                        </button>
+                    `;
+                    documentList.appendChild(emptyMessage);
+                    
+                    // Add event listener to the upload button
+                    document.getElementById(`uploadBtn-${category}`).addEventListener('click', function() {
+                        showUploadModal();
+                        document.getElementById('docCategory').value = category;
+                    });
+                }
+            });
+        }
+        
+        // Function to set up document search
+        function setupDocumentSearch() {
+            const searchInput = document.getElementById('documentSearch');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const allDocuments = document.querySelectorAll('.document-card');
+                
+                // Filter documents in all tabs
+                allDocuments.forEach(doc => {
+                    const title = doc.querySelector('h3').textContent.toLowerCase();
+                    const description = doc.querySelector('.doc-description').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        doc.style.display = 'flex';
+                    } else {
+                        doc.style.display = 'none';
+                    }
+                });
+                
+                // Add search term as a filter tag if not empty
+                if (searchTerm.trim() !== '') {
+                    addFilterTag('search', `Suche: ${searchTerm}`);
+                } else {
+                    removeFilterTag('search');
+                }
+            });
+        }
+        
+        // Function to set up category filter
+        function setupCategoryFilter() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            categoryFilter.addEventListener('change', function() {
+                const selectedCategory = this.value;
+                
+                // If "all" is selected, show all documents
+                if (selectedCategory === 'all') {
+                    document.querySelectorAll('.document-card').forEach(doc => {
+                        doc.style.display = 'flex';
+                    });
+                    
+                    // Remove category filter tag
+                    removeFilterTag('category');
+                    
+                    return;
+                }
+                
+                // Otherwise, filter documents in all tabs
+                document.querySelectorAll('.document-card').forEach(doc => {
+                    if (doc.getAttribute('data-category') === selectedCategory) {
+                        doc.style.display = 'flex';
+                    } else {
+                        doc.style.display = 'none';
+                    }
+                });
+                
+                // Add category as a filter tag
+                const categoryLabel = categoryFilter.options[categoryFilter.selectedIndex].text;
+                addFilterTag('category', `Kategorie: ${categoryLabel}`);
+                
+                // Also switch to the tab if applicable
+                const tabButton = document.querySelector(`.tab-button[data-tab="${selectedCategory}"]`);
+                if (tabButton) {
+                    tabButton.click();
+                }
+            });
+        }
+        
+        // Function to add a filter tag
+        function addFilterTag(type, text) {
+            // Remove existing tag of the same type
+            removeFilterTag(type);
+            
+            // Create new tag
+            const tagsContainer = document.getElementById('activeTags');
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag active';
+            tag.setAttribute('data-filter-type', type);
+            tag.innerHTML = `
+                ${text}
+                <span class="filter-tag-close" onclick="removeFilterTag('${type}')" aria-label="Filter entfernen">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </span>
+            `;
+            
+            tagsContainer.appendChild(tag);
+        }
+        
+        // Function to remove a filter tag
+        function removeFilterTag(type) {
+            const existingTag = document.querySelector(`.filter-tag[data-filter-type="${type}"]`);
+            if (existingTag) {
+                existingTag.remove();
+                
+                // Reset the corresponding filter
+                if (type === 'search') {
+                    document.getElementById('documentSearch').value = '';
+                    // Show all documents again
+                    document.querySelectorAll('.document-card').forEach(doc => {
+                        doc.style.display = 'flex';
+                    });
+                } else if (type === 'category') {
+                    document.getElementById('categoryFilter').value = 'all';
+                    // Show all documents again
+                    document.querySelectorAll('.document-card').forEach(doc => {
+                        doc.style.display = 'flex';
+                    });
+                }
+            }
+        }
+        
+        // Function to set up upload modal
+        function setupUploadModal() {
+            const uploadModal = document.getElementById('uploadModal');
+            const showUploadBtn = document.getElementById('showUploadModal');
+            const closeUploadBtn = document.getElementById('closeUploadBtn');
+            const cancelUploadBtn = document.getElementById('cancelUploadBtn');
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const uploadForm = document.getElementById('uploadForm');
+            
+            // Show upload modal
+            showUploadBtn.addEventListener('click', function() {
+                showUploadModal();
+            });
+            
+            // Close upload modal
+            closeUploadBtn.addEventListener('click', function() {
+                hideUploadModal();
+            });
+            
+            cancelUploadBtn.addEventListener('click', function() {
+                hideUploadModal();
+            });
+            
+            // Handle clicking on browse link
+            dropzone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    dropzone.classList.add('file-selected');
+                    
+                    // Update dropzone UI
+                    let fileIcon = 'fa-file-alt';
+                    if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
+                    else if (file.type.includes('word')) fileIcon = 'fa-file-word';
+                    else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = 'fa-file-excel';
+                    else if (file.type.includes('image')) fileIcon = 'fa-file-image';
+                    else if (file.type.includes('zip')) fileIcon = 'fa-file-archive';
+                    
+                    dropzone.innerHTML = `
+                        <i class="fas ${fileIcon}" aria-hidden="true"></i>
+                        <p>${file.name}</p>
+                        <span class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    `;
+                    
+                    // Auto-fill document title based on filename
+                    const docTitle = document.getElementById('docTitle');
+                    if (!docTitle.value) {
+                        docTitle.value = file.name.split('.')[0];
+                    }
+                }
+            });
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const title = document.getElementById('docTitle').value;
+                const category = document.getElementById('docCategory').value;
+                const description = document.getElementById('docDescription').value;
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    // Show error notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.danger(
+                            'Bitte wählen Sie eine Datei aus.',
+                            'Validierungsfehler'
+                        );
+                    }
+                    return;
+                }
+                
+                // In a real app, we would upload the file to the server
+                // For demo purposes, just simulate a successful upload
+                setTimeout(() => {
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            `Die Datei "${title}" wurde erfolgreich hochgeladen.`,
+                            'Upload erfolgreich'
+                        );
+                    }
+                    
+                    // Hide modal
+                    hideUploadModal();
+                    
+                    // Reset form
+                    uploadForm.reset();
+                    dropzone.classList.remove('file-selected');
+                    dropzone.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                        <p>Dateien hierher ziehen oder <span class="browse-link">durchsuchen</span></p>
+                    `;
+                }, 1500);
+            });
+        }
+        
+        // Function to show upload modal
+        function showUploadModal() {
+            const uploadModal = document.getElementById('uploadModal');
+            uploadModal.style.display = 'flex';
+            uploadModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Function to hide upload modal
+        function hideUploadModal() {
+            const uploadModal = document.getElementById('uploadModal');
+            uploadModal.style.display = 'none';
+            uploadModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Function to set up preview modal
+        function setupPreviewModal() {
+            const previewModal = document.getElementById('previewModal');
+            const closePreviewBtn = document.getElementById('closePreviewBtn');
+            const printDocumentBtn = document.getElementById('printDocumentBtn');
+            const downloadDocumentBtn = document.getElementById('downloadDocumentBtn');
+            
+            // Close preview modal
+            closePreviewBtn.addEventListener('click', function() {
+                hidePreviewModal();
+            });
+            
+            // Close when clicking outside the preview
+            previewModal.addEventListener('click', function(e) {
+                if (e.target === previewModal) {
+                    hidePreviewModal();
+                }
+            });
+            
+            // Handle print button
+            printDocumentBtn.addEventListener('click', function() {
+                const documentFrame = document.getElementById('documentFrame');
+                
+                try {
+                    documentFrame.contentWindow.print();
+                } catch (e) {
+                    console.error('Error printing document:', e);
+                    
+                    // Show info notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.info(
+                            'Druckfunktion nicht verfügbar in der Demo-Version.',
+                            'Demo-Einschränkung'
+                        );
+                    }
+                }
+            });
+            
+            // Handle download button
+            downloadDocumentBtn.addEventListener('click', function() {
+                const documentTitle = document.getElementById('preview-title').textContent;
+                
+                // Show success notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        `Die Datei "${documentTitle}" wird heruntergeladen.`,
+                        'Download gestartet'
+                    );
+                }
+                
+                hidePreviewModal();
+            });
+            
+            // Handle keyboard events
+            document.addEventListener('keydown', function(e) {
+                if (previewModal.style.display === 'flex' && e.key === 'Escape') {
+                    hidePreviewModal();
+                }
+            });
+        }
+        
+        // Function to preview a document
+        function previewDocument(docName) {
+            const previewModal = document.getElementById('previewModal');
+            const previewTitle = document.getElementById('preview-title');
+            const documentFrame = document.getElementById('documentFrame');
+            
+            // Set document title
+            previewTitle.textContent = docName;
+            
+            // In a real app, we would load the actual document
+            // For demo purposes, just show a placeholder
+            documentFrame.src = 'about:blank';
+            
+            // Show modal
+            previewModal.style.display = 'flex';
+            previewModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            
+            // Show info notification
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.info(
+                    `Vorschau für "${docName}" ist in der Demo-Version nicht verfügbar.`,
+                    'Demo-Einschränkung'
+                );
+            }
+        }
+        
+        // Function to hide preview modal
+        function hidePreviewModal() {
+            const previewModal = document.getElementById('previewModal');
+            previewModal.style.display = 'none';
+            previewModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>

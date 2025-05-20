@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RedBird Kundenportal</title>
+    <meta name="description" content="Kundenportal für RedBird Real Estate. Überwachen Sie Ihre Immobilieninvestition und verfolgen Sie den Fortschritt.">
+    <meta name="theme-color" content="#d55745">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="../img/icons/icon-192x192.png">
+    
+    <!-- Standardized CSS Structure -->
+    <link rel="stylesheet" href="../css/core.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layouts.css">
+    <link rel="stylesheet" href="../css/utilities.css">
+    
+    <!-- External Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Page-specific CSS (will be integrated into standardized structure later) -->
+    <link rel="stylesheet" href="../css/dashboard-page.css">
+    
+    <!-- Resource Preloading -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="../js/dashboard-consolidated.js" as="script">
+    <link rel="preload" href="../js/components/navigation.js" as="script">
+    <link rel="preload" href="../js/components/theme-switcher.js" as="script">
+    
+    <!-- Add accessibility support -->
+    <script src="../js/keyboard-nav.js" defer></script>
+</head>
+<body class="dashboard-page" data-page="dashboard">
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    
+    <!-- Navigation Placeholder (loaded via JS) -->
+    <div id="nav-placeholder"></div>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="dashboard-main">
+        <!-- Header Placeholder (loaded via JS) -->
+        <div id="header-placeholder" class="dashboard-header"></div>
+        
+        <div class="dashboard-container container-lg mx-auto p-4">
+            <!-- Welcome Section -->
+            <section class="welcome-section mb-8">
+                <div class="card p-6">
+                    <div class="d-flex justify-between items-center mb-4 flex-wrap gap-4">
+                        <h1 class="text-2xl font-bold welcome-title">Willkommen, <span id="user-name">Kunde</span></h1>
+                        <div class="d-flex gap-2">
+                            <button id="refresh-data" class="btn btn-outline btn-sm d-flex items-center gap-2" aria-label="Daten aktualisieren">
+                                <i class="fas fa-sync-alt"></i> Aktualisieren
+                            </button>
+                            <button id="settings-button" class="btn btn-outline btn-sm d-flex items-center gap-2" aria-label="Dashboard-Einstellungen">
+                                <i class="fas fa-cog"></i> Einstellungen
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-welcome-content">
+                        <p class="mb-4">Von hier aus können Sie den Fortschritt Ihrer Immobilieninvestition verfolgen, Dokumente einsehen und mit Ihrem persönlichen Berater in Kontakt treten.</p>
+                        
+                        <div class="d-flex justify-between items-center flex-wrap gap-4">
+                            <div class="d-flex gap-4 flex-wrap">
+                                <a href="progress.html" class="btn btn-primary d-flex items-center gap-2">
+                                    <i class="fas fa-chart-line"></i> Fortschritt ansehen
+                                </a>
+                                <a href="documents.html" class="btn btn-outline d-flex items-center gap-2">
+                                    <i class="fas fa-file-alt"></i> Dokumente
+                                </a>
+                            </div>
+                            <span id="last-updated" class="text-sm text-gray"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Progress Overview Section -->
+            <section class="progress-overview-section mb-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Fortschrittsübersicht</h2>
+                        <a href="progress.html" class="text-primary font-medium d-flex items-center gap-1">
+                            <span>Details ansehen</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="progress-indicators grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Overall Progress -->
+                            <div class="progress-summary d-flex flex-column items-center">
+                                <div class="progress-circle-enhanced mb-4" data-percent="0">
+                                    <span class="progress-value-enhanced">0%</span>
+                                </div>
+                                <h3 class="text-lg font-medium">Gesamtfortschritt</h3>
+                                <p class="text-sm text-gray text-center">Basierend auf allen Projektphasen</p>
+                            </div>
+                            
+                            <!-- Current Phase -->
+                            <div class="current-phase d-flex flex-column">
+                                <h3 class="text-lg font-medium mb-3">Aktuelle Phase</h3>
+                                <div class="phase-card p-4 rounded bg-lighter-gray d-flex flex-column gap-3">
+                                    <div class="d-flex justify-between items-center">
+                                        <span class="font-semibold current-phase-name">Kaufabwicklung</span>
+                                        <span class="badge badge-primary current-phase-status">In Bearbeitung</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" data-percent="35" style="width: 35%">
+                                            <span class="progress-text sr-only">35%</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-sm d-flex justify-between">
+                                        <span>Start: <span id="phase-start">10.03.2025</span></span>
+                                        <span>Geplante Fertigstellung: <span id="phase-end">20.04.2025</span></span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Next Steps -->
+                            <div class="next-steps d-flex flex-column">
+                                <h3 class="text-lg font-medium mb-3">Nächste Schritte</h3>
+                                <ul class="next-steps-list d-flex flex-column gap-2">
+                                    <li class="next-step-item">
+                                        <div class="next-step-card p-3 rounded bg-lighter-gray d-flex items-start gap-3">
+                                            <i class="fas fa-file-signature text-primary mt-1"></i>
+                                            <div>
+                                                <p class="font-medium">Unterzeichnung des Kaufvertrags</p>
+                                                <span class="text-sm text-gray">Deadline: 25.03.2025</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="next-step-item">
+                                        <div class="next-step-card p-3 rounded bg-lighter-gray d-flex items-start gap-3">
+                                            <i class="fas fa-money-bill-wave text-primary mt-1"></i>
+                                            <div>
+                                                <p class="font-medium">Anzahlung leisten</p>
+                                                <span class="text-sm text-gray">Deadline: 05.04.2025</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Property Info Section -->
+            <section class="property-info-section mb-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Immobilieninformationen</h2>
+                        <a href="#" class="text-primary font-medium d-flex items-center gap-1" id="property-details-toggle">
+                            <span>Details anzeigen</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Property Card -->
+                            <div class="property-card d-flex flex-column">
+                                <div class="property-image rounded-lg overflow-hidden mb-4">
+                                    <img src="../img/apartment-preview.jpg" alt="Apartment Meerblick" class="w-full h-auto">
+                                </div>
+                                <h3 class="text-lg font-semibold mb-2" id="property-name">Apartment Meerblick</h3>
+                                <p class="text-gray mb-4" id="property-address">Sunset Boulevard 123, 12345 North Cyprus</p>
+                                <div class="property-specs d-flex flex-wrap gap-4 mb-4">
+                                    <span class="d-flex items-center gap-2">
+                                        <i class="fas fa-ruler-combined text-primary"></i>
+                                        <span id="property-size">85 m²</span>
+                                    </span>
+                                    <span class="d-flex items-center gap-2">
+                                        <i class="fas fa-bed text-primary"></i>
+                                        <span id="property-bedrooms">2 Schlafzimmer</span>
+                                    </span>
+                                    <span class="d-flex items-center gap-2">
+                                        <i class="fas fa-bath text-primary"></i>
+                                        <span id="property-bathrooms">2 Badezimmer</span>
+                                    </span>
+                                    <span class="d-flex items-center gap-2">
+                                        <i class="fas fa-swimming-pool text-primary"></i>
+                                        <span id="property-pool">Gemeinschaftspool</span>
+                                    </span>
+                                </div>
+                                <a href="../img/apartment-preview.jpg" class="btn btn-outline btn-sm d-flex items-center gap-2 align-self-start" target="_blank" aria-label="Bilder in großer Ansicht öffnen">
+                                    <i class="fas fa-images"></i> Mehr Bilder ansehen
+                                </a>
+                            </div>
+                            
+                            <!-- Property Financial Info -->
+                            <div class="property-financial-info d-flex flex-column">
+                                <div class="financial-summary grid grid-cols-2 gap-4 mb-6">
+                                    <div class="financial-item p-4 bg-lighter-gray rounded-lg">
+                                        <h4 class="text-sm text-gray mb-1">Kaufpreis</h4>
+                                        <p class="text-xl font-bold" id="property-price">€ 250.000</p>
+                                    </div>
+                                    <div class="financial-item p-4 bg-lighter-gray rounded-lg">
+                                        <h4 class="text-sm text-gray mb-1">Bezahlt</h4>
+                                        <p class="text-xl font-bold" id="property-paid">€ 50.000</p>
+                                    </div>
+                                    <div class="financial-item p-4 bg-lighter-gray rounded-lg">
+                                        <h4 class="text-sm text-gray mb-1">Nächste Zahlung</h4>
+                                        <p class="text-xl font-bold" id="property-next-payment">€ 100.000</p>
+                                    </div>
+                                    <div class="financial-item p-4 bg-lighter-gray rounded-lg">
+                                        <h4 class="text-sm text-gray mb-1">Fällig am</h4>
+                                        <p class="text-xl font-bold" id="property-payment-date">05.04.2025</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-timeline mb-4">
+                                    <h4 class="font-semibold mb-2">Zahlungsplan</h4>
+                                    <div class="payment-progress">
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" data-percent="20" style="width: 20%">
+                                                <span class="progress-text sr-only">20%</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-between text-sm text-gray">
+                                            <span>0%</span>
+                                            <span>25%</span>
+                                            <span>50%</span>
+                                            <span>75%</span>
+                                            <span>100%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="property-documents">
+                                    <h4 class="font-semibold mb-2">Vertragsdokumente</h4>
+                                    <ul class="document-list d-flex flex-column gap-2">
+                                        <li>
+                                            <a href="#" class="document-link d-flex justify-between items-center p-3 rounded bg-lighter-gray">
+                                                <span class="d-flex items-center gap-2">
+                                                    <i class="fas fa-file-pdf text-primary"></i>
+                                                    <span>Kaufvertrag</span>
+                                                </span>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="document-link d-flex justify-between items-center p-3 rounded bg-lighter-gray">
+                                                <span class="d-flex items-center gap-2">
+                                                    <i class="fas fa-file-pdf text-primary"></i>
+                                                    <span>Zahlungsplan</span>
+                                                </span>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact Section -->
+            <section class="contact-section mb-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Ihr persönlicher Ansprechpartner</h2>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="advisor-card d-flex flex-wrap gap-6">
+                            <div class="advisor-avatar">
+                                <img src="../img/avatar-placeholder.jpg" alt="Berater" class="rounded-full w-24 h-24 object-cover">
+                            </div>
+                            
+                            <div class="advisor-info flex-1">
+                                <h3 class="text-lg font-semibold mb-2" id="advisor-name">Max Mustermann</h3>
+                                <p class="text-gray mb-4" id="advisor-title">Senior Immobilienberater</p>
+                                <div class="advisor-contact d-flex flex-column gap-2">
+                                    <div class="d-flex items-center gap-2">
+                                        <i class="fas fa-envelope text-primary"></i>
+                                        <a href="mailto:max.mustermann@redbird-realestate.com" class="text-primary" id="advisor-email">max.mustermann@redbird-realestate.com</a>
+                                    </div>
+                                    <div class="d-flex items-center gap-2">
+                                        <i class="fas fa-phone text-primary"></i>
+                                        <a href="tel:+491234567890" class="text-primary" id="advisor-phone">+49 123 4567890</a>
+                                    </div>
+                                    <div class="d-flex items-center gap-2">
+                                        <i class="fas fa-clock text-primary"></i>
+                                        <span id="advisor-hours">Mo-Fr: 9:00 - 17:00 Uhr</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="advisor-actions d-flex flex-column gap-3">
+                                <a href="#" class="btn btn-primary d-flex items-center gap-2" id="message-advisor">
+                                    <i class="fas fa-comment"></i> Nachricht senden
+                                </a>
+                                <a href="#" class="btn btn-outline d-flex items-center gap-2" id="schedule-call">
+                                    <i class="fas fa-calendar-alt"></i> Termin vereinbaren
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Recent Activity Section -->
+            <section class="recent-activity-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Neueste Aktivitäten</h2>
+                        <a href="#" class="text-primary font-medium d-flex items-center gap-1" id="all-activities-link">
+                            <span>Alle anzeigen</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-body">
+                        <ul class="activity-list d-flex flex-column gap-4" id="activity-list">
+                            <!-- Activities will be loaded via JS -->
+                            <li class="activity-item d-flex items-start gap-3 pb-4 border-b border-light-gray">
+                                <div class="activity-icon">
+                                    <i class="fas fa-file-alt bg-primary-light text-primary p-2 rounded-full"></i>
+                                </div>
+                                <div class="activity-content flex-1">
+                                    <div class="d-flex justify-between">
+                                        <p class="font-medium">Neues Dokument: Kaufvertrag</p>
+                                        <span class="text-sm text-gray">Heute, 10:30</span>
+                                    </div>
+                                    <p class="text-gray">Der Kaufvertrag ist jetzt zur Überprüfung verfügbar.</p>
+                                </div>
+                            </li>
+                            <li class="activity-item d-flex items-start gap-3 pb-4 border-b border-light-gray">
+                                <div class="activity-icon">
+                                    <i class="fas fa-chart-line bg-success-light text-success p-2 rounded-full"></i>
+                                </div>
+                                <div class="activity-content flex-1">
+                                    <div class="d-flex justify-between">
+                                        <p class="font-medium">Fortschritt aktualisiert</p>
+                                        <span class="text-sm text-gray">Gestern, 14:15</span>
+                                    </div>
+                                    <p class="text-gray">Die Vertragsverhandlungen sind abgeschlossen.</p>
+                                </div>
+                            </li>
+                            <li class="activity-item d-flex items-start gap-3">
+                                <div class="activity-icon">
+                                    <i class="fas fa-comment bg-info-light text-info p-2 rounded-full"></i>
+                                </div>
+                                <div class="activity-content flex-1">
+                                    <div class="d-flex justify-between">
+                                        <p class="font-medium">Neue Nachricht von Max Mustermann</p>
+                                        <span class="text-sm text-gray">15.03.2025, 09:45</span>
+                                    </div>
+                                    <p class="text-gray">Ich habe soeben eine Aktualisierung zum Zahlungsplan erhalten.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer Placeholder (loaded via JS) -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Message Modal -->
+    <div class="modal-backdrop" id="message-modal-backdrop"></div>
+    <div class="modal" id="message-modal" role="dialog" aria-labelledby="message-modal-title" aria-hidden="true">
+        <div class="modal-header">
+            <h3 id="message-modal-title" class="modal-title">Nachricht an Ihren Berater</h3>
+            <button type="button" class="modal-close" aria-label="Schließen" id="close-message-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="message-form">
+                <div class="form-group mb-4">
+                    <label for="message-subject" class="form-label">Betreff</label>
+                    <input type="text" id="message-subject" class="form-control" placeholder="Betreff Ihrer Nachricht" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="message-text" class="form-label">Nachricht</label>
+                    <textarea id="message-text" class="form-control" rows="6" placeholder="Ihre Nachricht" required></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="d-flex items-center gap-2 mb-4">
+                        <input type="checkbox" id="message-urgent" class="form-check-input">
+                        <label for="message-urgent" class="form-check-label">Als dringend markieren</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancel-message">Abbrechen</button>
+            <button type="button" class="btn btn-primary" id="send-message">Senden</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js" type="module"></script>
+    <script src="../js/api-client.js" type="module"></script>
+    <script src="../js/dashboard-consolidated.js" type="module"></script>
+    <script src="../js/auth-service.js" type="module"></script>
+    <script src="../js/components/navigation.js" type="module"></script>
+    <script src="../js/components/footer.js" type="module"></script>
+    <script src="../js/theme-switcher.js" type="module"></script>
+    <script src="../js/notifications-enhanced.js" type="module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load components (navigation, header, footer)
+            Promise.all([
+                fetch('../components/navigation.html').then(response => response.text()),
+                fetch('../components/dashboard-header.html').then(response => response.text()),
+                fetch('../components/footer.html').then(response => response.text())
+            ]).then(([nav, header, footer]) => {
+                document.getElementById('nav-placeholder').innerHTML = nav;
+                document.getElementById('header-placeholder').innerHTML = header;
+                document.getElementById('footer-placeholder').innerHTML = footer;
+                
+                // Initialize navigation after it's loaded
+                if (window.initNavigation) {
+                    window.initNavigation();
+                }
+            }).catch(error => {
+                console.error('Error loading components:', error);
+            });
+            
+            // Message modal functionality
+            const messageButton = document.getElementById('message-advisor');
+            const messageModal = document.getElementById('message-modal');
+            const messageBackdrop = document.getElementById('message-modal-backdrop');
+            const closeModalButton = document.getElementById('close-message-modal');
+            const cancelButton = document.getElementById('cancel-message');
+            const sendButton = document.getElementById('send-message');
+            
+            function openModal() {
+                messageModal.classList.add('show');
+                messageBackdrop.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    document.getElementById('message-subject').focus();
+                }, 100);
+            }
+            
+            function closeModal() {
+                messageModal.classList.remove('show');
+                messageBackdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+            
+            messageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
+            });
+            
+            [closeModalButton, cancelButton, messageBackdrop].forEach(el => {
+                el.addEventListener('click', function() {
+                    closeModal();
+                });
+            });
+            
+            sendButton.addEventListener('click', function() {
+                const form = document.getElementById('message-form');
+                if (form.checkValidity()) {
+                    // Here would be the logic to send the message
+                    const subject = document.getElementById('message-subject').value;
+                    const message = document.getElementById('message-text').value;
+                    const urgent = document.getElementById('message-urgent').checked;
+                    
+                    console.log('Sending message:', { subject, message, urgent });
+                    
+                    // Reset form and close modal
+                    form.reset();
+                    closeModal();
+                    
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success('Ihre Nachricht wurde erfolgreich gesendet.', 'Nachricht gesendet');
+                    }
+                } else {
+                    form.reportValidity();
+                }
+            });
+            
+            // Initialize "last updated" time display
+            const lastUpdatedEl = document.getElementById('last-updated');
+            if (lastUpdatedEl) {
+                const now = new Date();
+                lastUpdatedEl.textContent = `Zuletzt aktualisiert: ${now.toLocaleDateString('de-DE')} ${now.toLocaleTimeString('de-DE')}`;
+            }
+            
+            // Property details toggle
+            const propertyDetailsToggle = document.getElementById('property-details-toggle');
+            if (propertyDetailsToggle) {
+                propertyDetailsToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const expanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !expanded);
+                    
+                    const icon = this.querySelector('i');
+                    const text = this.querySelector('span');
+                    
+                    if (expanded) {
+                        icon.className = 'fas fa-chevron-down';
+                        text.textContent = 'Details anzeigen';
+                    } else {
+                        icon.className = 'fas fa-chevron-up';
+                        text.textContent = 'Details ausblenden';
+                    }
+                    
+                    // Example: toggle a details section
+                    const detailsSection = document.querySelector('.property-details');
+                    if (detailsSection) {
+                        detailsSection.classList.toggle('show');
+                    }
+                });
+            }
+            
+            // Simulate refresh data functionality
+            const refreshButton = document.getElementById('refresh-data');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.classList.add('fa-spin');
+                    this.disabled = true;
+                    
+                    // Simulate data refresh
+                    setTimeout(() => {
+                        icon.classList.remove('fa-spin');
+                        this.disabled = false;
+                        
+                        // Update last updated timestamp
+                        const now = new Date();
+                        if (lastUpdatedEl) {
+                            lastUpdatedEl.textContent = `Zuletzt aktualisiert: ${now.toLocaleDateString('de-DE')} ${now.toLocaleTimeString('de-DE')}`;
+                        }
+                        
+                        // Show success notification
+                        if (window.RedBirdNotify) {
+                            window.RedBirdNotify.success('Daten wurden aktualisiert.', 'Aktualisierung erfolgreich');
+                        }
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

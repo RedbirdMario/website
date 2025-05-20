@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedBird Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* Additional custom properties for admin panel */
+            --header-height: 70px;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--neutral-100);
+            color: var(--neutral-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Admin Header */
+        .admin-header {
+            height: var(--header-height);
+            background-color: var(--secondary-light);
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .brand-logo {
+            height: 40px;
+        }
+        
+        .brand-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+        
+        .brand-badge {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .action-button {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--neutral-600);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .action-button:hover {
+            background-color: var(--neutral-100);
+            color: var(--primary-red);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--primary-red);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .user-menu:hover {
+            background-color: var(--neutral-100);
+        }
+        
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--primary-red-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--neutral-800);
+            font-size: 0.9rem;
+        }
+        
+        .user-role {
+            color: var(--neutral-600);
+            font-size: 0.8rem;
+        }
+        
+        /* Admin Layout */
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - var(--header-height));
+            margin-top: var(--header-height);
+        }
+        
+        /* Admin Sidebar */
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--secondary-light);
+            border-right: 1px solid var(--neutral-200);
+            padding: 1.5rem 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .sidebar-collapsed .admin-sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+        
+        .sidebar-heading {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--neutral-500);
+            margin: 0 0 0.75rem 1rem;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--neutral-700);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            margin: 0.25rem 0;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar-link:hover {
+            background-color: var(--neutral-100);
+            color: var(--primary-red);
+        }
+        
+        .sidebar-link.active {
+            background-color: var(--primary-red-light);
+            color: var(--primary-red-dark);
+            font-weight: 600;
+        }
+        
+        .sidebar-link i {
+            width: 20px;
+            font-size: 1.1rem;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .sidebar-collapsed .sidebar-heading,
+        .sidebar-collapsed .sidebar-link span {
+            display: none;
+        }
+        
+        .sidebar-collapsed .sidebar-link {
+            padding: 0.8rem;
+            justify-content: center;
+        }
+        
+        .sidebar-collapsed .sidebar-link i {
+            margin-right: 0;
+            font-size: 1.2rem;
+        }
+        
+        /* Admin Content */
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar-collapsed .admin-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .content-header {
+            margin-bottom: 2rem;
+        }
+        
+        .content-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+        
+        .content-header .subtitle {
+            margin: 0;
+            color: var(--neutral-600);
+            font-size: 1rem;
+        }
+        
+        /* Dashboard widgets and cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--secondary-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-card .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card .stat-title {
+            font-weight: 600;
+            color: var(--neutral-600);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .stat-card .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .icon-primary {
+            background-color: var(--primary-red);
+        }
+        
+        .icon-success {
+            background-color: var(--status-success);
+        }
+        
+        .icon-info {
+            background-color: var(--status-info);
+        }
+        
+        .icon-warning {
+            background-color: var(--status-warning);
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin: 0;
+        }
+        
+        .stat-card .stat-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .change-positive {
+            color: var(--status-success);
+        }
+        
+        .change-negative {
+            color: var(--status-danger);
+        }
+        
+        .change-neutral {
+            color: var(--neutral-600);
+        }
+        
+        /* Main content cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .content-card {
+            background-color: var(--secondary-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neutral-800);
+        }
+        
+        .card-header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .card-header-actions button {
+            background: none;
+            border: none;
+            color: var(--neutral-600);
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+        
+        .card-header-actions button:hover {
+            background-color: var(--neutral-100);
+            color: var(--primary-red);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Activity list */
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--neutral-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--neutral-700);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: var(--neutral-800);
+        }
+        
+        .activity-description {
+            color: var(--neutral-600);
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .activity-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+        }
+        
+        .activity-time, .activity-user {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        /* Tasks list */
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .task-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--neutral-200);
+            align-items: center;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-check {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neutral-400);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            position: relative;
+            background-color: var(--secondary-light);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .task-check:checked {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+        
+        .task-check:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            margin: 0 0 0.25rem 0;
+            font-weight: 500;
+            color: var(--neutral-800);
+        }
+        
+        .task-check:checked + .task-content .task-title {
+            text-decoration: line-through;
+            color: var(--neutral-500);
+        }
+        
+        .task-due {
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .task-due.overdue {
+            color: var(--status-danger);
+            font-weight: 500;
+        }
+        
+        .task-due.today {
+            color: var(--status-warning);
+            font-weight: 500;
+        }
+        
+        .task-priority {
+            border-radius: var(--radius-full);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .priority-high {
+            background-color: var(--status-danger-light);
+            color: var(--status-danger);
+        }
+        
+        .priority-medium {
+            background-color: var(--status-warning-light);
+            color: var(--status-warning);
+        }
+        
+        .priority-low {
+            background-color: var(--status-info-light);
+            color: var(--status-info);
+        }
+        
+        /* Recent customers */
+        .customer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .customer-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background-color: var(--neutral-100);
+            transition: all 0.2s ease;
+        }
+        
+        .customer-card:hover {
+            background-color: var(--neutral-200);
+            transform: translateY(-2px);
+        }
+        
+        .customer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: var(--neutral-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--neutral-700);
+            flex-shrink: 0;
+        }
+        
+        .customer-info {
+            flex: 1;
+        }
+        
+        .customer-name {
+            font-weight: 600;
+            margin: 0;
+            color: var(--neutral-800);
+        }
+        
+        .customer-email {
+            font-size: 0.9rem;
+            color: var(--neutral-600);
+            margin: 0;
+        }
+        
+        .customer-cta {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-light);
+            border: 1px solid var(--neutral-300);
+            color: var(--neutral-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+            color: white;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .admin-header {
+                padding: 0 1rem;
+            }
+            
+            .admin-sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .admin-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar-heading,
+            .sidebar-link span {
+                display: none;
+            }
+            
+            .sidebar-link {
+                padding: 0.8rem;
+                justify-content: center;
+            }
+            
+            .sidebar-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-header {
+                justify-content: space-between;
+                padding: 0 1rem;
+            }
+            
+            .header-brand {
+                gap: 0.5rem;
+            }
+            
+            .brand-name {
+                display: none;
+            }
+            
+            .header-actions {
+                gap: 0.5rem;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .admin-sidebar {
+                position: fixed;
+                left: -280px;
+                width: 280px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar-open .admin-sidebar {
+                left: 0;
+            }
+            
+            .sidebar-heading,
+            .sidebar-link span {
+                display: block;
+            }
+            
+            .sidebar-link {
+                padding: 0.8rem 1rem;
+                justify-content: flex-start;
+            }
+            
+            .sidebar-link i {
+                margin-right: 0.75rem;
+                font-size: 1.1rem;
+            }
+            
+            .admin-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .sidebar-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            
+            .sidebar-open .sidebar-backdrop {
+                display: block;
+            }
+        }
+        
+        /* Mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neutral-600);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+        }
+        
+        /* Dark Mode Styles */
+        [data-theme="dark"] {
+            --primary-red: #ff6b6b;
+            --primary-red-light: #ff8c8c;
+            --primary-red-dark: #e72e2e;
+            
+            --secondary-light: #1e1e1e;
+            --secondary-dark: #f8f9fa;
+            
+            --neutral-100: #2c2c2c;
+            --neutral-200: #363636;
+            --neutral-300: #424242;
+            --neutral-400: #545454;
+            --neutral-500: #757575;
+            --neutral-600: #a0a0a0;
+            --neutral-700: #c5c5c5;
+            --neutral-800: #e0e0e0;
+            --neutral-900: #f5f5f5;
+            
+            --status-success-light: rgba(46, 204, 113, 0.2);
+            --status-warning-light: rgba(243, 156, 18, 0.2);
+            --status-danger-light: rgba(231, 76, 60, 0.2);
+            --status-info-light: rgba(52, 152, 219, 0.2);
+            
+            background-color: #121212;
+        }
+        
+        [data-theme="dark"] .admin-header,
+        [data-theme="dark"] .admin-sidebar,
+        [data-theme="dark"] .stat-card,
+        [data-theme="dark"] .content-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="dark"] .task-check {
+            background-color: var(--neutral-200);
+        }
+        
+        [data-theme="dark"] .customer-card {
+            background-color: var(--neutral-200);
+        }
+        
+        [data-theme="dark"] .customer-card:hover {
+            background-color: var(--neutral-300);
+        }
+        
+        [data-theme="dark"] .btn-icon {
+            background-color: var(--neutral-300);
+            border-color: var(--neutral-400);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Backdrop -->
+    <div class="sidebar-backdrop"></div>
+    
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="header-brand">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="brand-logo">
+            <span class="brand-name">RedBird <span class="brand-badge">ADMIN</span></span>
+        </div>
+        
+        <div class="header-actions">
+            <button class="action-button" aria-label="Suchen">
+                <i class="fas fa-search"></i>
+            </button>
+            
+            <button class="action-button" aria-label="Benachrichtigungen">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+            </button>
+            
+            <button class="action-button" aria-label="Dunkelmodus umschalten" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-menu">
+                <div class="user-avatar">MN</div>
+                <div class="user-info">
+                    <span class="user-name">Marion Nakowitz</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Admin Layout Container -->
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-heading">Dashboard</h3>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="index-enhanced.html" class="sidebar-link active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Übersicht</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="analytics.html" class="sidebar-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Analysen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-heading">Verwaltung</h3>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="user-management-refined.html" class="sidebar-link">
+                            <i class="fas fa-users"></i>
+                            <span>Kunden</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="properties.html" class="sidebar-link">
+                            <i class="fas fa-building"></i>
+                            <span>Immobilien</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pipeline-management.html" class="sidebar-link">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Pipeline</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="media-refined.html" class="sidebar-link">
+                            <i class="fas fa-images"></i>
+                            <span>Medien</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-heading">Prozesse</h3>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="unit-onboarding.html" class="sidebar-link">
+                            <i class="fas fa-home"></i>
+                            <span>Unit Onboarding</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="fulfillment-process.html" class="sidebar-link">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Fulfillment</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="progress.html" class="sidebar-link">
+                            <i class="fas fa-tasks"></i>
+                            <span>Fortschritt</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-heading">Einstellungen</h3>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="settings.html" class="sidebar-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Systemeinstellungen</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="sidebar-link">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Mein Profil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="login.html" class="sidebar-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Abmelden</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-content">
+            <div class="content-header">
+                <h1>Dashboard</h1>
+                <p class="subtitle">Willkommen zurück, Marion! Hier ist deine tägliche Übersicht.</p>
+            </div>
+            
+            <!-- Dashboard Statistics -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Kunden insgesamt</h3>
+                        <div class="stat-icon icon-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">245</p>
+                    <div class="stat-change change-positive">
+                        <i class="fas fa-arrow-up"></i> 12% im letzten Monat
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Aktive Projekte</h3>
+                        <div class="stat-icon icon-success">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">38</p>
+                    <div class="stat-change change-positive">
+                        <i class="fas fa-arrow-up"></i> 4 neue diese Woche
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Pipeline-Wert</h3>
+                        <div class="stat-icon icon-info">
+                            <i class="fas fa-euro-sign"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">€4.5M</p>
+                    <div class="stat-change change-positive">
+                        <i class="fas fa-arrow-up"></i> 7.2% seit letztem Quartal
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Supportanfragen</h3>
+                        <div class="stat-icon icon-warning">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">12</p>
+                    <div class="stat-change change-negative">
+                        <i class="fas fa-arrow-up"></i> 3 unbearbeitet
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Dokumente</h3>
+                        <div class="stat-icon icon-primary">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">1,284</p>
+                    <div class="stat-change change-neutral">
+                        <i class="fas fa-check-circle"></i> Alle aktuell
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3 class="stat-title">Teamauslastung</h3>
+                        <div class="stat-icon icon-success">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">82%</p>
+                    <div class="stat-change change-positive">
+                        <i class="fas fa-arrow-up"></i> 4% effektiver als letzten Monat
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Activity Feed -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>Neueste Aktivitäten</h2>
+                        <div class="card-header-actions">
+                            <button title="Aktualisieren">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button title="Filter">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background-color: var(--status-success-light); color: var(--status-success);">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4 class="activity-title">Neuer Kunde registriert</h4>
+                                    <p class="activity-description">Thomas Weber hat sich für ein Beratungsgespräch angemeldet. Immobilieninteresse: Sunset Bay Resort.</p>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">
+                                            <i class="far fa-clock"></i> Vor 32 Minuten
+                                        </span>
+                                        <span class="activity-user">
+                                            <i class="far fa-user"></i> System
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background-color: var(--status-info-light); color: var(--status-info);">
+                                    <i class="fas fa-file-signature"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4 class="activity-title">Vertrag unterzeichnet</h4>
+                                    <p class="activity-description">Maria Schmidt hat den Kaufvertrag für Palm View Residence B-105 unterzeichnet.</p>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">
+                                            <i class="far fa-clock"></i> Vor 2 Stunden
+                                        </span>
+                                        <span class="activity-user">
+                                            <i class="far fa-user"></i> Alex Johnson
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background-color: var(--primary-red-light); color: var(--primary-red-dark);">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4 class="activity-title">Neue Supportanfrage</h4>
+                                    <p class="activity-description">Klaus Weber hat eine Anfrage bezüglich des Fortschritts der Bauarbeiten gestellt.</p>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">
+                                            <i class="far fa-clock"></i> Vor 4 Stunden
+                                        </span>
+                                        <span class="activity-user">
+                                            <i class="far fa-user"></i> Klaus Weber
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background-color: var(--status-warning-light); color: var(--status-warning);">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4 class="activity-title">Zahlungserinnerung</h4>
+                                    <p class="activity-description">Erinnerung an Michael Schneider bezüglich der zweiten Rate für Seaside Apartments E-405 versendet.</p>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">
+                                            <i class="far fa-clock"></i> Vor 6 Stunden
+                                        </span>
+                                        <span class="activity-user">
+                                            <i class="far fa-user"></i> System
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background-color: var(--status-success-light); color: var(--status-success);">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4 class="activity-title">Fulfillment-Schritt abgeschlossen</h4>
+                                    <p class="activity-description">Notarielle Beglaubigung für Anna Becker (Mountain View Resort D-102) abgeschlossen.</p>
+                                    <div class="activity-meta">
+                                        <span class="activity-time">
+                                            <i class="far fa-clock"></i> Gestern, 15:42
+                                        </span>
+                                        <span class="activity-user">
+                                            <i class="far fa-user"></i> Sarah Williams
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Content -->
+                <div>
+                    <!-- Tasks Panel -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>Aufgaben</h2>
+                            <div class="card-header-actions">
+                                <button title="Neue Aufgabe">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <input type="checkbox" class="task-check" id="task1">
+                                    <div class="task-content">
+                                        <p class="task-title">Beratungstermin mit Thomas Weber bestätigen</p>
+                                        <div class="task-due today">
+                                            <i class="far fa-calendar-alt"></i> Heute
+                                        </div>
+                                    </div>
+                                    <span class="task-priority priority-high">Hoch</span>
+                                </li>
+                                
+                                <li class="task-item">
+                                    <input type="checkbox" class="task-check" id="task2">
+                                    <div class="task-content">
+                                        <p class="task-title">Unit-Onboarding für Golden Bay Villas C-301 starten</p>
+                                        <div class="task-due">
+                                            <i class="far fa-calendar-alt"></i> In 2 Tagen
+                                        </div>
+                                    </div>
+                                    <span class="task-priority priority-medium">Mittel</span>
+                                </li>
+                                
+                                <li class="task-item">
+                                    <input type="checkbox" class="task-check" id="task3">
+                                    <div class="task-content">
+                                        <p class="task-title">Supportanfrage von Klaus Weber beantworten</p>
+                                        <div class="task-due">
+                                            <i class="far fa-calendar-alt"></i> In 3 Tagen
+                                        </div>
+                                    </div>
+                                    <span class="task-priority priority-medium">Mittel</span>
+                                </li>
+                                
+                                <li class="task-item">
+                                    <input type="checkbox" class="task-check" id="task4" checked>
+                                    <div class="task-content">
+                                        <p class="task-title">Notariellen Termin für Anna Becker organisieren</p>
+                                        <div class="task-due">
+                                            <i class="far fa-calendar-alt"></i> Erledigt
+                                        </div>
+                                    </div>
+                                    <span class="task-priority priority-high">Hoch</span>
+                                </li>
+                                
+                                <li class="task-item">
+                                    <input type="checkbox" class="task-check" id="task5">
+                                    <div class="task-content">
+                                        <p class="task-title">Neue Immobilienfotos für Palm View Residence hochladen</p>
+                                        <div class="task-due">
+                                            <i class="far fa-calendar-alt"></i> In 5 Tagen
+                                        </div>
+                                    </div>
+                                    <span class="task-priority priority-low">Niedrig</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Customers -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2>Neueste Kunden</h2>
+                            <div class="card-header-actions">
+                                <button title="Alle anzeigen">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="customer-list">
+                                <div class="customer-card">
+                                    <div class="customer-avatar">TW</div>
+                                    <div class="customer-info">
+                                        <h4 class="customer-name">Thomas Weber</h4>
+                                        <p class="customer-email">t.weber@example.com</p>
+                                    </div>
+                                    <div class="customer-cta">
+                                        <button class="btn-icon" title="Anrufen">
+                                            <i class="fas fa-phone"></i>
+                                        </button>
+                                        <button class="btn-icon" title="E-Mail">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="customer-card">
+                                    <div class="customer-avatar">MS</div>
+                                    <div class="customer-info">
+                                        <h4 class="customer-name">Maria Schmidt</h4>
+                                        <p class="customer-email">m.schmidt@example.com</p>
+                                    </div>
+                                    <div class="customer-cta">
+                                        <button class="btn-icon" title="Anrufen">
+                                            <i class="fas fa-phone"></i>
+                                        </button>
+                                        <button class="btn-icon" title="E-Mail">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="customer-card">
+                                    <div class="customer-avatar">KW</div>
+                                    <div class="customer-info">
+                                        <h4 class="customer-name">Klaus Weber</h4>
+                                        <p class="customer-email">k.weber@example.com</p>
+                                    </div>
+                                    <div class="customer-cta">
+                                        <button class="btn-icon" title="Anrufen">
+                                            <i class="fas fa-phone"></i>
+                                        </button>
+                                        <button class="btn-icon" title="E-Mail">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../js/notifications-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggler
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Check for saved theme preference or respect OS preference
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Apply theme
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Theme toggle click handler
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Update theme attribute and save preference
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Update icon
+                if (newTheme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+                
+                // Show notification if available
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.info(
+                        `Theme auf ${newTheme === 'dark' ? 'Dunkelmodus' : 'Hellmodus'} umgestellt`,
+                        'Theme geändert'
+                    );
+                }
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const backdrop = document.querySelector('.sidebar-backdrop');
+            
+            function toggleMobileMenu() {
+                document.body.classList.toggle('sidebar-open');
+            }
+            
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            backdrop.addEventListener('click', toggleMobileMenu);
+            
+            // Initialize notifications if available
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+                
+                // Welcome notification
+                setTimeout(() => {
+                    window.RedBirdNotify.info(
+                        'Willkommen im Admin Dashboard von RedBird Real Estate.',
+                        'Willkommen'
+                    );
+                }, 1000);
+            }
+            
+            // Task checkboxes
+            const taskChecks = document.querySelectorAll('.task-check');
+            taskChecks.forEach(check => {
+                check.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (window.RedBirdNotify) {
+                            const taskTitle = this.nextElementSibling.querySelector('.task-title').textContent;
+                            window.RedBirdNotify.success(
+                                `Aufgabe erledigt: ${taskTitle}`,
+                                'Aufgabe abgeschlossen'
+                            );
+                        }
+                    }
+                });
+            });
+            
+            // Simulate loading notification
+            setTimeout(() => {
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.info(
+                        'Neue Supportanfrage eingegangen: Thomas Weber hat eine Frage zu Sunset Bay Resort.',
+                        'Neue Supportanfrage'
+                    );
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

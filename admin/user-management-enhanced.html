@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management - RedBird Admin</title>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/admin-styles.css">
+  <link rel="stylesheet" href="../css/admin-responsive.css">
+</head>
+<body class="admin-body">
+  <!-- Admin Header -->
+  <header class="admin-nav">
+    <div class="admin-nav-container">
+      <div class="logo-container">
+        <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="nav-logo">
+        <span class="admin-badge">ADMIN</span>
+      </div>
+      
+      <ul class="admin-nav-menu">
+        <li class="admin-nav-item" id="nav-dashboard">
+          <a href="dashboard-enhanced.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li class="admin-nav-item active" id="nav-user-management">
+          <a href="user-management-enhanced.html"><i class="fas fa-users"></i> Kunden</a>
+        </li>
+        <li class="admin-nav-item" id="nav-properties">
+          <a href="properties.html"><i class="fas fa-building"></i> Immobilien</a>
+        </li>
+        <li class="admin-nav-item" id="nav-crm-pipeline">
+          <a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a>
+        </li>
+        <li class="admin-nav-item" id="nav-unit-onboarding">
+          <a href="unit-onboarding.html"><i class="fas fa-clipboard-check"></i> Unit Onboarding</a>
+        </li>
+        <li class="admin-nav-item" id="nav-documents">
+          <a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a>
+        </li>
+        <li class="admin-nav-item" id="nav-media">
+          <a href="media.html"><i class="fas fa-images"></i> Medien</a>
+        </li>
+        <li class="admin-nav-item" id="nav-messaging">
+          <a href="messaging.html"><i class="fas fa-comments"></i> Messaging</a>
+        </li>
+        <li class="admin-nav-item" id="nav-customer-data">
+          <a href="customer-data.html"><i class="fas fa-database"></i> Kundendaten</a>
+        </li>
+      </ul>
+      
+      <div class="admin-user-menu">
+        <button class="admin-theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <div class="admin-user-info">
+          <div class="admin-user-name" id="adminUserName">Admin User</div>
+          <div class="admin-user-role" id="adminUserRole">Administrator</div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn"><i class="fas fa-chevron-down"></i></button>
+          <div class="dropdown-content">
+            <a href="profile.html"><i class="fas fa-user-circle"></i> Profil</a>
+            <a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-section">
+        <h3>Hauptmenü</h3>
+        <ul class="sidebar-menu">
+          <li id="sidebar-dashboard"><a href="dashboard-enhanced.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li id="sidebar-user-management"><a href="user-management-enhanced.html" class="active"><i class="fas fa-users"></i> Kundenverwaltung</a></li>
+          <li id="sidebar-properties"><a href="properties.html"><i class="fas fa-building"></i> Immobilien</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>CRM & Fulfillment</h3>
+        <ul class="sidebar-menu">
+          <li id="sidebar-crm-pipeline"><a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a></li>
+          <li id="sidebar-unit-onboarding"><a href="unit-onboarding.html"><i class="fas fa-clipboard-check"></i> Unit Onboarding</a></li>
+          <li id="sidebar-customer-data"><a href="customer-data.html"><i class="fas fa-database"></i> Kundendaten</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>Inhalte</h3>
+        <ul class="sidebar-menu">
+          <li id="sidebar-documents"><a href="documents.html"><i class="fas fa-file-alt"></i> Dokumente</a></li>
+          <li id="sidebar-media"><a href="media.html"><i class="fas fa-images"></i> Medienverwaltung</a></li>
+          <li id="sidebar-progress"><a href="progress.html"><i class="fas fa-tasks"></i> Fortschrittsvorlagen</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>Kommunikation</h3>
+        <ul class="sidebar-menu">
+          <li id="sidebar-messaging"><a href="messaging.html"><i class="fas fa-comments"></i> Nachrichten</a></li>
+          <li id="sidebar-notifications"><a href="notifications.html"><i class="fas fa-bell"></i> Benachrichtigungen</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>System</h3>
+        <ul class="sidebar-menu">
+          <li id="sidebar-settings"><a href="settings.html"><i class="fas fa-cog"></i> Einstellungen</a></li>
+          <li id="sidebar-logs"><a href="logs.html"><i class="fas fa-history"></i> Systemlogs</a></li>
+        </ul>
+      </div>
+    </aside>
+    
+    <div class="admin-content-wrapper">
+      <div class="admin-main-content">
+        <div class="page-header">
+          <div class="header-content">
+            <h1>Kundenverwaltung</h1>
+            <p>Verwalten Sie alle Benutzerkonten, Rollen und Berechtigungen</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="addUserBtn">
+              <i class="fas fa-plus"></i> Neuen Benutzer hinzufügen
+            </button>
+          </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header">
+            <h2 class="card-title">Filter</h2>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label for="searchTerm">Suche</label>
+                <input type="text" id="searchTerm" class="form-control" placeholder="Name, E-Mail oder ID">
+              </div>
+              
+              <div class="form-group">
+                <label for="roleFilter">Rolle</label>
+                <select id="roleFilter" class="form-control">
+                  <option value="">Alle Rollen</option>
+                  <option value="admin">Admin</option>
+                  <option value="advisor">Berater</option>
+                  <option value="client">Kunde</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="statusFilter">Status</label>
+                <select id="statusFilter" class="form-control">
+                  <option value="">Alle Status</option>
+                  <option value="active">Aktiv</option>
+                  <option value="inactive">Inaktiv</option>
+                </select>
+              </div>
+              
+              <div class="form-group" style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                <button class="btn btn-primary" id="applyFiltersBtn">
+                  <i class="fas fa-search"></i> Anwenden
+                </button>
+                <button class="btn btn-outline" id="clearFiltersBtn">
+                  <i class="fas fa-times"></i> Zurücksetzen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- User List Section -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Benutzerliste</h2>
+            <span>Anzeige von <span id="userDisplayCount">10</span> von <span id="userTotalCount">48</span> Benutzern</span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Rolle</th>
+                    <th>Registrierungsdatum</th>
+                    <th>Status</th>
+                    <th>Immobilien</th>
+                    <th>Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody">
+                  <!-- User rows will be generated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+              <div id="userPagination" style="display: flex; gap: 0.25rem;">
+                <!-- Pagination will be generated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- User Modal -->
+  <div class="modal" id="userModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Neuen Benutzer hinzufügen</h3>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="userForm">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label for="firstName">Vorname</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Nachname</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" required>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" name="phone" class="form-control">
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label for="role">Rolle</label>
+                <select id="role" name="role" class="form-control" required>
+                  <option value="">Rolle auswählen</option>
+                  <option value="admin">Admin</option>
+                  <option value="advisor">Berater</option>
+                  <option value="client">Kunde</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-control" required>
+                  <option value="active">Aktiv</option>
+                  <option value="inactive">Inaktiv</option>
+                </select>
+              </div>
+            </div>
+            
+            <div id="propertiesSection" style="display: none; margin-bottom: 1rem;">
+              <h4 style="margin-bottom: 0.75rem;">Zugewiesene Immobilien</h4>
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label for="assignedProperty">Immobilie</label>
+                  <select id="assignedProperty" name="assignedProperty" class="form-control">
+                    <option value="">Immobilie auswählen</option>
+                    <option value="1">Sunset Bay Resort - A-203</option>
+                    <option value="2">Mountain View Apartments - B-101</option>
+                    <option value="3">Riverside Villas - V-22</option>
+                  </select>
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                  <button type="button" class="btn btn-outline" id="addPropertyBtn">
+                    <i class="fas fa-plus"></i> Hinzufügen
+                  </button>
+                </div>
+              </div>
+              
+              <div id="assignedPropertiesList" style="margin-top: 0.75rem;">
+                <!-- Assigned properties will be listed here -->
+              </div>
+            </div>
+            
+            <div id="advisorSection" style="display: none; margin-bottom: 1rem;">
+              <h4 style="margin-bottom: 0.75rem;">Berater-Zuweisung</h4>
+              <div class="form-group">
+                <label for="assignedAdvisor">Zugewiesener Berater</label>
+                <select id="assignedAdvisor" name="assignedAdvisor" class="form-control">
+                  <option value="">Berater auswählen</option>
+                  <option value="1">John Berater</option>
+                  <option value="2">Emma Beraterin</option>
+                  <option value="3">Michael Experte</option>
+                </select>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" class="form-control">
+                <div class="form-text">
+                  Leer lassen für aktuelles Passwort (Bearbeitung) oder zufälliges Passwort (neuer Benutzer)
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Passwort bestätigen</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 1rem;">
+              <div class="form-check">
+                <input type="checkbox" id="sendWelcomeEmail" name="sendWelcomeEmail" checked>
+                <label for="sendWelcomeEmail">Willkommens-E-Mail mit Anmeldedaten senden</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="cancelUserBtn">Abbrechen</button>
+          <button class="btn btn-primary" id="saveUserBtn">Benutzer speichern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript -->
+  <script src="../js/admin-layout.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for admin user in localStorage
+      const userJson = localStorage.getItem('rb_current_user');
+      if (!userJson) {
+        // No user found, redirect to login
+        window.location.href = '../login.html';
+        return;
+      }
+      
+      // Parse user data
+      const user = JSON.parse(userJson);
+      
+      // Check if user is admin
+      if (user.role !== 'admin') {
+        // Not an admin, redirect to dashboard
+        window.location.href = '../pages/dashboard.html';
+        showNotification('Sie haben keine Berechtigung, auf den Admin-Bereich zuzugreifen.', 'error');
+        return;
+      }
+      
+      // Demo data for users
+      const demoUsers = [
+        {
+          id: '001',
+          firstName: 'Admin',
+          lastName: 'User',
+          email: 'admin@redbird.com',
+          phone: '+49 123 456789',
+          role: 'admin',
+          status: 'active',
+          registrationDate: '2024-12-01',
+          properties: []
+        },
+        {
+          id: '002',
+          firstName: 'John',
+          lastName: 'Advisor',
+          email: 'advisor@redbird.com',
+          phone: '+49 234 567890',
+          role: 'advisor',
+          status: 'active',
+          registrationDate: '2025-01-15',
+          properties: []
+        },
+        {
+          id: '003',
+          firstName: 'Demo',
+          lastName: 'Client',
+          email: 'client@example.com',
+          phone: '+49 345 678901',
+          role: 'client',
+          status: 'active',
+          registrationDate: '2025-02-10',
+          properties: [
+            { id: '1', name: 'Sunset Bay Resort', unit: 'A-203' }
+          ],
+          advisor: { id: '002', name: 'John Advisor' }
+        },
+        {
+          id: '004',
+          firstName: 'Emma',
+          lastName: 'Consultant',
+          email: 'emma@redbird.com',
+          phone: '+49 456 789012',
+          role: 'advisor',
+          status: 'active',
+          registrationDate: '2025-01-20',
+          properties: []
+        },
+        {
+          id: '005',
+          firstName: 'Michael',
+          lastName: 'Expert',
+          email: 'michael@redbird.com',
+          phone: '+49 567 890123',
+          role: 'advisor',
+          status: 'inactive',
+          registrationDate: '2025-02-05',
+          properties: []
+        },
+        {
+          id: '006',
+          firstName: 'Sarah',
+          lastName: 'Johnson',
+          email: 'sarah@example.com',
+          phone: '+49 678 901234',
+          role: 'client',
+          status: 'active',
+          registrationDate: '2025-03-10',
+          properties: [
+            { id: '2', name: 'Mountain View Apartments', unit: 'B-101' }
+          ],
+          advisor: { id: '004', name: 'Emma Consultant' }
+        },
+        {
+          id: '007',
+          firstName: 'Robert',
+          lastName: 'Smith',
+          email: 'robert@example.com',
+          phone: '+49 789 012345',
+          role: 'client',
+          status: 'active',
+          registrationDate: '2025-03-15',
+          properties: [
+            { id: '3', name: 'Riverside Villas', unit: 'V-22' }
+          ],
+          advisor: { id: '002', name: 'John Advisor' }
+        },
+        {
+          id: '008',
+          firstName: 'Thomas',
+          lastName: 'Admin',
+          email: 'thomas@redbird.com',
+          phone: '+49 890 123456',
+          role: 'admin',
+          status: 'active',
+          registrationDate: '2025-01-05',
+          properties: []
+        },
+        {
+          id: '009',
+          firstName: 'David',
+          lastName: 'Brown',
+          email: 'david@example.com',
+          phone: '+49 901 234567',
+          role: 'client',
+          status: 'inactive',
+          registrationDate: '2025-02-20',
+          properties: [],
+          advisor: { id: '004', name: 'Emma Consultant' }
+        },
+        {
+          id: '010',
+          firstName: 'Lisa',
+          lastName: 'Miller',
+          email: 'lisa@example.com',
+          phone: '+49 012 345678',
+          role: 'client',
+          status: 'active',
+          registrationDate: '2025-03-25',
+          properties: [
+            { id: '1', name: 'Sunset Bay Resort', unit: 'B-105' }
+          ],
+          advisor: { id: '002', name: 'John Advisor' }
+        }
+      ];
+      
+      // Check if we have users in localStorage
+      if (!localStorage.getItem('rb_demo_users')) {
+        localStorage.setItem('rb_demo_users', JSON.stringify(demoUsers));
+      }
+      
+      // Get elements
+      const userTableBody = document.getElementById('userTableBody');
+      const userDisplayCount = document.getElementById('userDisplayCount');
+      const userTotalCount = document.getElementById('userTotalCount');
+      const userPagination = document.getElementById('userPagination');
+      
+      // Modal elements
+      const userModal = document.getElementById('userModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalClose = document.getElementById('modalClose');
+      const addUserBtn = document.getElementById('addUserBtn');
+      const cancelUserBtn = document.getElementById('cancelUserBtn');
+      const saveUserBtn = document.getElementById('saveUserBtn');
+      const userForm = document.getElementById('userForm');
+      const roleSelect = document.getElementById('role');
+      const propertiesSection = document.getElementById('propertiesSection');
+      const advisorSection = document.getElementById('advisorSection');
+      
+      // Filter elements
+      const searchTerm = document.getElementById('searchTerm');
+      const roleFilter = document.getElementById('roleFilter');
+      const statusFilter = document.getElementById('statusFilter');
+      const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+      const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+      
+      // Current page and filters
+      let currentPage = 1;
+      const pageSize = 10;
+      let currentFilters = {
+        search: '',
+        role: '',
+        status: ''
+      };
+      
+      // Initialize the user list
+      initUserList();
+      
+      // Event Listeners
+      roleSelect.addEventListener('change', toggleUserSections);
+      addUserBtn.addEventListener('click', openAddUserModal);
+      modalClose.addEventListener('click', closeUserModal);
+      cancelUserBtn.addEventListener('click', closeUserModal);
+      saveUserBtn.addEventListener('click', saveUser);
+      applyFiltersBtn.addEventListener('click', applyFilters);
+      clearFiltersBtn.addEventListener('click', clearFilters);
+      
+      // Function to initialize user list
+      function initUserList() {
+        // Load users from localStorage
+        const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+        
+        // Update total count
+        userTotalCount.textContent = users.length;
+        
+        // Apply initial filters and render
+        filterAndRenderUsers();
+      }
+      
+      // Function to filter and render users
+      function filterAndRenderUsers() {
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+        
+        // Apply filters
+        let filteredUsers = users.filter(user => {
+          // Search filter
+          if (currentFilters.search) {
+            const searchLower = currentFilters.search.toLowerCase();
+            const fullName = (user.firstName + ' ' + user.lastName).toLowerCase();
+            const email = user.email.toLowerCase();
+            
+            if (!fullName.includes(searchLower) && !email.includes(searchLower) && !user.id.includes(searchLower)) {
+              return false;
+            }
+          }
+          
+          // Role filter
+          if (currentFilters.role && user.role !== currentFilters.role) {
+            return false;
+          }
+          
+          // Status filter
+          if (currentFilters.status && user.status !== currentFilters.status) {
+            return false;
+          }
+          
+          return true;
+        });
+        
+        // Update count
+        userDisplayCount.textContent = filteredUsers.length;
+        
+        // Paginate
+        const startIndex = (currentPage - 1) * pageSize;
+        const paginatedUsers = filteredUsers.slice(startIndex, startIndex + pageSize);
+        
+        // Clear table
+        userTableBody.innerHTML = '';
+        
+        // Render users
+        paginatedUsers.forEach(user => {
+          const row = document.createElement('tr');
+          
+          // User name column
+          const nameCell = document.createElement('td');
+          nameCell.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">
+                ${user.firstName.charAt(0)}${user.lastName.charAt(0)}
+              </div>
+              <div>
+                <div style="font-weight: 500;">${user.firstName} ${user.lastName}</div>
+                <div style="font-size: 0.85rem; color: var(--neutral-500);">${user.email}</div>
+              </div>
+            </div>
+          `;
+          
+          // Role column
+          const roleCell = document.createElement('td');
+          let roleClass = '';
+          if (user.role === 'admin') roleClass = 'badge-danger';
+          else if (user.role === 'advisor') roleClass = 'badge-info';
+          else roleClass = 'badge-success';
+          
+          roleCell.innerHTML = `
+            <span class="badge ${roleClass}">${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
+          `;
+          
+          // Registration date column
+          const dateCell = document.createElement('td');
+          const date = new Date(user.registrationDate);
+          dateCell.textContent = date.toLocaleDateString('de-DE');
+          
+          // Status column
+          const statusCell = document.createElement('td');
+          const statusClass = user.status === 'active' ? 'badge-success' : 'badge-neutral';
+          statusCell.innerHTML = `
+            <span class="badge ${statusClass}">${user.status === 'active' ? 'Aktiv' : 'Inaktiv'}</span>
+          `;
+          
+          // Properties column
+          const propertiesCell = document.createElement('td');
+          propertiesCell.textContent = user.properties ? user.properties.length : '0';
+          
+          // Actions column
+          const actionsCell = document.createElement('td');
+          actionsCell.className = 'd-flex gap-2';
+          actionsCell.innerHTML = `
+            <button class="btn btn-sm btn-outline edit-user" data-id="${user.id}" title="Bearbeiten">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline view-user" data-id="${user.id}" title="Anzeigen">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-outline delete-user" data-id="${user.id}" title="Löschen">
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+          
+          // Add event listeners to action buttons
+          actionsCell.querySelector('.edit-user').addEventListener('click', () => {
+            openEditUserModal(user.id);
+          });
+          
+          actionsCell.querySelector('.view-user').addEventListener('click', () => {
+            viewUser(user.id);
+          });
+          
+          actionsCell.querySelector('.delete-user').addEventListener('click', () => {
+            deleteUser(user.id);
+          });
+          
+          // Append cells to row
+          row.appendChild(nameCell);
+          row.appendChild(roleCell);
+          row.appendChild(dateCell);
+          row.appendChild(statusCell);
+          row.appendChild(propertiesCell);
+          row.appendChild(actionsCell);
+          
+          // Append row to table
+          userTableBody.appendChild(row);
+        });
+        
+        // Render pagination
+        renderPagination(filteredUsers.length);
+      }
+      
+      // Function to render pagination
+      function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / pageSize);
+        
+        // Clear pagination
+        userPagination.innerHTML = '';
+        
+        // Add previous button
+        if (totalPages > 1) {
+          const prevBtn = document.createElement('button');
+          prevBtn.className = 'btn btn-sm btn-outline';
+          prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+          prevBtn.disabled = currentPage === 1;
+          prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+          prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+              currentPage--;
+              filterAndRenderUsers();
+            }
+          });
+          userPagination.appendChild(prevBtn);
+        }
+        
+        // Add page buttons
+        for (let i = 1; i <= totalPages; i++) {
+          const pageBtn = document.createElement('button');
+          pageBtn.className = 'btn btn-sm';
+          if (i === currentPage) {
+            pageBtn.classList.add('btn-primary');
+          } else {
+            pageBtn.classList.add('btn-outline');
+          }
+          pageBtn.textContent = i;
+          pageBtn.addEventListener('click', () => {
+            currentPage = i;
+            filterAndRenderUsers();
+          });
+          userPagination.appendChild(pageBtn);
+        }
+        
+        // Add next button
+        if (totalPages > 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn btn-sm btn-outline';
+          nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+          nextBtn.disabled = currentPage === totalPages;
+          nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+          nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+              currentPage++;
+              filterAndRenderUsers();
+            }
+          });
+          userPagination.appendChild(nextBtn);
+        }
+      }
+      
+      // Function to toggle property and advisor sections based on role
+      function toggleUserSections() {
+        const selectedRole = roleSelect.value;
+        
+        if (selectedRole === 'client') {
+          propertiesSection.style.display = 'block';
+          advisorSection.style.display = 'block';
+        } else if (selectedRole === 'advisor') {
+          propertiesSection.style.display = 'none';
+          advisorSection.style.display = 'none';
+        } else {
+          propertiesSection.style.display = 'none';
+          advisorSection.style.display = 'none';
+        }
+      }
+      
+      // Function to open add user modal
+      function openAddUserModal() {
+        // Reset form
+        userForm.reset();
+        
+        // Update modal title
+        modalTitle.textContent = 'Neuen Benutzer hinzufügen';
+        
+        // Hide property and advisor sections
+        propertiesSection.style.display = 'none';
+        advisorSection.style.display = 'none';
+        
+        // Show modal
+        userModal.classList.add('active');
+      }
+      
+      // Function to open edit user modal
+      function openEditUserModal(userId) {
+        // Load user data
+        const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+        const user = users.find(u => u.id === userId);
+        
+        if (!user) {
+          showNotification('Benutzer nicht gefunden', 'error');
+          return;
+        }
+        
+        // Reset form
+        userForm.reset();
+        
+        // Update modal title
+        modalTitle.textContent = 'Benutzer bearbeiten';
+        
+        // Fill form with user data
+        document.getElementById('firstName').value = user.firstName;
+        document.getElementById('lastName').value = user.lastName;
+        document.getElementById('email').value = user.email;
+        document.getElementById('phone').value = user.phone || '';
+        document.getElementById('role').value = user.role;
+        document.getElementById('status').value = user.status;
+        
+        // Toggle sections based on role
+        if (user.role === 'client') {
+          propertiesSection.style.display = 'block';
+          advisorSection.style.display = 'block';
+          
+          // If user has an advisor, select it
+          if (user.advisor) {
+            document.getElementById('assignedAdvisor').value = user.advisor.id;
+          }
+          
+          // Display assigned properties
+          const assignedPropertiesList = document.getElementById('assignedPropertiesList');
+          assignedPropertiesList.innerHTML = '';
+          
+          if (user.properties && user.properties.length > 0) {
+            user.properties.forEach(property => {
+              const propertyItem = document.createElement('div');
+              propertyItem.style.display = 'flex';
+              propertyItem.style.alignItems = 'center';
+              propertyItem.style.padding = '0.5rem 0.75rem';
+              propertyItem.style.marginBottom = '0.5rem';
+              propertyItem.style.backgroundColor = 'var(--neutral-100)';
+              propertyItem.style.borderRadius = 'var(--radius-md)';
+              
+              propertyItem.innerHTML = `
+                <div style="flex: 1;">
+                  <strong>${property.name}</strong> - ${property.unit}
+                </div>
+                <button type="button" class="btn btn-sm btn-outline remove-property" data-id="${property.id}">
+                  <i class="fas fa-times"></i>
+                </button>
+              `;
+              
+              assignedPropertiesList.appendChild(propertyItem);
+            });
+          }
+        } else {
+          propertiesSection.style.display = 'none';
+          advisorSection.style.display = 'none';
+        }
+        
+        // Store user ID in form (hidden field would be better in a real app)
+        userForm.dataset.userId = userId;
+        
+        // Show modal
+        userModal.classList.add('active');
+      }
+      
+      // Function to view user details
+      function viewUser(userId) {
+        // This would typically load a read-only view
+        // For demo purposes, we'll just open the edit modal
+        openEditUserModal(userId);
+      }
+      
+      // Function to delete user
+      function deleteUser(userId) {
+        if (confirm('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?')) {
+          // Load users
+          const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+          
+          // Filter out the user
+          const updatedUsers = users.filter(user => user.id !== userId);
+          
+          // Save updated users
+          localStorage.setItem('rb_demo_users', JSON.stringify(updatedUsers));
+          
+          // Refresh the list
+          filterAndRenderUsers();
+          
+          // Show success message
+          showNotification('Benutzer erfolgreich gelöscht', 'success');
+        }
+      }
+      
+      // Function to close user modal
+      function closeUserModal() {
+        userModal.classList.remove('active');
+      }
+      
+      // Function to save user
+      function saveUser() {
+        // Get form data
+        const formData = {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName: document.getElementById('lastName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          role: document.getElementById('role').value,
+          status: document.getElementById('status').value,
+          password: document.getElementById('password').value,
+          confirmPassword: document.getElementById('confirmPassword').value,
+          sendWelcomeEmail: document.getElementById('sendWelcomeEmail').checked
+        };
+        
+        // Validate form
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.role || !formData.status) {
+          showNotification('Bitte füllen Sie alle erforderlichen Felder aus', 'error');
+          return;
+        }
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          showNotification('Bitte geben Sie eine gültige E-Mail-Adresse ein', 'error');
+          return;
+        }
+        
+        // Validate password match if provided
+        if (formData.password && formData.password !== formData.confirmPassword) {
+          showNotification('Passwörter stimmen nicht überein', 'error');
+          return;
+        }
+        
+        // Load users
+        const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+        
+        // Check if editing or adding
+        const userId = userForm.dataset.userId;
+        
+        if (userId) {
+          // Editing existing user
+          const userIndex = users.findIndex(user => user.id === userId);
+          
+          if (userIndex === -1) {
+            showNotification('Benutzer nicht gefunden', 'error');
+            return;
+          }
+          
+          // Update user data
+          users[userIndex] = {
+            ...users[userIndex],
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            role: formData.role,
+            status: formData.status
+          };
+          
+          // If role is client, handle advisor assignment
+          if (formData.role === 'client') {
+            const advisorId = document.getElementById('assignedAdvisor').value;
+            if (advisorId) {
+              const advisor = users.find(u => u.id === advisorId);
+              users[userIndex].advisor = {
+                id: advisor.id,
+                name: `${advisor.firstName} ${advisor.lastName}`
+              };
+            } else {
+              users[userIndex].advisor = null;
+            }
+          }
+          
+          // Save updated users
+          localStorage.setItem('rb_demo_users', JSON.stringify(users));
+          
+          // Show success message
+          showNotification('Benutzer erfolgreich aktualisiert', 'success');
+        } else {
+          // Adding new user
+          const newUser = {
+            id: generateUserId(),
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            role: formData.role,
+            status: formData.status,
+            registrationDate: new Date().toISOString().split('T')[0],
+            properties: []
+          };
+          
+          // If role is client, handle advisor assignment
+          if (formData.role === 'client') {
+            const advisorId = document.getElementById('assignedAdvisor').value;
+            if (advisorId) {
+              const advisor = users.find(u => u.id === advisorId);
+              newUser.advisor = {
+                id: advisor.id,
+                name: `${advisor.firstName} ${advisor.lastName}`
+              };
+            }
+          }
+          
+          // Add user to array
+          users.push(newUser);
+          
+          // Save updated users
+          localStorage.setItem('rb_demo_users', JSON.stringify(users));
+          
+          // Show success message
+          showNotification('Benutzer erfolgreich hinzugefügt', 'success');
+        }
+        
+        // Close modal
+        closeUserModal();
+        
+        // Refresh the list
+        filterAndRenderUsers();
+      }
+      
+      // Function to apply filters
+      function applyFilters() {
+        // Update current filters
+        currentFilters.search = searchTerm.value.trim();
+        currentFilters.role = roleFilter.value;
+        currentFilters.status = statusFilter.value;
+        
+        // Reset to first page
+        currentPage = 1;
+        
+        // Apply filters
+        filterAndRenderUsers();
+      }
+      
+      // Function to clear filters
+      function clearFilters() {
+        // Reset filter inputs
+        searchTerm.value = '';
+        roleFilter.value = '';
+        statusFilter.value = '';
+        
+        // Reset current filters
+        currentFilters.search = '';
+        currentFilters.role = '';
+        currentFilters.status = '';
+        
+        // Reset to first page
+        currentPage = 1;
+        
+        // Apply filters
+        filterAndRenderUsers();
+      }
+      
+      // Function to generate a unique user ID
+      function generateUserId() {
+        const users = JSON.parse(localStorage.getItem('rb_demo_users'));
+        const lastId = Math.max(...users.map(user => parseInt(user.id, 10)));
+        return (lastId + 1).toString().padStart(3, '0');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prozessverlauf - RedBird Kundenportal</title>
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/progress-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Enhanced Navigation -->
+    <nav class="nav-enhanced">
+        <div class="nav-container-enhanced">
+            <a href="dashboard.html" class="nav-logo-link">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="nav-logo-enhanced">
+            </a>
+            
+            <ul class="nav-menu-enhanced" role="menubar">
+                <li class="nav-item-enhanced" role="none">
+                    <a href="dashboard.html" role="menuitem">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item-enhanced" role="none">
+                    <a href="documents-enhanced.html" role="menuitem">
+                        <i class="fas fa-file-alt" aria-hidden="true"></i>
+                        <span>Dokumente</span>
+                    </a>
+                </li>
+                <li class="nav-item-enhanced" role="none">
+                    <a href="gallery-enhanced.html" role="menuitem">
+                        <i class="fas fa-images" aria-hidden="true"></i>
+                        <span>Fotogalerie</span>
+                    </a>
+                </li>
+                <li class="nav-item-enhanced active" role="none">
+                    <a href="progress-enhanced.html" role="menuitem" aria-current="page">
+                        <i class="fas fa-tasks" aria-hidden="true"></i>
+                        <span>Prozessverlauf</span>
+                    </a>
+                </li>
+                <li class="nav-item-enhanced" role="none">
+                    <a href="contact-enhanced.html" role="menuitem">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span>Kontakt</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="nav-actions">
+                <div class="nav-action-group">
+                    <button class="icon-btn" id="notificationsBtn" aria-label="Benachrichtigungen" title="Benachrichtigungen">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <button class="icon-btn" data-theme-toggle aria-label="Darkmodus umschalten" title="Darkmodus umschalten">
+                        <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                    </button>
+                    
+                    <div class="dropdown-enhanced" role="menu">
+                        <button class="dropbtn-enhanced" aria-haspopup="true" aria-expanded="false" aria-label="Benutzermenü öffnen">
+                            <div class="user-avatar">
+                                <img src="../img/user-placeholder.jpg" alt="">
+                            </div>
+                        </button>
+                        <div class="dropdown-content-enhanced" aria-label="Benutzermenü">
+                            <a href="profile-enhanced.html" role="menuitem">
+                                <i class="fas fa-user-circle" aria-hidden="true"></i>
+                                <span>Mein Profil</span>
+                            </a>
+                            <a href="settings-enhanced.html" role="menuitem">
+                                <i class="fas fa-cog" aria-hidden="true"></i>
+                                <span>Einstellungen</span>
+                            </a>
+                            <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                            <a href="#" id="logoutLink" role="menuitem">
+                                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                <span>Abmelden</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="content-header">
+                <div class="content-header-title">
+                    <h1><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</h1>
+                    <p class="lead">Verfolgen Sie den aktuellen Status Ihres Immobilienkaufs</p>
+                </div>
+                <div class="content-header-actions">
+                    <div class="language-selector" role="combobox" aria-label="Sprache wählen">
+                        <button class="language-btn" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="language-flag">🇩🇪</span>
+                            <span class="language-code">DE</span>
+                            <i class="fas fa-chevron-down language-arrow" aria-hidden="true"></i>
+                        </button>
+                        <ul class="language-dropdown" role="listbox">
+                            <li role="option" aria-selected="true">
+                                <span class="language-flag">🇩🇪</span>
+                                <span class="language-name">Deutsch</span>
+                            </li>
+                            <li role="option" aria-selected="false">
+                                <span class="language-flag">🇬🇧</span>
+                                <span class="language-name">English</span>
+                            </li>
+                            <li role="option" aria-selected="false">
+                                <span class="language-flag">🇹🇷</span>
+                                <span class="language-name">Türkçe</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Enhanced Progress Section -->
+            <section class="enhanced-progress-container">
+                <div class="enhanced-overview-card">
+                    <div class="enhanced-progress-header">
+                        <div class="enhanced-progress-info">
+                            <h2>Immobilienkauf: Sunset Bay Resort, Apartment A-203</h2>
+                            <div class="enhanced-progress-details">
+                                <span><i class="fas fa-home" aria-hidden="true"></i> 2+1 Apartment</span>
+                                <span><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Esentepe, Nordzypern</span>
+                                <span><i class="fas fa-info-circle" aria-hidden="true"></i> Aktueller Status: Eigentumseintragung</span>
+                            </div>
+                        </div>
+                        <div class="progress-circle-enhanced" data-percent="65" aria-label="65% des Kaufprozesses abgeschlossen">
+                            <div class="progress-circle-enhanced-inner">
+                                <div class="progress-value-enhanced">65%</div>
+                                <div class="progress-label-enhanced">Abgeschlossen</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="milestone-visualization-enhanced" aria-label="Kaufprozess Meilensteine">
+                        <div class="milestone-path-enhanced">
+                            <div class="milestone-path-fill-enhanced" style="width: 65%;"></div>
+                            <div class="milestone-enhanced completed" style="left: 0%;" aria-label="Reservierung abgeschlossen">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Reservierung</div>
+                            </div>
+                            <div class="milestone-enhanced completed" style="left: 16.66%;" aria-label="Anzahlung abgeschlossen">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Anzahlung</div>
+                            </div>
+                            <div class="milestone-enhanced completed" style="left: 33.33%;" aria-label="Vertrag abgeschlossen">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Vertrag</div>
+                            </div>
+                            <div class="milestone-enhanced completed" style="left: 50%;" aria-label="Zahlung abgeschlossen">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Zahlung</div>
+                            </div>
+                            <div class="milestone-enhanced active" style="left: 66.66%;" aria-label="Eintragung in Bearbeitung">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Eintragung</div>
+                            </div>
+                            <div class="milestone-enhanced" style="left: 83.33%;" aria-label="Schlüsselübergabe ausstehend">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Schlüssel</div>
+                            </div>
+                            <div class="milestone-enhanced" style="left: 100%;" aria-label="Abschluss ausstehend">
+                                <div class="milestone-dot-enhanced"></div>
+                                <div class="milestone-label-enhanced">Abschluss</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhanced-progress-completion">
+                        <div class="completion-estimate-enhanced">
+                            <h3>Geschätzter Abschluss</h3>
+                            <div class="completion-date-enhanced">30.07.2025</div>
+                            <div class="countdown-enhanced">Noch 76 Tage</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Timeline Section -->
+            <section class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-history" aria-hidden="true"></i> Detaillierter Prozessverlauf</h2>
+                    <div class="card-header-actions">
+                        <button class="btn btn-sm btn-outline" id="expandAllBtn">
+                            <i class="fas fa-expand-alt" aria-hidden="true"></i> Alle erweitern
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="collapseAllBtn">
+                            <i class="fas fa-compress-alt" aria-hidden="true"></i> Alle reduzieren
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Enhanced Timeline Visualization -->
+                    <div class="timeline-enhanced" style="--timeline-progress: 65%;">
+                        <!-- Phase 1: Reservierung -->
+                        <div class="timeline-item-enhanced completed">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 1: Reservierung</h3>
+                                        <div class="timeline-date-enhanced">15.03.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-completed">Abgeschlossen</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="false">
+                                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Die Reservierung des Apartments A-203 im Sunset Bay Resort wurde erfolgreich durchgeführt. Sie haben eine Reservierungsgebühr von 2.000€ entrichtet, die später mit dem Kaufpreis verrechnet wird.</p>
+                                </div>
+                                <div class="timeline-documents-enhanced collapsed">
+                                    <h4>Relevante Dokumente:</h4>
+                                    <ul>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Reservierungsvereinbarung.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Zahlungsbeleg_Reservierung.pdf</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2: Anzahlung -->
+                        <div class="timeline-item-enhanced completed">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 2: Anzahlung</h3>
+                                        <div class="timeline-date-enhanced">05.04.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-completed">Abgeschlossen</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="false">
+                                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Die Anzahlung in Höhe von 30% des Kaufpreises (45.000€) wurde erfolgreich geleistet. Dieser Schritt sichert Ihnen das Apartment verbindlich zu und initiiert die Vertragsvorbereitungen.</p>
+                                </div>
+                                <div class="timeline-documents-enhanced collapsed">
+                                    <h4>Relevante Dokumente:</h4>
+                                    <ul>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Anzahlungsvereinbarung.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Zahlungsbeleg_Anzahlung.pdf</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3: Vertragsunterzeichnung -->
+                        <div class="timeline-item-enhanced completed">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 3: Vertragsunterzeichnung</h3>
+                                        <div class="timeline-date-enhanced">20.04.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-completed">Abgeschlossen</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="false">
+                                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Der Kaufvertrag wurde von allen Parteien unterzeichnet. Unser Anwalt hat alle rechtlichen Aspekte geprüft und bestätigt, dass der Vertrag den lokalen Gesetzen entspricht und Ihre Interessen schützt.</p>
+                                </div>
+                                <div class="timeline-documents-enhanced collapsed">
+                                    <h4>Relevante Dokumente:</h4>
+                                    <ul>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Kaufvertrag_final.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Anwaltliche_Bestätigung.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Übersetzung_Kaufvertrag_DE.pdf</a></li>
+                                    </ul>
+                                </div>
+                                <div class="timeline-notes-enhanced collapsed">
+                                    <h4>Anmerkungen:</h4>
+                                    <p>Der Kaufvertrag wurde in englischer und türkischer Sprache erstellt. Eine deutsche Übersetzung wurde zu Ihrer Information bereitgestellt, rechtlich bindend ist jedoch die englische/türkische Version.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4: Vollständige Zahlung -->
+                        <div class="timeline-item-enhanced completed">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 4: Vollständige Zahlung</h3>
+                                        <div class="timeline-date-enhanced">25.04.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-completed">Abgeschlossen</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="false">
+                                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Die Restzahlung des Kaufpreises (105.000€) sowie die Nebenkosten (19.500€) wurden vollständig beglichen. Damit ist der finanzielle Teil des Kaufs abgeschlossen.</p>
+                                </div>
+                                <div class="timeline-documents-enhanced collapsed">
+                                    <h4>Relevante Dokumente:</h4>
+                                    <ul>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Zahlungsbestätigung.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-excel" aria-hidden="true"></i> Kostenaufstellung.xlsx</a></li>
+                                    </ul>
+                                </div>
+                                <div class="timeline-notes-enhanced collapsed">
+                                    <h4>Kostenaufschlüsselung:</h4>
+                                    <ul>
+                                        <li>Kaufpreis: 150.000€</li>
+                                        <li>Übertragungssteuer (6%): 9.000€</li>
+                                        <li>Grundbucheintrag (0,5%): 750€</li>
+                                        <li>MwSt. (5%): 7.500€</li>
+                                        <li>Anwaltskosten: 2.250€</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 5: Eigentumseintragung -->
+                        <div class="timeline-item-enhanced active">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-sync-alt fa-spin"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 5: Eigentumseintragung</h3>
+                                        <div class="timeline-date-enhanced">Seit 12.05.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-active">In Bearbeitung</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="true">
+                                        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Die Eintragung Ihres Eigentums im Grundbuch ist derzeit in Bearbeitung. Dieser Prozess dauert in Nordzypern in der Regel 4-6 Wochen. Unser Anwaltsteam verfolgt den Fortschritt aktiv und steht in regelmäßigem Kontakt mit den zuständigen Behörden.</p>
+                                </div>
+                                <div class="timeline-progress-enhanced">
+                                    <div class="sub-progress">
+                                        <div class="sub-step completed">
+                                            <div class="sub-step-dot"></div>
+                                            <div class="sub-step-content">
+                                                <span class="sub-step-name">Dokumenteneinreichung</span>
+                                                <span class="sub-step-date">12.05.2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-step completed">
+                                            <div class="sub-step-dot"></div>
+                                            <div class="sub-step-content">
+                                                <span class="sub-step-name">Behördliche Prüfung</span>
+                                                <span class="sub-step-date">14.05.2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-step active">
+                                            <div class="sub-step-dot"></div>
+                                            <div class="sub-step-content">
+                                                <span class="sub-step-name">Bearbeitung und Erstellung des Titels</span>
+                                                <span class="sub-step-date">In Bearbeitung</span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-step">
+                                            <div class="sub-step-dot"></div>
+                                            <div class="sub-step-content">
+                                                <span class="sub-step-name">Eintragung abgeschlossen</span>
+                                                <span class="sub-step-date">Ausstehend</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="timeline-documents-enhanced">
+                                    <h4>Relevante Dokumente:</h4>
+                                    <ul>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Grundbuchauszug.pdf</a></li>
+                                        <li><a href="#" class="document-link"><i class="fas fa-file-pdf" aria-hidden="true"></i> Vollmacht_Grundbucheintragung.pdf</a></li>
+                                    </ul>
+                                </div>
+                                <div class="timeline-notes-enhanced">
+                                    <h4>Nächster Schritt:</h4>
+                                    <p>Voraussichtlicher Abschluss der Eintragung: <strong>15.06.2025</strong></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 6: Schlüsselübergabe -->
+                        <div class="timeline-item-enhanced upcoming">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-hourglass"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 6: Schlüsselübergabe</h3>
+                                        <div class="timeline-date-enhanced">Geplant für 15.07.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-pending">Ausstehend</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="true">
+                                        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Nach erfolgreicher Eintragung im Grundbuch wird die offizielle Schlüsselübergabe stattfinden. Bei diesem Termin erhalten Sie alle Schlüssel, Zugangscodes, und werden in alle wichtigen Funktionen des Apartments eingewiesen.</p>
+                                </div>
+                                <div class="timeline-notes-enhanced">
+                                    <h4>Hinweise zur Vorbereitung:</h4>
+                                    <p>Bitte planen Sie etwa 2 Stunden für die Schlüsselübergabe ein. Es empfiehlt sich, bei der Übergabe persönlich anwesend zu sein, um das Apartment zu inspizieren und etwaige Fragen direkt klären zu können.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 7: Abschluss -->
+                        <div class="timeline-item-enhanced upcoming">
+                            <div class="timeline-dot-enhanced" aria-hidden="true">
+                                <i class="fas fa-hourglass"></i>
+                            </div>
+                            <div class="timeline-content-enhanced">
+                                <div class="timeline-header-enhanced">
+                                    <div>
+                                        <h3>Phase 7: Abschluss</h3>
+                                        <div class="timeline-date-enhanced">Geplant für 30.07.2025</div>
+                                    </div>
+                                    <div class="timeline-status-enhanced">
+                                        <span class="status-badge status-pending">Ausstehend</span>
+                                    </div>
+                                    <button class="timeline-toggle-enhanced" aria-label="Details ein-/ausblenden" aria-expanded="true">
+                                        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-description-enhanced">
+                                    <p>Der Kaufprozess wird mit der Überprüfung aller Dokumente, der Einrichtung von Versorgungsverträgen (Strom, Wasser, Internet) und der Übergabe aller relevanten Unterlagen abgeschlossen.</p>
+                                </div>
+                                <div class="timeline-notes-enhanced">
+                                    <h4>Nach dem Kauf:</h4>
+                                    <p>Nach Abschluss des Kaufprozesses steht Ihnen unser Team weiterhin zur Verfügung, um Sie bei der Verwaltung Ihrer Immobilie zu unterstützen, sei es für die Eigennutzung oder für Vermietungszwecke.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Timeline Navigation -->
+            <div class="mobile-timeline-nav">
+                <div class="mobile-tabs" role="tablist">
+                    <button class="mobile-tab active" data-phase="all" role="tab" aria-selected="true" aria-controls="all-phases">Alle Phasen</button>
+                    <button class="mobile-tab" data-phase="Reservierung" role="tab" aria-selected="false" aria-controls="phase-reservierung">Reservierung</button>
+                    <button class="mobile-tab" data-phase="Anzahlung" role="tab" aria-selected="false" aria-controls="phase-anzahlung">Anzahlung</button>
+                    <button class="mobile-tab" data-phase="Vertragsunterzeichnung" role="tab" aria-selected="false" aria-controls="phase-vertrag">Vertrag</button>
+                    <button class="mobile-tab" data-phase="Vollständige Zahlung" role="tab" aria-selected="false" aria-controls="phase-zahlung">Zahlung</button>
+                    <button class="mobile-tab" data-phase="Eigentumseintragung" role="tab" aria-selected="false" aria-controls="phase-eintragung">Eintragung</button>
+                    <button class="mobile-tab" data-phase="Schlüsselübergabe" role="tab" aria-selected="false" aria-controls="phase-schluessel">Schlüssel</button>
+                    <button class="mobile-tab" data-phase="Abschluss" role="tab" aria-selected="false" aria-controls="phase-abschluss">Abschluss</button>
+                </div>
+            </div>
+
+            <!-- Next Steps Card -->
+            <section class="card mt-5">
+                <div class="card-header">
+                    <h2><i class="fas fa-list-ol" aria-hidden="true"></i> Nächste Schritte</h2>
+                </div>
+                <div class="card-body">
+                    <ol class="next-steps-list">
+                        <li class="step-in-progress">
+                            <div class="step-header">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                <h3>Finalisierung der Eigentumseintragung</h3>
+                            </div>
+                            <p>Wir arbeiten intensiv mit den Behörden zusammen, um die Eigentumseintragung so schnell wie möglich abzuschließen.</p>
+                            <span class="step-date">Erwarteter Abschluss: 15.06.2025</span>
+                        </li>
+                        <li class="step-upcoming">
+                            <div class="step-header">
+                                <i class="fas fa-hourglass-start" aria-hidden="true"></i>
+                                <h3>Vorbereitung der Schlüsselübergabe</h3>
+                            </div>
+                            <p>Sobald die Eigentumseintragung abgeschlossen ist, werden wir einen Termin für die Schlüsselübergabe vereinbaren.</p>
+                            <span class="step-date">Geplant für 15.07.2025</span>
+                        </li>
+                        <li class="step-upcoming">
+                            <div class="step-header">
+                                <i class="fas fa-hourglass-start" aria-hidden="true"></i>
+                                <h3>Einrichtung der Versorgungsverträge</h3>
+                            </div>
+                            <p>Bei der Schlüsselübergabe besprechen wir die Einrichtung aller notwendigen Versorgungsverträge (Strom, Wasser, Internet).</p>
+                            <span class="step-date">Geplant für 15.07.2025</span>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="cta-card">
+                <div class="cta-content">
+                    <h2>Haben Sie Fragen zum Prozess?</h2>
+                    <p>Unser Team steht Ihnen jederzeit zur Verfügung, um alle Fragen zu Ihrem Immobilienkauf zu beantworten.</p>
+                    <a href="contact-enhanced.html" class="btn btn-primary">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> Kontakt aufnehmen
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer-enhanced">
+        <div class="footer-content">
+            <div class="footer-branding">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="footer-logo">
+                <p class="footer-tagline">Ihr Partner für exklusive Immobilien in Nordzypern</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-links-group">
+                    <h4>Kundenportal</h4>
+                    <ul>
+                        <li><a href="dashboard-enhanced.html">Dashboard</a></li>
+                        <li><a href="documents-enhanced.html">Dokumente</a></li>
+                        <li><a href="gallery-enhanced.html">Fotogalerie</a></li>
+                        <li><a href="progress-enhanced.html">Prozessverlauf</a></li>
+                        <li><a href="contact-enhanced.html">Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Rechtliches</h4>
+                    <ul>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">AGB</a></li>
+                        <li><a href="#">Cookie-Einstellungen</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="tel:+491234567890"><i class="fas fa-phone" aria-hidden="true"></i> +49 123 456 7890</a></li>
+                        <li><a href="mailto:info@redbird-immobilien.de"><i class="fas fa-envelope" aria-hidden="true"></i> info@redbird-immobilien.de</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Standorte</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-social">
+                <h4>Folgen Sie uns</h4>
+                <div class="social-icons">
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="YouTube">
+                        <i class="fab fa-youtube" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="language-select-footer">
+                <select aria-label="Sprache wählen">
+                    <option value="de" selected>Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="tr">Türkçe</option>
+                </select>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/config.js" type="module"></script>
+<script src="../js/api-client.js" type="module"></script>
+    <script src="../js/api-service.js"></script>
+    <script src="../js/api-service-enhanced.js"></script>
+    <script src="../js/progress-enhanced.js"></script>
+    <script src="../js/progress-controller.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize progress features (handled by progress-controller.js)
+            
+            // Handle logout
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                AuthService.logout();
+                window.location.href = '../login.html';
+            });
+            
+            // Show welcome notification
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.info(
+                    'Hier können Sie den aktuellen Status Ihres Immobilienkaufs verfolgen.',
+                    'Willkommen im Prozessverlauf'
+                );
+            }
+        });
+    </script>
+</body>
+</html>

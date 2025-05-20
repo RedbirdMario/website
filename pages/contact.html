@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt - RedBird Real Estate</title>
+    <meta name="description" content="Kontaktieren Sie RedBird Real Estate - Ihr Partner für Immobilien in Nordzypern. Finden Sie Kontaktdaten, Öffnungszeiten und unser Kontaktformular.">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/mobile-enhanced.css">
+    <link rel="stylesheet" href="../css/footer-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <style>
+        /* Page specific styles */
+        .page-header {
+            background-color: var(--secondary-dark);
+            color: white;
+            padding: var(--space-10) 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/about-office.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+        
+        .page-header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .page-header p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumbs a {
+            color: white;
+            opacity: 0.8;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        .breadcrumbs a:hover {
+            opacity: 1;
+            color: var(--primary-red-light);
+        }
+        
+        .breadcrumbs .separator {
+            margin: 0 var(--space-2);
+            opacity: 0.6;
+        }
+        
+        .breadcrumbs .current {
+            color: var(--primary-red-light);
+            font-weight: 500;
+        }
+        
+        .contact-section {
+            padding: var(--space-10) 0;
+            background-color: var(--neutral-100);
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+        }
+        
+        .contact-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .contact-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            height: 100%;
+        }
+        
+        .contact-info-header {
+            margin-bottom: var(--space-4);
+        }
+        
+        .contact-info-header h2 {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .contact-info-header p {
+            color: var(--neutral-600);
+            font-size: 1.1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-5);
+            align-items: flex-start;
+        }
+        
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .contact-text {
+            flex: 1;
+        }
+        
+        .contact-text h3 {
+            margin-bottom: var(--space-2);
+            font-size: 1.1rem;
+        }
+        
+        .contact-text p, .contact-text a {
+            color: var(--neutral-600);
+            line-height: 1.5;
+        }
+        
+        .contact-text a {
+            text-decoration: none;
+            transition: color var(--transition-normal);
+        }
+        
+        .contact-text a:hover {
+            color: var(--primary-red);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-600);
+            transition: all var(--transition-normal);
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            color: white;
+            background-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+        
+        .contact-form-container {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .contact-form-header {
+            margin-bottom: var(--space-6);
+        }
+        
+        .contact-form-header h2 {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+        
+        .contact-form-header p {
+            color: var(--neutral-600);
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-2);
+            color: var(--neutral-700);
+            font-weight: 500;
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            background-color: var(--neutral-100);
+            transition: all var(--transition-normal);
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(231, 46, 46, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .btn-submit:hover {
+            background-color: var(--primary-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(231, 46, 46, 0.3);
+        }
+        
+        .office-locations {
+            padding: var(--space-10) 0;
+            background-color: var(--neutral-800);
+            color: white;
+        }
+        
+        .office-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-8);
+        }
+        
+        .office-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .office-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-red);
+            transform: translateX(-50%);
+            border-radius: var(--radius-full);
+        }
+        
+        .office-header p {
+            font-size: 1.125rem;
+            color: var(--neutral-300);
+        }
+        
+        .office-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .office-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+        
+        .office-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .office-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .office-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .office-card:hover .office-image img {
+            transform: scale(1.05);
+        }
+        
+        .office-content {
+            padding: var(--space-4);
+        }
+        
+        .office-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-2);
+            color: white;
+        }
+        
+        .office-address {
+            margin-bottom: var(--space-3);
+            color: var(--neutral-300);
+        }
+        
+        .office-contact {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+        
+        .office-contact a {
+            color: var(--neutral-300);
+            text-decoration: none;
+            transition: color var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .office-contact a:hover {
+            color: var(--primary-red-light);
+        }
+        
+        .office-hours {
+            font-size: 0.9rem;
+            padding-top: var(--space-3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--neutral-300);
+        }
+        
+        .faq-section {
+            padding: var(--space-10) 0;
+            background-color: var(--neutral-100);
+        }
+        
+        .faq-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-8);
+        }
+        
+        .faq-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .faq-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-red);
+            transform: translateX(-50%);
+            border-radius: var(--radius-full);
+        }
+        
+        .faq-header p {
+            font-size: 1.125rem;
+            color: var(--neutral-600);
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: var(--space-4);
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .faq-question {
+            padding: var(--space-4);
+            background-color: var(--bg-card);
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--neutral-800);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .faq-question:hover {
+            color: var(--primary-red);
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 var(--space-4);
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 var(--space-4) var(--space-4);
+            max-height: 1000px;
+        }
+        
+        .faq-answer p {
+            color: var(--neutral-600);
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 992px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-header p {
+                font-size: 1.1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="../index-enhanced.html">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="logo">
+                </a>
+            </div>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menü öffnen">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="site-nav" id="siteNav">
+                <ul class="nav-menu" role="menubar">
+                    <li class="nav-item" role="none">
+                        <a href="../index-enhanced.html" class="nav-link" role="menuitem">
+                            <span>Startseite</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../rental/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Immobilien</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../rental/index.html#buy" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Kaufen</span>
+                            </a>
+                            <a href="../rental/index.html#rent" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-key" aria-hidden="true"></i>
+                                <span>Mieten</span>
+                            </a>
+                            <a href="../rental/index.html#rental-service" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-hand-holding-usd" aria-hidden="true"></i>
+                                <span>Vermietungsservice</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="../community/index.html" class="nav-link" role="menuitem" aria-haspopup="true">
+                            <span>Community</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="../community/index.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-comments" aria-hidden="true"></i>
+                                <span>Forum</span>
+                            </a>
+                            <a href="../community/index.html#events" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                <span>Events</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item active" role="none">
+                        <a href="about.html" class="nav-link" role="menuitem" aria-haspopup="true" aria-current="page">
+                            <span>Über uns</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="about.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-building" aria-hidden="true"></i>
+                                <span>Unternehmen</span>
+                            </a>
+                            <a href="team.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                <span>Team</span>
+                            </a>
+                            <a href="contact.html" class="dropdown-item" role="menuitem">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>Kontakt</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Darkmodus umschalten" title="Darkmodus umschalten">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                
+                <div class="auth-buttons">
+                    <a href="../login.html" class="btn-login">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                        <span>Anmelden</span>
+                    </a>
+                    <a href="../pages/dashboard.html" class="btn-signup">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        <span>Kundenbereich</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header" id="contact">
+        <div class="page-header-content">
+            <div class="breadcrumbs">
+                <a href="../index-enhanced.html">Startseite</a>
+                <span class="separator">/</span>
+                <a href="about.html">Über uns</a>
+                <span class="separator">/</span>
+                <span class="current">Kontakt</span>
+            </div>
+            <h1>Kontaktieren Sie uns</h1>
+            <p>Haben Sie Fragen oder möchten Sie mehr über unsere Dienstleistungen erfahren? Wir freuen uns, von Ihnen zu hören!</p>
+        </div>
+    </div>
+
+    <section class="contact-section">
+        <div class="section-container">
+            <div class="contact-grid">
+                <div class="contact-info-container" data-aos="fade-right">
+                    <div class="contact-card">
+                        <div class="contact-info-header">
+                            <h2>Kontaktinformationen</h2>
+                            <p>Verschiedene Wege, um mit uns in Verbindung zu treten</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h3>Adresse</h3>
+                                <p>Hauptstraße 123<br>12345 Berlin<br>Deutschland</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h3>Telefon</h3>
+                                <p><a href="tel:+4930123456789">+49 30 123456789</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h3>E-Mail</h3>
+                                <p><a href="mailto:info@redbird-realestate.com">info@redbird-realestate.com</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h3>Öffnungszeiten</h3>
+                                <p>Montag - Freitag: 9:00 - 18:00 Uhr<br>Samstag: 10:00 - 14:00 Uhr<br>Sonntag: Geschlossen</p>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <i class="fab fa-instagram" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter">
+                                <i class="fab fa-twitter" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-container" data-aos="fade-left">
+                    <div class="contact-form-header">
+                        <h2>Senden Sie uns eine Nachricht</h2>
+                        <p>Wir werden uns so schnell wie möglich bei Ihnen melden</p>
+                    </div>
+                    
+                    <form id="contactForm" action="#" method="post">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Name *</label>
+                                <input type="text" id="name" name="name" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">E-Mail *</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Telefon</label>
+                            <input type="tel" id="phone" name="phone" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Betreff *</label>
+                            <select id="subject" name="subject" class="form-select" required>
+                                <option value="">Bitte wählen</option>
+                                <option value="general">Allgemeine Anfrage</option>
+                                <option value="property">Immobilienanfrage</option>
+                                <option value="rental">Vermietungsservice</option>
+                                <option value="investment">Investmentberatung</option>
+                                <option value="other">Sonstiges</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Nachricht *</label>
+                            <textarea id="message" name="message" class="form-textarea" rows="5" required></textarea>
+                        </div>
+                        
+                        <!-- Honeypot field to catch bots - hidden from humans but visible to bots -->
+                        <div style="display:none">
+                            <label for="website">Website (Lassen Sie dieses Feld leer)</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                <span>Nachricht senden</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="office-locations">
+        <div class="section-container">
+            <div class="office-header" data-aos="fade-up">
+                <h2>Unsere Standorte</h2>
+                <p>Besuchen Sie uns in einem unserer Büros</p>
+            </div>
+            
+            <div class="office-grid">
+                <div class="office-card" data-aos="fade-up">
+                    <div class="office-image">
+                        <img src="../img/about-office.jpg" alt="Berlin Office" loading="lazy">
+                    </div>
+                    <div class="office-content">
+                        <h3 class="office-title">Berlin (Hauptsitz)</h3>
+                        <p class="office-address">Hauptstraße 123<br>12345 Berlin<br>Deutschland</p>
+                        <div class="office-contact">
+                            <a href="tel:+4930123456789">
+                                <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                                <span>+49 30 123456789</span>
+                            </a>
+                            <a href="mailto:berlin@redbird-realestate.com">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>berlin@redbird-realestate.com</span>
+                            </a>
+                        </div>
+                        <div class="office-hours">
+                            <p>Mo - Fr: 9:00 - 18:00 Uhr<br>Sa: 10:00 - 14:00 Uhr<br>So: Geschlossen</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="office-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="office-image">
+                        <img src="../img/about-office.jpg" alt="Kyrenia Office" loading="lazy">
+                    </div>
+                    <div class="office-content">
+                        <h3 class="office-title">Kyrenia (Nordzypern)</h3>
+                        <p class="office-address">Palm Beach Road 45<br>Kyrenia<br>Nordzypern</p>
+                        <div class="office-contact">
+                            <a href="tel:+90533123456">
+                                <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                                <span>+90 533 123456</span>
+                            </a>
+                            <a href="mailto:kyrenia@redbird-realestate.com">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>kyrenia@redbird-realestate.com</span>
+                            </a>
+                        </div>
+                        <div class="office-hours">
+                            <p>Mo - Fr: 9:00 - 18:00 Uhr<br>Sa: 10:00 - 14:00 Uhr<br>So: Geschlossen</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="office-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="office-image">
+                        <img src="../img/about-office.jpg" alt="Hamburg Office" loading="lazy">
+                    </div>
+                    <div class="office-content">
+                        <h3 class="office-title">Hamburg</h3>
+                        <p class="office-address">Hafenstraße 78<br>20359 Hamburg<br>Deutschland</p>
+                        <div class="office-contact">
+                            <a href="tel:+4940123456789">
+                                <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                                <span>+49 40 123456789</span>
+                            </a>
+                            <a href="mailto:hamburg@redbird-realestate.com">
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <span>hamburg@redbird-realestate.com</span>
+                            </a>
+                        </div>
+                        <div class="office-hours">
+                            <p>Mo - Fr: 9:00 - 18:00 Uhr<br>Sa: Nach Vereinbarung<br>So: Geschlossen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="section-container">
+            <div class="faq-header" data-aos="fade-up">
+                <h2>Häufig gestellte Fragen</h2>
+                <p>Antworten auf die am häufigsten gestellten Fragen</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item" data-aos="fade-up">
+                    <div class="faq-question">
+                        <span>Wie kann ich einen Beratungstermin vereinbaren?</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sie können einen Beratungstermin auf verschiedene Arten vereinbaren: Nutzen Sie das Kontaktformular auf dieser Seite, rufen Sie uns unter +49 30 123456789 an oder senden Sie uns eine E-Mail an info@redbird-realestate.com. Wir werden uns innerhalb eines Werktages bei Ihnen melden, um einen Termin zu vereinbaren.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <span>Welche Unterlagen benötige ich für eine Immobilienberatung?</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Für eine erste Beratung benötigen Sie keine speziellen Unterlagen. Es ist jedoch hilfreich, wenn Sie bereits eine Vorstellung von Ihrem Budget, den gewünschten Immobilieneigenschaften und dem Zweck der Investition haben. Für fortgeschrittene Beratungen zu Finanzierung und Steuern können zusätzliche Dokumente erforderlich sein, die wir individuell mit Ihnen besprechen.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <span>Bieten Sie virtuelle Besichtigungen von Immobilien in Nordzypern an?</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ja, wir bieten virtuelle 360°-Besichtigungen für viele unserer Immobilien an. Zusätzlich können wir individuelle Videobesichtigungen per Zoom oder andere Videokonferenztools arrangieren, bei denen einer unserer lokalen Mitarbeiter die Immobilie live für Sie besichtigt und Ihre Fragen direkt beantwortet.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        <span>Wie funktioniert der Vermietungsservice von RedBird?</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Unser Vermietungsservice umfasst die komplette Verwaltung Ihrer Immobilie: von der Erstellung attraktiver Anzeigen über die Auswahl geeigneter Mieter bis hin zur regelmäßigen Wartung und Abrechnung. Wir bieten verschiedene Servicemodelle für Langzeit- und Kurzzeitvermietung an, die auf Ihre Bedürfnisse zugeschnitten werden können. Für detaillierte Informationen vereinbaren Sie bitte ein Beratungsgespräch.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="faq-question">
+                        <span>Welche Zahlungsmethoden akzeptieren Sie?</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Wir akzeptieren verschiedene Zahlungsmethoden, darunter Banküberweisung, Kreditkarte und in bestimmten Fällen auch Kryptowährungen. Die genauen Zahlungsmodalitäten werden im Rahmen des Vertragsabschlusses individuell vereinbart.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-enhanced">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-branding">
+                    <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="footer-logo">
+                    <p class="footer-tagline">Ihr zuverlässiger Partner für Immobilien in Nordzypern. Wir bieten umfassende Dienstleistungen vom Kauf bis zur Vermietung.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" aria-label="Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon instagram" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon youtube" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Schnellzugriff</h4>
+                    <ul>
+                        <li><a href="../rental/index.html"><i class="fas fa-home" aria-hidden="true"></i> Immobilienangebote</a></li>
+                        <li><a href="../rental/index.html#rental-service"><i class="fas fa-key" aria-hidden="true"></i> Vermietungsservice</a></li>
+                        <li><a href="../pages/dashboard.html"><i class="fas fa-user" aria-hidden="true"></i> Kundenbereich</a></li>
+                        <li><a href="../blog/index.html"><i class="fas fa-newspaper" aria-hidden="true"></i> Blog</a></li>
+                        <li><a href="../community/index.html"><i class="fas fa-comments" aria-hidden="true"></i> Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Über uns</h4>
+                    <ul>
+                        <li><a href="about.html"><i class="fas fa-building" aria-hidden="true"></i> Unternehmen</a></li>
+                        <li><a href="team.html"><i class="fas fa-users" aria-hidden="true"></i> Team</a></li>
+                        <li><a href="careers.html"><i class="fas fa-briefcase" aria-hidden="true"></i> Karriere</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-group">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="#" class="contact-item"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Hauptstraße 123, 12345 Berlin</a></li>
+                        <li><a href="tel:+4930123456789" class="contact-item"><i class="fas fa-phone-alt" aria-hidden="true"></i> +49 30 123456789</a></li>
+                        <li><a href="mailto:info@redbird-realestate.com" class="contact-item"><i class="fas fa-envelope" aria-hidden="true"></i> info@redbird-realestate.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="language-select-footer">
+                    <select aria-label="Sprache wählen">
+                        <option value="de" selected>Deutsch</option>
+                        <option value="en">English</option>
+                        <option value="tr">Türkçe</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/config.js" type="module"></script>
+    <script src="../js/logger.js" type="module"></script>
+    <script src="../js/api-client.js" type="module"></script>
+    <script src="../js/contact-form.js" type="module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Navigation Toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const siteNav = document.getElementById('siteNav');
+            
+            if (mobileMenuToggle && siteNav) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    siteNav.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                        this.setAttribute('aria-label', 'Menü schließen');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                        this.setAttribute('aria-label', 'Menü öffnen');
+                    }
+                });
+            }
+            
+            // FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    // Close all other items
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Toggle current item
+                    if (!isActive) {
+                        faqItem.classList.add('active');
+                    }
+                });
+            });
+            
+            // Animation on scroll (simulating AOS library)
+            const animatedElements = document.querySelectorAll('[data-aos]');
+            
+            function checkScroll() {
+                animatedElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        el.classList.add('aos-animate');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on load
+            
+            // Add a class for animations and form validation
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    /* Animation styles */
+                    [data-aos] {
+                        opacity: 0;
+                        transform: translateY(50px);
+                        transition: opacity 0.6s ease, transform 0.6s ease;
+                    }
+                    
+                    [data-aos].aos-animate {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    
+                    [data-aos-delay="100"] {
+                        transition-delay: 0.1s;
+                    }
+                    
+                    [data-aos-delay="200"] {
+                        transition-delay: 0.2s;
+                    }
+                    
+                    [data-aos-delay="300"] {
+                        transition-delay: 0.3s;
+                    }
+                    
+                    [data-aos-delay="400"] {
+                        transition-delay: 0.4s;
+                    }
+                    
+                    /* Form validation styles */
+                    .form-input.is-invalid,
+                    .form-textarea.is-invalid,
+                    .form-select.is-invalid {
+                        border-color: var(--primary-red);
+                        background-color: rgba(231, 46, 46, 0.05);
+                        box-shadow: 0 0 0 3px rgba(231, 46, 46, 0.1);
+                    }
+                    
+                    .form-input.is-valid,
+                    .form-textarea.is-valid,
+                    .form-select.is-valid {
+                        border-color: #4caf50;
+                        background-color: rgba(76, 175, 80, 0.05);
+                    }
+                    
+                    .error-message {
+                        color: var(--primary-red);
+                        font-size: 0.8rem;
+                        margin-top: 0.25rem;
+                        font-weight: 500;
+                    }
+                </style>
+            `);
+            
+            // Initialize contact form handler with appropriate configuration
+            import('../js/contact-form.js').then(module => {
+                const ContactFormHandler = module.default;
+                
+                // Check if API client is available
+                const isApiAvailable = typeof window.api !== 'undefined';
+                
+                // Create notifications container if needed
+                if (!document.querySelector('.notifications-container')) {
+                    const container = document.createElement('div');
+                    container.className = 'notifications-container top-right';
+                    document.body.appendChild(container);
+                }
+                
+                // Create contact form handler with appropriate configuration
+                new ContactFormHandler('contactForm', {
+                    apiEndpoint: '/api/v1/contact/submit', // Updated to match backend route
+                    demoMode: !isApiAvailable, // Use demo mode if API not available
+                    successTemplate: true,
+                    resetFormOnSuccess: false, // Don't reset form since we're using template
+                    showNotification: true,
+                    validationRules: {
+                        name: { required: true, minLength: 2 },
+                        email: { required: true, email: true },
+                        phone: { required: false, phone: true },
+                        subject: { required: true },
+                        message: { required: true, minLength: 10 },
+                        website: { required: false } // Honeypot field - should be empty
+                    }
+                });
+                
+                // Log configuration for debugging
+                console.log(`Contact form initialized in ${isApiAvailable ? 'API' : 'DEMO'} mode`);
+            }).catch(error => {
+                console.error('Error loading contact form handler:', error);
+                
+                // Fallback to simple form handling in case module fails to load
+                const contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        // Simple validation
+                        let isValid = true;
+                        const requiredFields = ['name', 'email', 'subject', 'message'];
+                        
+                        requiredFields.forEach(field => {
+                            const element = contactForm.elements[field];
+                            if (!element.value.trim()) {
+                                isValid = false;
+                                element.style.borderColor = 'red';
+                            } else {
+                                element.style.borderColor = '';
+                            }
+                        });
+                        
+                        if (!isValid) return;
+                        
+                        // Disable form inputs and button during submission
+                        const formElements = contactForm.elements;
+                        for (let i = 0; i < formElements.length; i++) {
+                            formElements[i].disabled = true;
+                        }
+                        
+                        // Change button text
+                        const submitButton = contactForm.querySelector('.btn-submit');
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Wird gesendet...</span>';
+                        
+                        // Simulate server response
+                        setTimeout(() => {
+                            contactForm.innerHTML = `
+                                <div style="text-align: center; padding: var(--space-6);">
+                                    <div style="font-size: 4rem; color: var(--primary-red); margin-bottom: var(--space-4);">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h3 style="margin-bottom: var(--space-3);">Nachricht erfolgreich gesendet!</h3>
+                                    <p style="color: var(--neutral-600); margin-bottom: var(--space-4);">Vielen Dank für Ihre Nachricht. Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.</p>
+                                    <button type="button" class="btn-submit" onclick="location.reload()">
+                                        <i class="fas fa-paper-plane"></i>
+                                        <span>Neue Nachricht senden</span>
+                                    </button>
+                                </div>
+                            `;
+                        }, 2000);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

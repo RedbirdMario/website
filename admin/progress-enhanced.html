@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projektstatus - RedBird Real Estate</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/progress.css">
+    <link rel="stylesheet" href="../css/progress-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+        <i class="fas fa-moon" data-theme-icon></i>
+    </button>
+    
+    <!-- Header -->
+    <header class="admin-header-enhanced">
+        <div class="admin-header-container-enhanced">
+            <div class="admin-title-enhanced">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo">
+                <h1>Admin Portal</h1>
+            </div>
+            <div class="admin-controls-enhanced">
+                <div class="admin-search-enhanced">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Suche...">
+                </div>
+                <div class="admin-notifications-enhanced dropdown-enhanced">
+                    <button class="notification-btn-enhanced" aria-label="Benachrichtigungen">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="dropdown-content-enhanced notification-dropdown">
+                        <div class="notification-header">
+                            <h3>Benachrichtigungen</h3>
+                            <button class="text-btn">Alle markieren</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-success-soft">
+                                    <i class="fas fa-check text-success"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1064 wurde aktualisiert</p>
+                                    <span class="notification-time">Vor 10 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-primary-soft">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Neuer Kunde registriert: Maria Schmidt</p>
+                                    <span class="notification-time">Vor 30 Minuten</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon bg-warning-soft">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Projekt #1058 benötigt Ihre Aufmerksamkeit</p>
+                                    <span class="notification-time">Vor 1 Stunde</span>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" class="text-btn">Alle Benachrichtigungen ansehen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-user-enhanced dropdown-enhanced">
+                    <button class="user-btn-enhanced">
+                        <div class="user-avatar-enhanced">
+                            <span>AS</span>
+                        </div>
+                        <div class="user-info-enhanced d-none d-md-block">
+                            <span class="user-name-enhanced">Admin User</span>
+                            <span class="user-role-enhanced">Administrator</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content-enhanced">
+                        <a href="#"><i class="fas fa-user-circle"></i> Mein Profil</a>
+                        <a href="#"><i class="fas fa-cog"></i> Einstellungen</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> Hilfe & Support</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar-enhanced">
+        <div class="sidebar-header-enhanced">
+            <img src="../img/redbird-logo.svg" alt="RedBird" class="sidebar-logo-enhanced">
+            <button class="sidebar-toggle-enhanced" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-user-enhanced">
+            <div class="user-avatar-enhanced">
+                <span>AS</span>
+            </div>
+            <div class="user-info-enhanced">
+                <span class="user-name-enhanced">Admin User</span>
+                <span class="user-role-enhanced">Administrator</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav-enhanced">
+            <ul class="sidebar-menu-enhanced">
+                <li class="sidebar-item-enhanced">
+                    <a href="index-enhanced.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-users"></i>
+                        <span>Kunden</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        <span>Immobilien</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Dokumente</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="media-refined.html">
+                        <i class="fas fa-images"></i>
+                        <span>Medienverwaltung</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced active">
+                    <a href="progress-enhanced.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Projektstatus</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="fulfillment-process.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Fulfillment Prozess</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Berichte</span>
+                    </a>
+                </li>
+                <li class="sidebar-item-enhanced">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Einstellungen</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-content-enhanced">
+        <div class="content-header-enhanced">
+            <div>
+                <h1 class="mb-2">Projektstatus</h1>
+                <p class="text-muted">Überwachen Sie den Fortschritt von Immobilienprojekten und managen Sie den Status.</p>
+            </div>
+            <div class="content-actions-enhanced">
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-download"></i> Exportieren
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Neues Projekt
+                </button>
+            </div>
+        </div>
+        
+        <!-- Projects Overview Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Projektübersicht</h2>
+                <div>
+                    <select class="form-control">
+                        <option>Alle Projekte</option>
+                        <option>Aktive Projekte</option>
+                        <option>Abgeschlossene Projekte</option>
+                        <option>Ausstehende Projekte</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="search-container-enhanced">
+                    <i class="fas fa-search search-icon-enhanced"></i>
+                    <input type="text" class="search-input-enhanced" placeholder="Suche nach Projekten, Kunden oder Immobilien...">
+                </div>
+                
+                <div class="projects-table-responsive">
+                    <table class="table-enhanced">
+                        <thead>
+                            <tr>
+                                <th>Projekt</th>
+                                <th>Kunde</th>
+                                <th>Immobilie</th>
+                                <th>Fortschritt</th>
+                                <th>Status</th>
+                                <th>Letzte Aktualisierung</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-home text-primary"></i>
+                                        </div>
+                                        <span>Kauf-Projekt #1072</span>
+                                    </div>
+                                </td>
+                                <td>Max Mustermann</td>
+                                <td>Sunset Bay Resort, A-203</td>
+                                <td>
+                                    <div class="progress-bar-enhanced">
+                                        <div class="progress-fill-enhanced" style="width: 70%;"></div>
+                                    </div>
+                                    <div class="progress-text-enhanced">5/7 Schritte</div>
+                                </td>
+                                <td><span class="status-badge status-active">Aktiv</span></td>
+                                <td>15.05.2025</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Dokumentation">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-home text-primary"></i>
+                                        </div>
+                                        <span>Kauf-Projekt #1064</span>
+                                    </div>
+                                </td>
+                                <td>Maria Schmidt</td>
+                                <td>Palm View Residence, B-105</td>
+                                <td>
+                                    <div class="progress-bar-enhanced">
+                                        <div class="progress-fill-enhanced" style="width: 40%;"></div>
+                                    </div>
+                                    <div class="progress-text-enhanced">3/7 Schritte</div>
+                                </td>
+                                <td><span class="status-badge status-active">Aktiv</span></td>
+                                <td>10.05.2025</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Dokumentation">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-home text-primary"></i>
+                                        </div>
+                                        <span>Kauf-Projekt #1058</span>
+                                    </div>
+                                </td>
+                                <td>Klaus Weber</td>
+                                <td>Golden Bay Villas, C-301</td>
+                                <td>
+                                    <div class="progress-bar-enhanced">
+                                        <div class="progress-fill-enhanced warning-fill" style="width: 15%;"></div>
+                                    </div>
+                                    <div class="progress-text-enhanced">1/7 Schritte</div>
+                                </td>
+                                <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                <td>12.05.2025</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Dokumentation">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="stagger-item">
+                                <td>
+                                    <div class="project-cell">
+                                        <div class="project-icon bg-primary-soft">
+                                            <i class="fas fa-home text-primary"></i>
+                                        </div>
+                                        <span>Kauf-Projekt #1042</span>
+                                    </div>
+                                </td>
+                                <td>Anna Becker</td>
+                                <td>Mountain View Resort, D-102</td>
+                                <td>
+                                    <div class="progress-bar-enhanced">
+                                        <div class="progress-fill-enhanced success-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <div class="progress-text-enhanced">7/7 Schritte</div>
+                                </td>
+                                <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                <td>05.05.2025</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" title="Details anzeigen">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn" title="Bearbeiten">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" title="Dokumentation">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-footer-enhanced">
+                    <div class="table-info">Zeige 1 bis 4 von 32 Einträgen</div>
+                    <div class="pagination-enhanced">
+                        <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn">4</button>
+                        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Project Details Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Projektdetails: Kauf-Projekt #1072</h2>
+                <div>
+                    <button class="btn btn-outline btn-sm">
+                        <i class="fas fa-print"></i> Drucken
+                    </button>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Bearbeiten
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Property Card -->
+                <div class="property-card-enhanced">
+                    <div class="property-image-enhanced">
+                        <img src="../img/apartment-preview.jpg" alt="Apartment">
+                    </div>
+                    <div class="property-details-enhanced">
+                        <h3 class="property-title-enhanced">Sunset Bay Resort, A-203</h3>
+                        <div class="property-location-enhanced">
+                            <i class="fas fa-map-marker-alt"></i> Esentepe, Nordzypern
+                        </div>
+                        <div class="property-features-enhanced">
+                            <div class="property-feature-enhanced">
+                                <i class="fas fa-expand"></i>
+                                <span>85 m²</span>
+                            </div>
+                            <div class="property-feature-enhanced">
+                                <i class="fas fa-bed"></i>
+                                <span>2 Schlafzimmer</span>
+                            </div>
+                            <div class="property-feature-enhanced">
+                                <i class="fas fa-bath"></i>
+                                <span>1 Badezimmer</span>
+                            </div>
+                            <div class="property-feature-enhanced">
+                                <i class="fas fa-euro-sign"></i>
+                                <span>189.000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="property-progress-enhanced">
+                            <div class="progress-circle-enhanced" data-percent="65">
+                                <div class="progress-circle-enhanced-inner">
+                                    <span class="progress-value-enhanced">65%</span>
+                                    <span class="progress-label-enhanced">Gesamtfortschritt</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Tabs -->
+                <div class="tabs-enhanced mt-4">
+                    <div class="tabs-header-enhanced">
+                        <button class="tab-btn-enhanced active" data-tab="fulfillment-tab">Fulfillment Prozess</button>
+                        <button class="tab-btn-enhanced" data-tab="purchase-tab">Kaufprozess</button>
+                        <button class="tab-btn-enhanced" data-tab="timeline-tab">Zeitlinie</button>
+                    </div>
+                    
+                    <div class="tabs-content-enhanced">
+                        <!-- Fulfillment Tab -->
+                        <div id="fulfillment-tab" class="tab-pane-enhanced active">
+                            <div class="progress-summary-enhanced">
+                                <h4>Fulfillment Prozess Fortschritt</h4>
+                                <div class="progress-bar-enhanced large">
+                                    <div class="progress-fill-enhanced" style="width: 29%;"></div>
+                                </div>
+                                <div class="progress-stats-enhanced">
+                                    <div>5 von 17 Schritten abgeschlossen</div>
+                                    <div>29% abgeschlossen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="fulfillment-steps-table">
+                                <table class="table-enhanced">
+                                    <thead>
+                                        <tr>
+                                            <th>Schritt</th>
+                                            <th>Status</th>
+                                            <th>Verantwortlich</th>
+                                            <th>Letzte Aktualisierung</th>
+                                            <th>Aktionen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1. WhatsApp Gruppe Welcome</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>Team</td>
+                                            <td>01.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2. Onboarding Terminvereinbarung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>Assistent</td>
+                                            <td>03.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3. Onboarding Video-Call</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>Berater</td>
+                                            <td>05.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4. Unit-Matching</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>Berater</td>
+                                            <td>10.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5. Beratung Terminvereinbarung</td>
+                                            <td><span class="status-badge status-active">In Bearbeitung</span></td>
+                                            <td>Berater</td>
+                                            <td>15.05.2025</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>6. Beratung Video Call</td>
+                                            <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                            <td>Berater</td>
+                                            <td>-</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-actions-enhanced">
+                                <button class="btn btn-primary">Status aktualisieren</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Purchase Tab -->
+                        <div id="purchase-tab" class="tab-pane-enhanced">
+                            <div class="progress-summary-enhanced">
+                                <h4>Kaufprozess Fortschritt</h4>
+                                <div class="progress-bar-enhanced large">
+                                    <div class="progress-fill-enhanced" style="width: 70%;"></div>
+                                </div>
+                                <div class="progress-stats-enhanced">
+                                    <div>5 von 7 Schritten abgeschlossen</div>
+                                    <div>70% abgeschlossen</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-visualization">
+                                <div class="timeline-path">
+                                    <div class="timeline-progress-fill" style="width: 70%;"></div>
+                                    <div class="timeline-milestone completed">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Reservierung</div>
+                                    </div>
+                                    <div class="timeline-milestone completed">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Anzahlung</div>
+                                    </div>
+                                    <div class="timeline-milestone completed">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Vertrag</div>
+                                    </div>
+                                    <div class="timeline-milestone completed">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Zahlung</div>
+                                    </div>
+                                    <div class="timeline-milestone completed">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Eintragung</div>
+                                    </div>
+                                    <div class="timeline-milestone active">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Schlüssel</div>
+                                    </div>
+                                    <div class="timeline-milestone">
+                                        <div class="milestone-indicator"></div>
+                                        <div class="milestone-title">Abschluss</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="purchase-steps-table mt-4">
+                                <table class="table-enhanced">
+                                    <thead>
+                                        <tr>
+                                            <th>Schritt</th>
+                                            <th>Status</th>
+                                            <th>Datum</th>
+                                            <th>Aktionen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1. Reservierung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>25.04.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2. Anzahlung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>28.04.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3. Vertragsunterzeichnung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>05.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4. Vollständige Zahlung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>10.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5. Eigentumseintragung</td>
+                                            <td><span class="status-badge status-completed">Abgeschlossen</span></td>
+                                            <td>15.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>6. Schlüsselübergabe</td>
+                                            <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                            <td>Geplant: 25.05.2025</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="action-btn" title="Details anzeigen">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn" title="Bearbeiten">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>7. Abschluss</td>
+                                            <td><span class="status-badge status-pending">Ausstehend</span></td>
+                                            <td>Geplant: 30.05.2025</td>
+                                            <td>
+                                                <button class="action-btn" title="Details anzeigen">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-actions-enhanced">
+                                <button class="btn btn-primary">Status aktualisieren</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline Tab -->
+                        <div id="timeline-tab" class="tab-pane-enhanced">
+                            <div class="next-steps-card" style="width: 100%;">
+                                <div class="card-body">
+                                    <ol class="next-steps-list">
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Reservierung abgeschlossen</h3>
+                                            </div>
+                                            <p>Kunde hat die Immobilie Sunset Bay Resort, A-203 reserviert. Reservierungsgebühr von 2.000€ wurde bezahlt.</p>
+                                            <span class="step-date">Abgeschlossen am 25.04.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Anzahlung erhalten</h3>
+                                            </div>
+                                            <p>Anzahlung von 30% (56.700€) wurde auf das Firmenkonto überwiesen.</p>
+                                            <span class="step-date">Abgeschlossen am 28.04.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>WhatsApp Gruppe Welcome erstellt</h3>
+                                            </div>
+                                            <p>Welcome-Gruppe für den Kunden wurde erstellt und Begrüßungsnachricht gesendet.</p>
+                                            <span class="step-date">Abgeschlossen am 01.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Onboarding Termin vereinbart</h3>
+                                            </div>
+                                            <p>Onboarding-Termin für den 05.05.2025 um 14:00 Uhr vereinbart.</p>
+                                            <span class="step-date">Abgeschlossen am 03.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Vertragsunterzeichnung</h3>
+                                            </div>
+                                            <p>Kaufvertrag wurde von beiden Parteien unterzeichnet.</p>
+                                            <span class="step-date">Abgeschlossen am 05.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Onboarding Video-Call durchgeführt</h3>
+                                            </div>
+                                            <p>Erfolgreicher Onboarding-Call mit dem Kunden. Alle Fragen wurden beantwortet.</p>
+                                            <span class="step-date">Abgeschlossen am 05.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Unit-Matching abgeschlossen</h3>
+                                            </div>
+                                            <p>Passende Immobilie für den Kunden wurde bestätigt.</p>
+                                            <span class="step-date">Abgeschlossen am 10.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Vollständige Zahlung erhalten</h3>
+                                            </div>
+                                            <p>Restzahlung von 132.300€ wurde auf das Firmenkonto überwiesen.</p>
+                                            <span class="step-date">Abgeschlossen am 10.05.2025</span>
+                                        </li>
+                                        <li class="step-completed">
+                                            <div class="step-header">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h3>Eigentumseintragung erfolgt</h3>
+                                            </div>
+                                            <p>Eigentumsübertragung im Grundbuchamt wurde abgeschlossen.</p>
+                                            <span class="step-date">Abgeschlossen am 15.05.2025</span>
+                                        </li>
+                                        <li class="step-in-progress">
+                                            <div class="step-header">
+                                                <i class="fas fa-clock"></i>
+                                                <h3>Beratung Terminvereinbarung</h3>
+                                            </div>
+                                            <p>Terminvereinbarung für die Beratung ist im Gange.</p>
+                                            <span class="step-date">In Bearbeitung seit 15.05.2025</span>
+                                        </li>
+                                        <li class="step-upcoming">
+                                            <div class="step-header">
+                                                <i class="fas fa-hourglass-start"></i>
+                                                <h3>Schlüsselübergabe geplant</h3>
+                                            </div>
+                                            <p>Schlüsselübergabe und Einweisung in die Immobilie.</p>
+                                            <span class="step-date">Geplant für 25.05.2025</span>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar-enhanced');
+            const mainContent = document.querySelector('.admin-content-enhanced');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                });
+            }
+            
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn-enhanced');
+            const tabPanes = document.querySelectorAll('.tab-pane-enhanced');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding pane
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Initialize the progress circle
+            initEnhancedProgressCircle();
+            
+            // Configure notifications
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+            }
+        });
+        
+        // Initialize the progress circle
+        function initEnhancedProgressCircle() {
+            const progressCircles = document.querySelectorAll('.progress-circle-enhanced');
+            
+            progressCircles.forEach(circle => {
+                const percentValue = circle.getAttribute('data-percent') || 0;
+                
+                // Set the CSS variable for the progress angle
+                const angle = (percentValue / 100) * 360;
+                circle.style.setProperty('--progress-angle', `${angle}deg`);
+                
+                // Determine colors based on progress
+                updateProgressCircleColors(circle, percentValue);
+            });
+        }
+        
+        // Update progress circle colors based on percent
+        function updateProgressCircleColors(circle, percent) {
+            // Convert percent to a color gradient (red -> yellow -> green)
+            if (percent < 50) {
+                // Red to yellow gradient
+                circle.style.setProperty('--progress-start', 'var(--status-warning)');
+                circle.style.setProperty('--progress-end', 'var(--status-warning)');
+                circle.style.setProperty('--progress-bg', 'rgba(255, 152, 0, 0.2)');
+            } else {
+                // Yellow to green gradient
+                circle.style.setProperty('--progress-start', 'var(--status-success)');
+                circle.style.setProperty('--progress-end', 'var(--status-success)');
+                circle.style.setProperty('--progress-bg', 'rgba(76, 175, 80, 0.2)');
+            }
+        }
+    </script>
+</body>
+</html>

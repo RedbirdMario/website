@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties Management - RedBird Real Estate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-responsive.css">
+    <style>
+        /* Custom styles that extend the main style guide */
+        body {
+            background-color: var(--redbird-light-gray);
+            color: var(--redbird-dark);
+            line-height: 1.6;
+        }
+        
+        a {
+            color: var(--redbird-red);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        a:hover {
+            color: var(--redbird-dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--redbird-dark);
+            color: var(--redbird-white);
+            padding: var(--spacing-md) 0;
+            transition: all var(--transition-normal);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .sidebar-logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-badge {
+            display: inline-block;
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu-item {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: rgba(255, 255, 255, 0.7);
+            transition: all var(--transition-normal);
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu-link:hover, .sidebar-menu-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--redbird-white);
+            text-decoration: none;
+        }
+        
+        .sidebar-menu-link.active {
+            border-left: 3px solid var(--redbird-red);
+        }
+        
+        .sidebar-menu-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: var(--spacing-md);
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--redbird-dark);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .property-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+        
+        .property-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-3px);
+        }
+        
+        .property-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .property-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: var(--border-radius-md);
+            font-size: 0.8rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--redbird-white);
+        }
+        
+        .status-available {
+            background-color: var(--status-success);
+        }
+        
+        .status-pending {
+            background-color: var(--status-warning);
+        }
+        
+        .status-sold {
+            background-color: var(--status-danger);
+        }
+        
+        .property-details {
+            padding: var(--spacing-md);
+        }
+        
+        .property-address {
+            font-size: 1rem;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: 5px;
+        }
+        
+        .property-type {
+            color: var(--redbird-gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .property-price {
+            font-weight: var(--font-weight-bold);
+            color: var(--redbird-red);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .property-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--redbird-dark-gray);
+        }
+        
+        .property-meta-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-meta-item i {
+            margin-right: 5px;
+        }
+        
+        .property-actions {
+            border-top: 1px solid var(--redbird-border);
+            padding: var(--spacing-sm) var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .add-property-button {
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-normal);
+        }
+        
+        .add-property-button:hover {
+            background-color: var(--redbird-dark);
+        }
+        
+        .search-filter-container {
+            display: flex;
+            margin-bottom: var(--spacing-md);
+            gap: var(--spacing-sm);
+        }
+        
+        .search-input {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-input input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            padding-left: 40px;
+            border: 1px solid var(--redbird-border);
+            border-radius: var(--border-radius-md);
+            font-size: 0.9rem;
+        }
+        
+        .search-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--redbird-gray);
+        }
+        
+        .filter-dropdown select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--redbird-border);
+            border-radius: var(--border-radius-md);
+            font-size: 0.9rem;
+            background-color: var(--redbird-white);
+            color: var(--redbird-dark);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--redbird-border);
+            margin: 0 5px;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        
+        .pagination-item:hover, .pagination-item.active {
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+            border-color: var(--redbird-red);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                padding: var(--spacing-sm) 0;
+            }
+            
+            .sidebar-header {
+                padding: 0 var(--spacing-sm) var(--spacing-sm);
+            }
+            
+            .sidebar-menu-text, .admin-badge {
+                display: none;
+            }
+            
+            .sidebar-menu-link {
+                justify-content: center;
+                padding: var(--spacing-sm);
+            }
+            
+            .sidebar-menu-link i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .search-filter-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="sidebar-logo">
+                <span class="admin-badge">Admin Portal</span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="index.html" class="sidebar-menu-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="sidebar-menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="user-management.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i>
+                        <span class="sidebar-menu-text">Users</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="properties.html" class="sidebar-menu-link active">
+                        <i class="fas fa-building"></i>
+                        <span class="sidebar-menu-text">Properties</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="documents.html" class="sidebar-menu-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="sidebar-menu-text">Documents</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="messaging.html" class="sidebar-menu-link">
+                        <i class="fas fa-comments"></i>
+                        <span class="sidebar-menu-text">Messaging</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="media.html" class="sidebar-menu-link">
+                        <i class="fas fa-images"></i>
+                        <span class="sidebar-menu-text">Media</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="progress.html" class="sidebar-menu-link">
+                        <i class="fas fa-tasks"></i>
+                        <span class="sidebar-menu-text">Progress</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="fulfillment-process.html" class="sidebar-menu-link">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span class="sidebar-menu-text">Fulfillment</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="settings.html" class="sidebar-menu-link">
+                        <i class="fas fa-cog"></i>
+                        <span class="sidebar-menu-text">Settings</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="../login.html" class="sidebar-menu-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="sidebar-menu-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">Property Management</h2>
+                
+                <div class="action-buttons">
+                    <button class="add-property-button">
+                        <i class="fas fa-plus"></i>
+                        Add Property
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-filter-container">
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search properties...">
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select>
+                        <option value="all">All Properties</option>
+                        <option value="available">Available</option>
+                        <option value="pending">Pending</option>
+                        <option value="sold">Sold</option>
+                    </select>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select>
+                        <option value="all">All Types</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                        <option value="land">Land</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="property-grid">
+                <!-- Property Card 1 -->
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://via.placeholder.com/400x300')">
+                        <div class="property-status status-available">Available</div>
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-address">Esentepe Villa #104</h3>
+                        <div class="property-type">Villa • Esentepe</div>
+                        <div class="property-price">€295,000</div>
+                        <div class="property-meta">
+                            <div class="property-meta-item">
+                                <i class="fas fa-bed"></i> 3 Bedrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-bath"></i> 2 Bathrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-ruler-combined"></i> 150 m²
+                            </div>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <a href="#" class="property-action-link">Edit</a>
+                        <a href="#" class="property-action-link">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Property Card 2 -->
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://via.placeholder.com/400x300')">
+                        <div class="property-status status-pending">Pending</div>
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-address">Kyrenia Apartment #206</h3>
+                        <div class="property-type">Apartment • Kyrenia</div>
+                        <div class="property-price">€175,000</div>
+                        <div class="property-meta">
+                            <div class="property-meta-item">
+                                <i class="fas fa-bed"></i> 2 Bedrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-bath"></i> 1 Bathroom
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-ruler-combined"></i> 85 m²
+                            </div>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <a href="#" class="property-action-link">Edit</a>
+                        <a href="#" class="property-action-link">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Property Card 3 -->
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://via.placeholder.com/400x300')">
+                        <div class="property-status status-sold">Sold</div>
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-address">Famagusta House #78</h3>
+                        <div class="property-type">House • Famagusta</div>
+                        <div class="property-price">€320,000</div>
+                        <div class="property-meta">
+                            <div class="property-meta-item">
+                                <i class="fas fa-bed"></i> 4 Bedrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-bath"></i> 3 Bathrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-ruler-combined"></i> 220 m²
+                            </div>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <a href="#" class="property-action-link">Edit</a>
+                        <a href="#" class="property-action-link">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Property Card 4 -->
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://via.placeholder.com/400x300')">
+                        <div class="property-status status-available">Available</div>
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-address">Iskele Apartment #45</h3>
+                        <div class="property-type">Apartment • Iskele</div>
+                        <div class="property-price">€155,000</div>
+                        <div class="property-meta">
+                            <div class="property-meta-item">
+                                <i class="fas fa-bed"></i> 2 Bedrooms
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-bath"></i> 1 Bathroom
+                            </div>
+                            <div class="property-meta-item">
+                                <i class="fas fa-ruler-combined"></i> 75 m²
+                            </div>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <a href="#" class="property-action-link">Edit</a>
+                        <a href="#" class="property-action-link">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- More property cards would go here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <div class="pagination-item">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="pagination-item active">1</div>
+                <div class="pagination-item">2</div>
+                <div class="pagination-item">3</div>
+                <div class="pagination-item">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/admin-responsive.js"></script>
+</body>
+</html>

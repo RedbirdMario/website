@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - RedBird Real Estate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-responsive.css">
+    <style>
+        /* Custom styles that extend the main style guide */
+        body {
+            background-color: var(--redbird-light-gray);
+            color: var(--redbird-dark);
+            line-height: 1.6;
+        }
+        
+        a {
+            color: var(--redbird-red);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+        
+        a:hover {
+            color: var(--redbird-dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--redbird-dark);
+            color: var(--redbird-white);
+            padding: var(--spacing-md) 0;
+            transition: all var(--transition-normal);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .sidebar-logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-badge {
+            display: inline-block;
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu-item {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: rgba(255, 255, 255, 0.7);
+            transition: all var(--transition-normal);
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu-link:hover, .sidebar-menu-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--redbird-white);
+            text-decoration: none;
+        }
+        
+        .sidebar-menu-link.active {
+            border-left: 3px solid var(--redbird-red);
+        }
+        
+        .sidebar-menu-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: var(--spacing-md);
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--redbird-dark);
+        }
+        
+        .settings-tabs {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--redbird-border);
+        }
+        
+        .settings-tab {
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            position: relative;
+            font-weight: var(--font-weight-medium);
+            color: var(--redbird-gray);
+            transition: all var(--transition-normal);
+        }
+        
+        .settings-tab.active {
+            color: var(--redbird-red);
+        }
+        
+        .settings-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--redbird-red);
+        }
+        
+        .settings-card {
+            background-color: var(--redbird-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .settings-card-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--redbird-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .settings-card-title {
+            font-size: 1.1rem;
+            font-weight: var(--font-weight-medium);
+            margin: 0;
+        }
+        
+        .settings-card-body {
+            padding: var(--spacing-md);
+        }
+        
+        .settings-card-footer {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--redbird-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: var(--font-weight-medium);
+            color: var(--redbird-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--redbird-border);
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-normal);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--redbird-red);
+            box-shadow: 0 0 0 2px rgba(255, 33, 33, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-label {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .toggle-slider {
+            position: relative;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-slider input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: all var(--transition-normal);
+            border-radius: 12px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: all var(--transition-normal);
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--redbird-red);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-normal);
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--redbird-red);
+            color: var(--redbird-white);
+        }
+        
+        .btn-primary:hover {
+            background-color: #d80000;
+        }
+        
+        .btn-secondary {
+            background-color: var(--redbird-gray);
+            color: var(--redbird-white);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--redbird-gray);
+            margin-top: 5px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                padding: var(--spacing-sm) 0;
+            }
+            
+            .sidebar-header {
+                padding: 0 var(--spacing-sm) var(--spacing-sm);
+            }
+            
+            .sidebar-menu-text, .admin-badge {
+                display: none;
+            }
+            
+            .sidebar-menu-link {
+                justify-content: center;
+                padding: var(--spacing-sm);
+            }
+            
+            .sidebar-menu-link i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="sidebar-logo">
+                <span class="admin-badge">Admin Portal</span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="index.html" class="sidebar-menu-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="sidebar-menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="user-management.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i>
+                        <span class="sidebar-menu-text">Users</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="properties.html" class="sidebar-menu-link">
+                        <i class="fas fa-building"></i>
+                        <span class="sidebar-menu-text">Properties</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="documents.html" class="sidebar-menu-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="sidebar-menu-text">Documents</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="messaging.html" class="sidebar-menu-link">
+                        <i class="fas fa-comments"></i>
+                        <span class="sidebar-menu-text">Messaging</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="media.html" class="sidebar-menu-link">
+                        <i class="fas fa-images"></i>
+                        <span class="sidebar-menu-text">Media</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="progress.html" class="sidebar-menu-link">
+                        <i class="fas fa-tasks"></i>
+                        <span class="sidebar-menu-text">Progress</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="fulfillment-process.html" class="sidebar-menu-link">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span class="sidebar-menu-text">Fulfillment</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="settings.html" class="sidebar-menu-link active">
+                        <i class="fas fa-cog"></i>
+                        <span class="sidebar-menu-text">Settings</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="../login.html" class="sidebar-menu-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="sidebar-menu-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">System Settings</h2>
+            </div>
+            
+            <div class="settings-tabs">
+                <div class="settings-tab active">General</div>
+                <div class="settings-tab">Notifications</div>
+                <div class="settings-tab">Email</div>
+                <div class="settings-tab">Security</div>
+                <div class="settings-tab">API</div>
+                <div class="settings-tab">Integrations</div>
+                <div class="settings-tab">Localization</div>
+                <div class="settings-tab">Backup</div>
+            </div>
+            
+            <!-- General Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3 class="settings-card-title">General Settings</h3>
+                </div>
+                <div class="settings-card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="site-name">Site Name</label>
+                            <input type="text" id="site-name" class="form-control" value="RedBird Real Estate">
+                            <p class="help-text">Displayed in the browser tab and admin pages</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="site-url">Site URL</label>
+                            <input type="text" id="site-url" class="form-control" value="https://redbird-realestate.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="admin-email">Admin Email</label>
+                            <input type="email" id="admin-email" class="form-control" value="admin@redbird-realestate.com">
+                            <p class="help-text">Used for system notifications</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-format">Date Format</label>
+                            <select id="date-format" class="form-control">
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                <option value="DD.MM.YYYY">DD.MM.YYYY</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currency">Default Currency</label>
+                            <select id="currency" class="form-control">
+                                <option value="EUR">Euro (€)</option>
+                                <option value="USD">US Dollar ($)</option>
+                                <option value="GBP">British Pound (£)</option>
+                                <option value="TRY">Turkish Lira (₺)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="language">Default Language</label>
+                            <select id="language" class="form-control">
+                                <option value="de">German</option>
+                                <option value="en">English</option>
+                                <option value="tr">Turkish</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>System Features</label>
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable Client Portal</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable Messaging System</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable Document System</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Maintenance Mode</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-card-footer">
+                    <button class="btn btn-secondary">Reset to Default</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+            
+            <!-- API Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3 class="settings-card-title">API Settings</h3>
+                </div>
+                <div class="settings-card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>API Status</label>
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable API Access</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <div style="display: flex;">
+                                <input type="text" class="form-control" value="rb_5f7a8e2b9c3d6f1a4e7b8c9d" readonly style="flex: 1; margin-right: 10px;">
+                                <button class="btn btn-secondary" style="white-space: nowrap;">Regenerate</button>
+                            </div>
+                            <p class="help-text">Keep this key secret. Last regenerated: 12 Feb 2023</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Access Control</label>
+                            <div class="toggle-switch">
+                                <label class="toggle-slider">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="toggle-label">Enable API Rate Limiting</span>
+                            </div>
+                            <p class="help-text">Limits API requests to 100 per minute per client</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="api-version">API Version</label>
+                            <select id="api-version" class="form-control">
+                                <option value="v1">v1 (Current)</option>
+                                <option value="v1-beta">v1-beta (Testing)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-card-footer">
+                    <button class="btn btn-secondary">Reset</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+            
+            <!-- System Information -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3 class="settings-card-title">System Information</h3>
+                </div>
+                <div class="settings-card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>System Version</label>
+                            <p>RedBird CRM v2.5.3 <span class="badge badge-success">Up to date</span></p>
+                        </div>
+                        <div class="form-group">
+                            <label>Database Status</label>
+                            <p>Connected <span class="badge badge-success">Healthy</span></p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Last Backup</label>
+                            <p>May 19, 2023 at 03:15 AM <span class="badge badge-success">Successful</span></p>
+                        </div>
+                        <div class="form-group">
+                            <label>Server Load</label>
+                            <p>23% <span class="badge badge-success">Normal</span></p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>PHP Version</label>
+                            <p>8.1.12</p>
+                        </div>
+                        <div class="form-group">
+                            <label>MySQL Version</label>
+                            <p>8.0.27</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-card-footer">
+                    <button class="btn btn-secondary">Check for Updates</button>
+                    <button class="btn btn-primary">Run System Diagnostics</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/admin-responsive.js"></script>
+</body>
+</html>

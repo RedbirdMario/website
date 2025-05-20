@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedBird Admin - Form Validation Demo</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-refined.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="../css/form-validation-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .form-title {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .validation-feedback {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--primary-red);
+        }
+        
+        .help-tooltip {
+            display: inline-block;
+            position: relative;
+            margin-left: 0.5rem;
+            color: var(--neutral-500);
+            cursor: help;
+        }
+        
+        .help-tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip-content {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--bg-tooltip, var(--neutral-800));
+            color: var(--text-tooltip, white);
+            text-align: center;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 0.8rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--bg-tooltip, var(--neutral-800)) transparent transparent transparent;
+        }
+        
+        .validation-summary {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .validation-summary ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .validation-summary li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .validation-summary li::before {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+            background-color: var(--status-danger);
+            border-radius: 50%;
+        }
+        
+        .validation-summary li.success::before {
+            background-color: var(--status-success);
+        }
+        
+        .password-strength-meter {
+            height: 5px;
+            background-color: var(--neutral-300);
+            margin-top: 0.5rem;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .password-strength-indicator {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .strength-weak {
+            width: 25%;
+            background-color: var(--status-danger);
+        }
+        
+        .strength-medium {
+            width: 50%;
+            background-color: var(--status-warning);
+        }
+        
+        .strength-strong {
+            width: 75%;
+            background-color: var(--status-info);
+        }
+        
+        .strength-very-strong {
+            width: 100%;
+            background-color: var(--status-success);
+        }
+        
+        .strength-label {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+            text-align: right;
+            color: var(--text-muted);
+        }
+        
+        .form-section-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .inline-help {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .inline-help i {
+            margin-right: 0.5rem;
+            color: var(--primary-red);
+        }
+        
+        .form-group-enhanced.is-submitting {
+            position: relative;
+        }
+        
+        .form-group-enhanced.is-submitting::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Interactive animation for loading state */
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+        
+        .form-group-enhanced.is-submitting::before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+            z-index: 20;
+            animation: spinner .8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header Component -->
+    <header class="admin-header">
+        <div class="admin-header-logo">
+            <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="admin-logo">
+            <span class="admin-title">Admin Dashboard</span>
+        </div>
+        <nav class="admin-nav">
+            <a href="dashboard-refined.html" class="admin-nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="user-management-refined.html" class="admin-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Benutzerverwaltung</span>
+            </a>
+            <a href="pipeline-management.html" class="admin-nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Pipeline</span>
+            </a>
+            <a href="form-validation-demo.html" class="admin-nav-item active">
+                <i class="fas fa-check-circle"></i>
+                <span>Formular-Validierung</span>
+            </a>
+        </nav>
+        <div class="admin-header-actions">
+            <button class="action-button notification-button" aria-label="Benachrichtigungen">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            <button class="action-button theme-toggle" aria-label="Dunkelmodus umschalten" data-theme-toggle>
+                <i class="fas fa-moon" data-theme-icon></i>
+            </button>
+            <div class="admin-user-menu">
+                <button class="user-menu-button">
+                    <div class="user-avatar">MN</div>
+                    <span class="user-name">Marion Nakowitz</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Content Area -->
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Administration</h3>
+                    <a href="dashboard-refined.html" class="sidebar-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="user-management-refined.html" class="sidebar-link">
+                        <i class="fas fa-users"></i>
+                        <span>Benutzerverwaltung</span>
+                    </a>
+                    <a href="pipeline-management.html" class="sidebar-link">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Pipeline-Management</span>
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Formulare</h3>
+                    <a href="form-validation-demo.html" class="sidebar-link active">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Formular-Validierung</span>
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Dokumenten-Upload</span>
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Einstellungen</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-content">
+            <div class="content-header">
+                <h1>Formular-Validierung</h1>
+                <p class="subtitle">Erweiterte Formularvalidierung mit Echtzeit-Feedback</p>
+            </div>
+            
+            <!-- Form Validation Demo -->
+            <div class="form-section-card">
+                <h2 class="form-title">Kundeninformationen</h2>
+                <p class="form-description">Alle Felder mit * sind Pflichtfelder. Die Validierung erfolgt in Echtzeit für ein besseres Benutzererlebnis.</p>
+                
+                <form class="form-enhanced" id="customer-form" data-ajax="true" data-demo="true">
+                    <div class="form-section">
+                        <h3 class="form-section-title">Persönliche Informationen</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="firstName" class="form-label-enhanced form-label-required">Vorname</label>
+                                    <input type="text" id="firstName" name="firstName" class="form-control-enhanced" required minlength="2">
+                                    <span class="form-help-text">Mindestens 2 Zeichen</span>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="lastName" class="form-label-enhanced form-label-required">Nachname</label>
+                                    <input type="text" id="lastName" name="lastName" class="form-control-enhanced" required minlength="2">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="email" class="form-label-enhanced form-label-required">E-Mail-Adresse</label>
+                                    <div class="input-with-icon">
+                                        <input type="email" id="email" name="email" class="form-control-enhanced" required>
+                                        <i class="fas fa-envelope input-icon"></i>
+                                    </div>
+                                    <div class="inline-help">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Wir senden wichtige Informationen an diese E-Mail-Adresse</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="phone" class="form-label-enhanced form-label-required">Telefonnummer</label>
+                                    <div class="input-with-icon">
+                                        <input type="tel" id="phone" name="phone" class="form-control-enhanced" required pattern="[0-9+\-\s()]{10,15}">
+                                        <i class="fas fa-phone input-icon"></i>
+                                    </div>
+                                    <span class="form-help-text">Format: +49 123 4567890</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3 class="form-section-title">Anmeldeinformationen</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="username" class="form-label-enhanced form-label-required">Benutzername</label>
+                                    <input type="text" id="username" name="username" class="form-control-enhanced" required minlength="4">
+                                    <span class="form-help-text">Mindestens 4 Zeichen, keine Sonderzeichen</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="password" class="form-label-enhanced form-label-required">
+                                        Passwort
+                                        <span class="help-tooltip">
+                                            <i class="fas fa-question-circle"></i>
+                                            <span class="tooltip-content">
+                                                Mindestens 8 Zeichen, mindestens ein Großbuchstabe, ein Kleinbuchstabe, eine Zahl und ein Sonderzeichen.
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <input type="password" id="password" name="password" class="form-control-enhanced" required data-validation="enhanced">
+                                    <div class="password-strength-meter">
+                                        <div class="password-strength-indicator" id="passwordStrength"></div>
+                                    </div>
+                                    <span class="strength-label" id="strengthLabel">Passwort nicht eingegeben</span>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group-enhanced">
+                                    <label for="confirmPassword" class="form-label-enhanced form-label-required">Passwort bestätigen</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control-enhanced" required data-match="password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3 class="form-section-title">Zusätzliche Informationen</h3>
+                        
+                        <div class="form-group-enhanced">
+                            <label for="clientType" class="form-label-enhanced">Kundentyp</label>
+                            <select id="clientType" name="clientType" class="custom-select-enhanced">
+                                <option value="">Bitte auswählen</option>
+                                <option value="private">Privatkunde</option>
+                                <option value="business">Geschäftskunde</option>
+                                <option value="investor">Investor</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">Kommunikationspräferenzen</label>
+                            
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="emailComm" name="communication[]" value="email" class="custom-control-input">
+                                <label for="emailComm" class="custom-control-label">E-Mail</label>
+                            </div>
+                            
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="phoneComm" name="communication[]" value="phone" class="custom-control-input">
+                                <label for="phoneComm" class="custom-control-label">Telefon</label>
+                            </div>
+                            
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="smsComm" name="communication[]" value="sms" class="custom-control-input">
+                                <label for="smsComm" class="custom-control-label">SMS</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label for="notes" class="form-label-enhanced">Notizen</label>
+                            <textarea id="notes" name="notes" class="form-control-enhanced" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <div class="toggle-switch-label">
+                                <span>Newsletter abonnieren</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="newsletter" name="newsletter">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="profilePhoto" name="profilePhoto">
+                                <label class="custom-file-label" for="profilePhoto">Profilbild auswählen</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="validation-summary" id="validationSummary" style="display: none;">
+                        <h4>Bitte korrigieren Sie folgende Fehler:</h4>
+                        <ul id="validationList"></ul>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Kunde anlegen</button>
+                        <button type="button" class="btn btn-secondary" id="resetForm">Zurücksetzen</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="validation-feedback">
+                <h3>Verbessertes Formular-Feedback</h3>
+                <p>Dieser Demo-Formular zeigt folgende Verbesserungen:</p>
+                <ul>
+                    <li>Echtzeit-Validierung während der Eingabe</li>
+                    <li>Visuelles Feedback durch Farben und Symbole</li>
+                    <li>Detaillierte Fehlermeldungen pro Eingabefeld</li>
+                    <li>Hilfe-Tooltips für komplexe Anforderungen</li>
+                    <li>Passwort-Stärkenanzeige mit Echtzeitüberprüfung</li>
+                    <li>Zugängliche Formulare mit ARIA-Attributen</li>
+                    <li>Zusammenfassung aller Fehler</li>
+                    <li>Touch- und Mobilgeräte-optimiert</li>
+                    <li>Animierte Übergänge für besseres visuelles Feedback</li>
+                    <li>AJAX-Formularübermittlung mit Ladeanimationen</li>
+                    <li>Tastaturfreundliche Navigation durch Formularfelder</li>
+                </ul>
+                <p class="mt-3"><strong>Hinweis:</strong> Dieses Formular läuft im Demo-Modus, d.h. beim Absenden wird nach 1,5 Sekunden eine simulierte erfolgreiche Antwort angezeigt.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/forms-enhanced.js"></script>
+    <script src="../js/password-validation.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize password strength meter
+            const passwordInput = document.getElementById('password');
+            const strengthIndicator = document.getElementById('passwordStrength');
+            const strengthLabel = document.getElementById('strengthLabel');
+            
+            passwordInput.addEventListener('input', function() {
+                updatePasswordStrength(this.value);
+            });
+            
+            function updatePasswordStrength(password) {
+                // Remove all classes first
+                strengthIndicator.className = 'password-strength-indicator';
+                
+                if (!password) {
+                    strengthLabel.textContent = 'Passwort nicht eingegeben';
+                    return;
+                }
+                
+                // Calculate password strength
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+                
+                // Character type checks
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[a-z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                // Variety check
+                const uniqueChars = new Set(password.split('')).size;
+                if (uniqueChars > password.length * 0.6) strength += 1;
+                
+                // Update UI based on strength
+                if (password.length < 4) {
+                    strengthIndicator.classList.add('strength-weak');
+                    strengthLabel.textContent = 'Sehr schwach';
+                } else if (strength < 3) {
+                    strengthIndicator.classList.add('strength-weak');
+                    strengthLabel.textContent = 'Schwach';
+                } else if (strength < 5) {
+                    strengthIndicator.classList.add('strength-medium');
+                    strengthLabel.textContent = 'Mittel';
+                } else if (strength < 7) {
+                    strengthIndicator.classList.add('strength-strong');
+                    strengthLabel.textContent = 'Stark';
+                } else {
+                    strengthIndicator.classList.add('strength-very-strong');
+                    strengthLabel.textContent = 'Sehr stark';
+                }
+            }
+            
+            // Reset form button
+            document.getElementById('resetForm').addEventListener('click', function() {
+                const form = document.getElementById('customer-form');
+                form.reset();
+                
+                // Reset validation styles
+                const formGroups = form.querySelectorAll('.form-group-enhanced');
+                formGroups.forEach(group => {
+                    group.classList.remove('is-valid', 'is-invalid');
+                });
+                
+                // Reset password strength indicator
+                strengthIndicator.className = 'password-strength-indicator';
+                strengthLabel.textContent = 'Passwort nicht eingegeben';
+                
+                // Hide validation summary
+                document.getElementById('validationSummary').style.display = 'none';
+                
+                // Show notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.info('Formular wurde zurückgesetzt.', 'Formular zurückgesetzt');
+                }
+            });
+            
+            // Form validation summary
+            const form = document.getElementById('customer-form');
+            const validationSummary = document.getElementById('validationSummary');
+            const validationList = document.getElementById('validationList');
+            
+            form.addEventListener('formValidationFailed', function() {
+                // Clear previous errors
+                validationList.innerHTML = '';
+                
+                // Collect all errors
+                const invalidInputs = form.querySelectorAll('.is-invalid');
+                
+                if (invalidInputs.length > 0) {
+                    validationSummary.style.display = 'block';
+                    
+                    invalidInputs.forEach(input => {
+                        const label = input.closest('.form-group-enhanced').querySelector('label').textContent.trim();
+                        const feedback = input.closest('.form-group-enhanced').querySelector('.invalid-feedback');
+                        
+                        const errorMessage = feedback 
+                            ? `${label}: ${feedback.textContent}` 
+                            : `${label} ist ungültig`;
+                        
+                        const li = document.createElement('li');
+                        li.textContent = errorMessage;
+                        validationList.appendChild(li);
+                    });
+                } else {
+                    validationSummary.style.display = 'none';
+                }
+            });
+            
+            form.addEventListener('formValidationSuccess', function() {
+                validationSummary.style.display = 'none';
+            });
+            
+            // Form submission success/error handling
+            form.addEventListener('formSubmissionSuccess', function(event) {
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Kundendaten wurden erfolgreich gespeichert.',
+                        'Kunde angelegt'
+                    );
+                }
+                
+                // Update validation summary with success messages
+                validationSummary.style.display = 'block';
+                validationList.innerHTML = '';
+                
+                const li = document.createElement('li');
+                li.textContent = 'Formular erfolgreich abgesendet';
+                li.className = 'success';
+                validationList.appendChild(li);
+            });
+            
+            form.addEventListener('formSubmissionError', function(event) {
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.danger(
+                        'Beim Speichern der Kundendaten ist ein Fehler aufgetreten.',
+                        'Fehler'
+                    );
+                }
+            });
+            
+            // Configure notifications if available
+            if (window.RedBirdNotify) {
+                window.RedBirdNotify.configure({
+                    position: 'top-right',
+                    duration: 5000,
+                    maxNotifications: 4
+                });
+            }
+        });
+    </script>
+</body>
+</html>

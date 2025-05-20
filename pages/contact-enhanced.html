@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt - RedBird Kundenportal</title>
+    <meta name="description" content="Nehmen Sie Kontakt mit unserem Team auf für Fragen zu Ihrem Immobilienkauf.">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#E72E2E">
+    <link rel="apple-touch-icon" href="../img/icons/icon-192x192.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/notifications-enhanced.css">
+    <link rel="stylesheet" href="../css/forms-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .contact-header {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .contact-method {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+        
+        .contact-method:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            background-color: var(--bg-soft);
+            border-radius: 50%;
+        }
+        
+        .contact-method h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .contact-advisor {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .advisor-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .advisor-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .advisor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .advisor-details h3 {
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .advisor-details p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .advisor-contacts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .advisor-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .advisor-contact-item i {
+            color: var(--primary-red);
+        }
+        
+        .advisor-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .map-container {
+            margin-top: 2rem;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            height: 250px;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .office-info {
+            margin-top: 1.5rem;
+        }
+        
+        .office-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .office-info p {
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .office-hours {
+            margin-top: 1rem;
+        }
+        
+        .office-hours-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        .office-hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .office-hours-list li:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .advisor-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .advisor-actions {
+                justify-content: center;
+            }
+            
+            .advisor-contacts {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    <nav class="main-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li class="nav-item" role="none"><a href="dashboard.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Dashboard</a></li>
+                <li class="nav-item" role="none"><a href="documents.html" role="menuitem"><i class="fas fa-file-alt" aria-hidden="true"></i> Dokumente</a></li>
+                <li class="nav-item" role="none"><a href="gallery.html" role="menuitem"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a></li>
+                <li class="nav-item" role="none"><a href="progress.html" role="menuitem"><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</a></li>
+                <li class="nav-item active" role="none"><a href="contact.html" role="menuitem" aria-current="page"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="language-switcher"></div>
+                <button class="theme-toggle" data-theme-toggle aria-label="Dark Mode umschalten" aria-pressed="false">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Laden...</span>
+                    <span class="user-role" id="userProperty">Laden...</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn" aria-label="Benutzermenü öffnen" aria-expanded="false" aria-haspopup="true" aria-controls="user-menu-dropdown"><i class="fas fa-user-circle" aria-hidden="true"></i></button>
+                    <div class="dropdown-content" id="user-menu-dropdown" role="menu">
+                        <a href="profile.html" role="menuitem"><i class="fas fa-user-cog" aria-hidden="true"></i> Profil</a>
+                        <a href="settings.html" role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="contact-container" id="main-content" role="main">
+        <div class="contact-header">
+            <h1>Kontakt</h1>
+            <p class="lead">Wir sind für Sie da. Kontaktieren Sie uns über einen der folgenden Kanäle oder nutzen Sie unser Kontaktformular.</p>
+        </div>
+        
+        <div class="contact-methods">
+            <div class="contact-method">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>E-Mail</h3>
+                <p>support@redbird-realestate.com</p>
+                <p class="text-muted">Antwort innerhalb von 24 Stunden</p>
+            </div>
+            
+            <div class="contact-method">
+                <div class="contact-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3>Telefon</h3>
+                <p>+49 30 12345678</p>
+                <p class="text-muted">Mo-Fr: 9:00 - 18:00 Uhr</p>
+            </div>
+            
+            <div class="contact-method">
+                <div class="contact-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>WhatsApp</h3>
+                <p>+49 30 12345679</p>
+                <p class="text-muted">Schnelle Hilfe über WhatsApp</p>
+            </div>
+        </div>
+        
+        <div class="contact-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-paper-plane"></i> Nachricht senden</h2>
+                </div>
+                <div class="card-body">
+                    <form class="form-enhanced" id="contactForm">
+                        <div class="form-group-enhanced">
+                            <label for="subject">Betreff</label>
+                            <select id="subject" class="form-control-enhanced" required>
+                                <option value="">Bitte wählen...</option>
+                                <option value="Frage zum Kaufprozess">Frage zum Kaufprozess</option>
+                                <option value="Dokumente">Dokumente</option>
+                                <option value="Zahlungen">Zahlungen</option>
+                                <option value="Technische Probleme">Technische Probleme</option>
+                                <option value="Sonstiges">Sonstiges</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label for="message">Ihre Nachricht</label>
+                            <textarea id="message" class="form-control-enhanced" rows="6" placeholder="Wie können wir Ihnen helfen?" required></textarea>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <div class="form-check-enhanced">
+                                <input type="checkbox" id="copy-to-me" class="form-check-input-enhanced">
+                                <label for="copy-to-me" class="form-check-label-enhanced">Kopie an meine E-Mail-Adresse senden</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions-enhanced">
+                            <button type="submit" class="btn btn-primary">Nachricht senden</button>
+                            <button type="reset" class="btn btn-secondary">Zurücksetzen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div>
+                <div class="contact-advisor">
+                    <h2 class="mb-4"><i class="fas fa-user-tie"></i> Ihr persönlicher Berater</h2>
+                    
+                    <div class="advisor-info">
+                        <div class="advisor-image">
+                            <img src="../img/contact-person.jpg" alt="Ihr Berater" id="advisorImage">
+                        </div>
+                        <div class="advisor-details">
+                            <h3 id="advisorName">Laden...</h3>
+                            <p id="advisorRole">Immobilienberater/in</p>
+                            
+                            <div class="advisor-contacts">
+                                <div class="advisor-contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span id="advisorEmail">loading@redbird.com</span>
+                                </div>
+                                <div class="advisor-contact-item">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <span id="advisorPhone">+49 12345 67890</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="advisor-actions">
+                        <a href="#" id="emailAdvisorBtn" class="btn btn-outline"><i class="fas fa-envelope"></i> E-Mail senden</a>
+                        <a href="#" id="callAdvisorBtn" class="btn btn-primary"><i class="fas fa-phone-alt"></i> Anrufen</a>
+                        <a href="#" id="bookMeetingBtn" class="btn btn-outline"><i class="fas fa-calendar-alt"></i> Termin buchen</a>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2><i class="fas fa-map-marker-alt"></i> Unsere Bürostandorte</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="map-container">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.654294921181!2d13.32897231579353!3d52.50793627981043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a850242b2bf483%3A0x9582e91ad01bd357!2sKurf%C3%BCrstendamm%2C%20Berlin!5e0!3m2!1sen!2sde!4v1652345678901!5m2!1sen!2sde" allowfullscreen="" loading="lazy" title="Standortkarte" aria-label="Karte mit dem Standort des RedBird Büros"></iframe>
+                        </div>
+                        
+                        <div class="office-info">
+                            <h4>RedBird Zentrale Berlin</h4>
+                            <p>Kurfürstendamm 123</p>
+                            <p>10719 Berlin</p>
+                            <p>Deutschland</p>
+                            
+                            <div class="office-hours">
+                                <h5>Öffnungszeiten:</h5>
+                                <ul class="office-hours-list">
+                                    <li>
+                                        <span>Montag - Freitag</span>
+                                        <span>9:00 - 18:00 Uhr</span>
+                                    </li>
+                                    <li>
+                                        <span>Samstag</span>
+                                        <span>10:00 - 14:00 Uhr</span>
+                                    </li>
+                                    <li>
+                                        <span>Sonntag</span>
+                                        <span>Geschlossen</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add API client and auth service before main.js -->
+    <script src="../js/config.js" type="module"></script>
+<script src="../js/api-client.js" type="module"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/forms-enhanced.js"></script>
+    <script src="../js/keyboard-nav.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/language-switcher.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language switcher
+            if (window.LanguageSwitcher) {
+                const languageSwitcher = new LanguageSwitcher({
+                    containerId: 'language-switcher',
+                    i18nService: window.i18n
+                });
+            }
+            
+            // Initialize accessibility features
+            initAccessibility();
+            
+            // Function to initialize accessibility features
+            function initAccessibility() {
+                // Update theme toggle state based on current theme
+                const themeToggle = document.querySelector('[data-theme-toggle]');
+                if (themeToggle) {
+                    const currentTheme = localStorage.getItem('redbird_theme') || 'light';
+                    themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
+                    
+                    // Update aria-pressed when theme changes
+                    themeToggle.addEventListener('click', function() {
+                        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                        this.setAttribute('aria-pressed', isDark);
+                    });
+                }
+                
+                // Add keyboard support for dropdown menu
+                const dropdownBtn = document.querySelector('.dropbtn');
+                const dropdownContent = document.querySelector('.dropdown-content');
+                
+                if (dropdownBtn && dropdownContent) {
+                    // Toggle dropdown on click
+                    dropdownBtn.addEventListener('click', function() {
+                        const expanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !expanded);
+                        dropdownContent.style.display = expanded ? 'none' : 'block';
+                    });
+                    
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.matches('.dropbtn') && !e.target.closest('.dropdown-content')) {
+                            dropdownBtn.setAttribute('aria-expanded', 'false');
+                            dropdownContent.style.display = 'none';
+                        }
+                    });
+                    
+                    // Handle keyboard navigation within dropdown
+                    const menuItems = dropdownContent.querySelectorAll('[role="menuitem"]');
+                    menuItems.forEach((item, index) => {
+                        item.addEventListener('keydown', function(e) {
+                            let nextItem = null;
+                            
+                            // Arrow down: go to next item
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                nextItem = menuItems[(index + 1) % menuItems.length];
+                            }
+                            // Arrow up: go to previous item
+                            else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                nextItem = menuItems[(index - 1 + menuItems.length) % menuItems.length];
+                            }
+                            // Escape: close dropdown
+                            else if (e.key === 'Escape') {
+                                e.preventDefault();
+                                dropdownBtn.setAttribute('aria-expanded', 'false');
+                                dropdownContent.style.display = 'none';
+                                dropdownBtn.focus();
+                                return;
+                            }
+                            
+                            if (nextItem) {
+                                nextItem.focus();
+                            }
+                        });
+                    });
+                }
+            }
+            
+            // Check authentication
+            if (!window.authService.isAuthenticated() && 
+                (!window.demoAuthService || !window.demoAuthService.isAuthenticated())) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Get current user from local storage (while API loads)
+            const currentUser = window.authService.getCurrentUser() || 
+                               (window.demoAuthService ? window.demoAuthService.getCurrentUser() : null);
+            
+            if (currentUser) {
+                // Display initial user info from localStorage
+                document.getElementById('userName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+            }
+            
+            // Set up logout functionality
+            document.getElementById('logoutLink').addEventListener('click', async function(e) {
+                e.preventDefault();
+                // Check which auth service to use
+                if (localStorage.getItem('rb_is_demo') === 'true') {
+                    window.demoAuthService.logout();
+                } else {
+                    await window.authService.logout();
+                }
+                window.location.href = '../login.html';
+            });
+            
+            try {
+                // Fetch advisor data from API
+                const response = await window.api.get('/user/advisor');
+                
+                if (response.advisor) {
+                    const advisor = response.advisor;
+                    document.getElementById('advisorName').textContent = advisor.name || 'Nicht zugewiesen';
+                    document.getElementById('advisorRole').textContent = advisor.role || 'Immobilienberater';
+                    document.getElementById('advisorEmail').textContent = advisor.email || 'kontakt@redbird.com';
+                    document.getElementById('advisorPhone').textContent = advisor.phone || '+49 30 12345678';
+                    
+                    if (advisor.email) {
+                        document.getElementById('emailAdvisorBtn').href = `mailto:${advisor.email}`;
+                    }
+                    
+                    if (advisor.phone) {
+                        document.getElementById('callAdvisorBtn').href = `tel:${advisor.phone}`;
+                    }
+                    
+                    if (advisor.calendar_url) {
+                        document.getElementById('bookMeetingBtn').href = advisor.calendar_url;
+                    }
+                    
+                    if (advisor.avatar_url) {
+                        document.getElementById('advisorImage').src = advisor.avatar_url;
+                    }
+                } else {
+                    // Use fallback data
+                    const advisorData = {
+                        name: "Anna Müller",
+                        role: "Senior Immobilienberaterin",
+                        email: "anna.mueller@redbird-realestate.com",
+                        phone: "+49 30 123456789",
+                        image: "../img/contact-person.jpg"
+                    };
+                    
+                    document.getElementById('advisorName').textContent = advisorData.name;
+                    document.getElementById('advisorRole').textContent = advisorData.role;
+                    document.getElementById('advisorEmail').textContent = advisorData.email;
+                    document.getElementById('advisorPhone').textContent = advisorData.phone;
+                    document.getElementById('emailAdvisorBtn').href = `mailto:${advisorData.email}`;
+                    document.getElementById('callAdvisorBtn').href = `tel:${advisorData.phone}`;
+                    document.getElementById('advisorImage').src = advisorData.image;
+                }
+                
+                // Show success notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Kontaktdaten wurden erfolgreich geladen.',
+                        'Daten geladen'
+                    );
+                }
+                
+            } catch (error) {
+                console.error('Error fetching advisor data:', error);
+                
+                // Use fallback data for demo
+                const advisorData = {
+                    name: "Anna Müller",
+                    role: "Senior Immobilienberaterin",
+                    email: "anna.mueller@redbird-realestate.com",
+                    phone: "+49 30 123456789",
+                    image: "../img/contact-person.jpg"
+                };
+                
+                document.getElementById('advisorName').textContent = advisorData.name;
+                document.getElementById('advisorRole').textContent = advisorData.role;
+                document.getElementById('advisorEmail').textContent = advisorData.email;
+                document.getElementById('advisorPhone').textContent = advisorData.phone;
+                document.getElementById('emailAdvisorBtn').href = `mailto:${advisorData.email}`;
+                document.getElementById('callAdvisorBtn').href = `tel:${advisorData.phone}`;
+                document.getElementById('advisorImage').src = advisorData.image;
+                
+                // Show error notification
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.warning(
+                        'Kontaktdaten konnten nicht vom Server geladen werden. Fallback-Daten werden angezeigt.',
+                        'Verbindungsproblem'
+                    );
+                }
+            }
+            
+            // Handle contact form submission
+            document.getElementById('contactForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                const copyToMe = document.getElementById('copy-to-me').checked;
+                
+                try {
+                    // Here you would normally send the data to the server
+                    // await window.api.post('/contact/message', { subject, message, copy_to_me: copyToMe });
+                    
+                    // For demo, we'll just simulate a successful submission
+                    console.log('Contact form submitted:', { subject, message, copyToMe });
+                    
+                    // Show success notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.success(
+                            'Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns in Kürze bei Ihnen melden.',
+                            'Nachricht gesendet'
+                        );
+                    }
+                    
+                    // Reset form
+                    this.reset();
+                    
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    
+                    // Show error notification
+                    if (window.RedBirdNotify) {
+                        window.RedBirdNotify.danger(
+                            'Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.',
+                            'Fehler'
+                        );
+                    }
+                }
+            });
+            
+            // Update page with current language if i18n is available
+            if (window.i18n) {
+                window.i18n.translatePage();
+                
+                // Listen for language changes
+                document.addEventListener('languageChanged', function(event) {
+                    // Update the page with new translations
+                    window.i18n.translatePage();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

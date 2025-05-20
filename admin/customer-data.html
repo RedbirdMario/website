@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Data Management - RedBird Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-styles.css">
+    <link rel="stylesheet" href="../css/customer-data.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+                <span class="admin-badge">Admin</span>
+            </div>
+            <ul class="admin-nav-menu">
+                <li class="admin-nav-item"><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="admin-nav-item"><a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a></li>
+                <li class="admin-nav-item"><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                <li class="admin-nav-item"><a href="unit-onboarding.html"><i class="fas fa-home"></i> Unit Onboarding</a></li>
+                <li class="admin-nav-item"><a href="messaging.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                <li class="admin-nav-item active"><a href="customer-data.html"><i class="fas fa-database"></i> Customer Data</a></li>
+                <li class="admin-nav-item"><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+                <li class="admin-nav-item"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="admin-user-menu">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-content-wrapper">
+        <div class="admin-sidebar">
+            <div class="sidebar-section">
+                <h3>Quick Filters</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">All Customers</a></li>
+                    <li><a href="#">Recently Added</a></li>
+                    <li><a href="#">Needs Analysis Pending</a></li>
+                    <li><a href="#">High Priority</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>Data Quality</h3>
+                <div class="data-quality-meter">
+                    <div class="meter-label">
+                        <span>Overall Completeness</span>
+                        <span>78%</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 78%;"></div>
+                    </div>
+                </div>
+                <div class="data-quality-stats">
+                    <div class="quality-stat">
+                        <div class="stat-label">Missing Contact Info</div>
+                        <div class="stat-value">8</div>
+                    </div>
+                    <div class="quality-stat">
+                        <div class="stat-label">Incomplete Preferences</div>
+                        <div class="stat-value">12</div>
+                    </div>
+                    <div class="quality-stat">
+                        <div class="stat-label">Missing Documents</div>
+                        <div class="stat-value">15</div>
+                    </div>
+                </div>
+                <a href="#" class="action-link">Run Data Audit</a>
+            </div>
+            <div class="sidebar-section">
+                <h3>Data Integrations</h3>
+                <ul class="integration-list">
+                    <li class="integration-item connected">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </li>
+                    <li class="integration-item connected">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </li>
+                    <li class="integration-item pending">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Contract System</span>
+                    </li>
+                    <li class="integration-item disconnected">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics Platform</span>
+                    </li>
+                </ul>
+                <a href="#" class="action-link">Manage Integrations</a>
+            </div>
+        </div>
+        
+        <div class="admin-main-content">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Customer Data Management</h1>
+                    <p>View, edit, and analyze customer information and preferences</p>
+                </div>
+                <div class="page-actions">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search customers..." class="search-input">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-primary" id="addCustomerBtn"><i class="fas fa-plus"></i> Add Customer</button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle">
+                            <i class="fas fa-file-export"></i> Export
+                        </button>
+                        <div class="dropdown-content export-dropdown">
+                            <a href="#"><i class="fas fa-file-csv"></i> Export as CSV</a>
+                            <a href="#"><i class="fas fa-file-excel"></i> Export as Excel</a>
+                            <a href="#"><i class="fas fa-file-pdf"></i> Export as PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="customers">Customers</button>
+                    <button class="tab" data-tab="needs-analysis">Needs Analysis</button>
+                    <button class="tab" data-tab="data-insights">Data Insights</button>
+                    <button class="tab" data-tab="reports">Reports</button>
+                </div>
+                
+                <div class="tab-content active" id="customers-tab">
+                    <div class="table-controls">
+                        <div class="table-filters">
+                            <div class="filter-item">
+                                <label for="statusFilter">Status</label>
+                                <select id="statusFilter">
+                                    <option value="all">All</option>
+                                    <option value="active">Active</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label for="typeFilter">Customer Type</label>
+                                <select id="typeFilter">
+                                    <option value="all">All</option>
+                                    <option value="buyer">Buyer</option>
+                                    <option value="investor">Investor</option>
+                                    <option value="renter">Renter</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label for="dateFilter">Date Added</label>
+                                <select id="dateFilter">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-actions">
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-filter"></i> More Filters</button>
+                            <button class="btn btn-sm btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                    <th>Customer Name <i class="fas fa-sort"></i></th>
+                                    <th>Contact Info</th>
+                                    <th>Status <i class="fas fa-sort"></i></th>
+                                    <th>Customer Type</th>
+                                    <th>Date Added <i class="fas fa-sort"></i></th>
+                                    <th>Data Completeness</th>
+                                    <th class="actions-cell">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="select-row">
+                                    </td>
+                                    <td>
+                                        <div class="customer-name-cell">
+                                            <img src="../img/avatar1.jpg" alt="John Smith" class="customer-avatar">
+                                            <span>John Smith</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info-cell">
+                                            <div><i class="fas fa-envelope"></i> john.smith@example.com</div>
+                                            <div><i class="fas fa-phone"></i> +44 7890 123456</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>Buyer</td>
+                                    <td>May 15, 2025</td>
+                                    <td>
+                                        <div class="completeness-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill" style="width: 85%;"></div>
+                                            </div>
+                                            <span class="meter-value">85%</span>
+                                        </div>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-icon-btn view-data" data-id="cust1" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-icon-btn edit-data" data-id="cust1" title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-icon-btn analyze-needs" data-id="cust1" title="Needs Analysis">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="select-row">
+                                    </td>
+                                    <td>
+                                        <div class="customer-name-cell">
+                                            <img src="../img/avatar2.jpg" alt="Maria Garcia" class="customer-avatar">
+                                            <span>Maria Garcia</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info-cell">
+                                            <div><i class="fas fa-envelope"></i> maria.garcia@example.com</div>
+                                            <div><i class="fas fa-phone"></i> +33 6789 01234</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Pending</span></td>
+                                    <td>Investor</td>
+                                    <td>May 14, 2025</td>
+                                    <td>
+                                        <div class="completeness-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill" style="width: 60%;"></div>
+                                            </div>
+                                            <span class="meter-value">60%</span>
+                                        </div>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-icon-btn view-data" data-id="cust2" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-icon-btn edit-data" data-id="cust2" title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-icon-btn analyze-needs" data-id="cust2" title="Needs Analysis">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="select-row">
+                                    </td>
+                                    <td>
+                                        <div class="customer-name-cell">
+                                            <img src="../img/avatar3.jpg" alt="Ahmed Hassan" class="customer-avatar">
+                                            <span>Ahmed Hassan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info-cell">
+                                            <div><i class="fas fa-envelope"></i> ahmed.hassan@example.com</div>
+                                            <div><i class="fas fa-phone"></i> +971 50 123 4567</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>Buyer</td>
+                                    <td>May 10, 2025</td>
+                                    <td>
+                                        <div class="completeness-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill warning" style="width: 45%;"></div>
+                                            </div>
+                                            <span class="meter-value warning">45%</span>
+                                        </div>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-icon-btn view-data" data-id="cust3" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-icon-btn edit-data" data-id="cust3" title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-icon-btn analyze-needs" data-id="cust3" title="Needs Analysis">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="select-row">
+                                    </td>
+                                    <td>
+                                        <div class="customer-name-cell">
+                                            <img src="../img/avatar4.jpg" alt="Lisa Chen" class="customer-avatar">
+                                            <span>Lisa Chen</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info-cell">
+                                            <div><i class="fas fa-envelope"></i> lisa.chen@example.com</div>
+                                            <div><i class="fas fa-phone"></i> +1 234 567 8910</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge inactive">Inactive</span></td>
+                                    <td>Renter</td>
+                                    <td>May 8, 2025</td>
+                                    <td>
+                                        <div class="completeness-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill" style="width: 90%;"></div>
+                                            </div>
+                                            <span class="meter-value">90%</span>
+                                        </div>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-icon-btn view-data" data-id="cust4" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-icon-btn edit-data" data-id="cust4" title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-icon-btn analyze-needs" data-id="cust4" title="Needs Analysis">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="select-row">
+                                    </td>
+                                    <td>
+                                        <div class="customer-name-cell">
+                                            <img src="../img/avatar5.jpg" alt="Thomas Weber" class="customer-avatar">
+                                            <span>Thomas Weber</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info-cell">
+                                            <div><i class="fas fa-envelope"></i> thomas.weber@example.com</div>
+                                            <div><i class="fas fa-phone"></i> +49 151 1234567</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>Investor</td>
+                                    <td>May 5, 2025</td>
+                                    <td>
+                                        <div class="completeness-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill" style="width: 75%;"></div>
+                                            </div>
+                                            <span class="meter-value">75%</span>
+                                        </div>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="action-icon-btn view-data" data-id="cust5" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-icon-btn edit-data" data-id="cust5" title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-icon-btn analyze-needs" data-id="cust5" title="Needs Analysis">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <span class="pagination-ellipsis">...</span>
+                        <button class="pagination-btn">10</button>
+                        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="needs-analysis-tab">
+                    <div class="needs-analysis-dashboard">
+                        <div class="analysis-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                                <div class="stat-content">
+                                    <div class="stat-value">42</div>
+                                    <div class="stat-label">Total Analyses</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="stat-content">
+                                    <div class="stat-value">28</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                                <div class="stat-content">
+                                    <div class="stat-value">14</div>
+                                    <div class="stat-label">Pending</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="stat-content">
+                                    <div class="stat-value">67%</div>
+                                    <div class="stat-label">Completion Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-filters">
+                            <div class="filter-group">
+                                <button class="filter-btn active">All</button>
+                                <button class="filter-btn">Completed</button>
+                                <button class="filter-btn">Pending</button>
+                                <button class="filter-btn">Overdue</button>
+                            </div>
+                            <button class="btn btn-primary"><i class="fas fa-plus"></i> New Analysis</button>
+                        </div>
+                        
+                        <div class="analysis-list">
+                            <div class="analysis-item">
+                                <div class="analysis-header">
+                                    <div class="customer-info">
+                                        <img src="../img/avatar1.jpg" alt="John Smith" class="customer-avatar">
+                                        <div>
+                                            <h4>John Smith</h4>
+                                            <p><i class="fas fa-calendar-alt"></i> Created: May 15, 2025</p>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-status completed">
+                                        <i class="fas fa-check-circle"></i> Completed
+                                    </div>
+                                </div>
+                                <div class="analysis-content">
+                                    <div class="analysis-section">
+                                        <h5>Property Preferences</h5>
+                                        <div class="preference-tags">
+                                            <span class="tag">Sea View</span>
+                                            <span class="tag">2-3 Bedrooms</span>
+                                            <span class="tag">Kyrenia</span>
+                                            <span class="tag">Modern Style</span>
+                                            <span class="tag">Swimming Pool</span>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-section">
+                                        <h5>Investment Goals</h5>
+                                        <ul class="analysis-list-items">
+                                            <li>Primary residence with rental potential</li>
+                                            <li>5-year investment horizon</li>
+                                            <li>Budget: €150,000 - €200,000</li>
+                                        </ul>
+                                    </div>
+                                    <div class="analysis-section">
+                                        <h5>Key Requirements</h5>
+                                        <ul class="analysis-list-items">
+                                            <li>Close to amenities and beaches</li>
+                                            <li>Prefer ground floor or with elevator</li>
+                                            <li>Security features</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="analysis-footer">
+                                    <div class="analyst-info">
+                                        <img src="../img/avatar-sarah.jpg" alt="Sarah Williams" class="avatar-sm">
+                                        <span>Analyzed by: Sarah Williams</span>
+                                    </div>
+                                    <div class="analysis-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View Full Analysis</button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i> Edit</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analysis-item">
+                                <div class="analysis-header">
+                                    <div class="customer-info">
+                                        <img src="../img/avatar2.jpg" alt="Maria Garcia" class="customer-avatar">
+                                        <div>
+                                            <h4>Maria Garcia</h4>
+                                            <p><i class="fas fa-calendar-alt"></i> Created: May 14, 2025</p>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-status pending">
+                                        <i class="fas fa-clock"></i> Pending
+                                    </div>
+                                </div>
+                                <div class="analysis-content">
+                                    <div class="analysis-section">
+                                        <h5>Property Preferences</h5>
+                                        <div class="preference-tags">
+                                            <span class="tag">Mountain View</span>
+                                            <span class="tag">1-2 Bedrooms</span>
+                                            <span class="tag">Esentepe</span>
+                                            <span class="tag">Traditional Style</span>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-section">
+                                        <h5>Investment Goals</h5>
+                                        <div class="incomplete-section">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span>This section needs to be completed</span>
+                                        </div>
+                                    </div>
+                                    <div class="analysis-section">
+                                        <h5>Key Requirements</h5>
+                                        <ul class="analysis-list-items">
+                                            <li>Quiet location</li>
+                                            <li>Garden or large terrace</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="analysis-footer">
+                                    <div class="analyst-info">
+                                        <img src="../img/avatar-mike.jpg" alt="Mike Peterson" class="avatar-sm">
+                                        <span>Assigned to: Mike Peterson</span>
+                                    </div>
+                                    <div class="analysis-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View Details</button>
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-clipboard-check"></i> Complete Analysis</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="load-more">
+                            <button class="btn btn-outline btn-block">Load More</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="data-insights-tab">
+                    <div class="insights-dashboard">
+                        <div class="insights-header">
+                            <h2>Customer Data Insights</h2>
+                            <div class="insights-controls">
+                                <div class="date-range-picker">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Last 30 Days</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            </div>
+                        </div>
+                        
+                        <div class="insights-grid">
+                            <div class="insight-panel">
+                                <h3>Customer Demographics</h3>
+                                <div class="chart-container">
+                                    <canvas id="demographicsChart"></canvas>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: #4e73df;"></span>
+                                        <span>UK (38%)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: #1cc88a;"></span>
+                                        <span>Germany (22%)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: #36b9cc;"></span>
+                                        <span>Russia (15%)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: #f6c23e;"></span>
+                                        <span>UAE (12%)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: #e74a3b;"></span>
+                                        <span>Other (13%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-panel">
+                                <h3>Property Preferences</h3>
+                                <div class="chart-container">
+                                    <canvas id="preferencesChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-panel">
+                                <h3>Data Completion Rate</h3>
+                                <div class="chart-container">
+                                    <canvas id="completionChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-panel">
+                                <h3>Top Property Locations</h3>
+                                <div class="ranking-list">
+                                    <div class="ranking-item">
+                                        <div class="ranking-position">1</div>
+                                        <div class="ranking-content">
+                                            <div class="ranking-name">Kyrenia</div>
+                                            <div class="ranking-bar">
+                                                <div class="ranking-fill" style="width: 85%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ranking-value">85%</div>
+                                    </div>
+                                    <div class="ranking-item">
+                                        <div class="ranking-position">2</div>
+                                        <div class="ranking-content">
+                                            <div class="ranking-name">Famagusta</div>
+                                            <div class="ranking-bar">
+                                                <div class="ranking-fill" style="width: 65%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ranking-value">65%</div>
+                                    </div>
+                                    <div class="ranking-item">
+                                        <div class="ranking-position">3</div>
+                                        <div class="ranking-content">
+                                            <div class="ranking-name">Iskele</div>
+                                            <div class="ranking-bar">
+                                                <div class="ranking-fill" style="width: 40%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ranking-value">40%</div>
+                                    </div>
+                                    <div class="ranking-item">
+                                        <div class="ranking-position">4</div>
+                                        <div class="ranking-content">
+                                            <div class="ranking-name">Esentepe</div>
+                                            <div class="ranking-bar">
+                                                <div class="ranking-fill" style="width: 35%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ranking-value">35%</div>
+                                    </div>
+                                    <div class="ranking-item">
+                                        <div class="ranking-position">5</div>
+                                        <div class="ranking-content">
+                                            <div class="ranking-name">Karpaz</div>
+                                            <div class="ranking-bar">
+                                                <div class="ranking-fill" style="width: 15%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ranking-value">15%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="reports-tab">
+                    <div class="reports-dashboard">
+                        <div class="reports-header">
+                            <h2>Customer Data Reports</h2>
+                            <button class="btn btn-primary"><i class="fas fa-plus"></i> Create Report</button>
+                        </div>
+                        
+                        <div class="saved-reports">
+                            <h3>Saved Reports</h3>
+                            <div class="report-grid">
+                                <div class="report-card">
+                                    <div class="report-icon"><i class="fas fa-chart-pie"></i></div>
+                                    <div class="report-info">
+                                        <h4>Customer Demographics</h4>
+                                        <p>Overview of customer countries, ages, and investment preferences</p>
+                                    </div>
+                                    <div class="report-meta">
+                                        <span><i class="fas fa-calendar-alt"></i> Updated May 15, 2025</span>
+                                    </div>
+                                    <div class="report-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-download"></i> Download</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-card">
+                                    <div class="report-icon"><i class="fas fa-search-dollar"></i></div>
+                                    <div class="report-info">
+                                        <h4>Investment Trends</h4>
+                                        <p>Analysis of property budgets, ROI expectations, and investment horizons</p>
+                                    </div>
+                                    <div class="report-meta">
+                                        <span><i class="fas fa-calendar-alt"></i> Updated May 12, 2025</span>
+                                    </div>
+                                    <div class="report-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-download"></i> Download</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-card">
+                                    <div class="report-icon"><i class="fas fa-home"></i></div>
+                                    <div class="report-info">
+                                        <h4>Property Preferences</h4>
+                                        <p>Breakdown of location preferences, property types, and amenities</p>
+                                    </div>
+                                    <div class="report-meta">
+                                        <span><i class="fas fa-calendar-alt"></i> Updated May 10, 2025</span>
+                                    </div>
+                                    <div class="report-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-download"></i> Download</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-card">
+                                    <div class="report-icon"><i class="fas fa-clipboard-list"></i></div>
+                                    <div class="report-info">
+                                        <h4>Needs Analysis Summary</h4>
+                                        <p>Summary of completed needs analyses and identified key requirements</p>
+                                    </div>
+                                    <div class="report-meta">
+                                        <span><i class="fas fa-calendar-alt"></i> Updated May 8, 2025</span>
+                                    </div>
+                                    <div class="report-actions">
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-download"></i> Download</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="report-templates">
+                            <h3>Report Templates</h3>
+                            <div class="template-grid">
+                                <div class="template-card">
+                                    <div class="template-icon"><i class="fas fa-users"></i></div>
+                                    <div class="template-info">
+                                        <h4>Customer Overview</h4>
+                                        <p>General statistics about customer base</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</button>
+                                </div>
+                                
+                                <div class="template-card">
+                                    <div class="template-icon"><i class="fas fa-filter"></i></div>
+                                    <div class="template-info">
+                                        <h4>Custom Segment</h4>
+                                        <p>Create report based on custom filters</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</button>
+                                </div>
+                                
+                                <div class="template-card">
+                                    <div class="template-icon"><i class="fas fa-chart-line"></i></div>
+                                    <div class="template-info">
+                                        <h4>Trend Analysis</h4>
+                                        <p>Time-based trend analysis for selected metrics</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</button>
+                                </div>
+                                
+                                <div class="template-card">
+                                    <div class="template-icon"><i class="fas fa-table"></i></div>
+                                    <div class="template-info">
+                                        <h4>Data Export</h4>
+                                        <p>Export raw data for external analysis</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Needs Analysis Modal -->
+    <div class="modal" id="needsAnalysisModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Customer Needs Analysis</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="customer-summary">
+                    <div class="customer-avatar-lg">
+                        <img src="../img/avatar1.jpg" alt="John Smith">
+                    </div>
+                    <div class="customer-details">
+                        <h3>John Smith</h3>
+                        <div class="detail-items">
+                            <div class="detail-item"><i class="fas fa-envelope"></i> john.smith@example.com</div>
+                            <div class="detail-item"><i class="fas fa-phone"></i> +44 7890 123456</div>
+                            <div class="detail-item"><i class="fas fa-map-marker-alt"></i> London, UK</div>
+                        </div>
+                    </div>
+                    <div class="customer-status">
+                        <span class="status-badge active">Active</span>
+                    </div>
+                </div>
+                
+                <form id="needsAnalysisForm">
+                    <div class="form-section">
+                        <h3>Purpose & Timeline</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="purchasePurpose">Primary Purpose</label>
+                                <select id="purchasePurpose" name="purchasePurpose" required>
+                                    <option value="">Select Purpose</option>
+                                    <option value="residence">Primary Residence</option>
+                                    <option value="holiday">Holiday Home</option>
+                                    <option value="investment">Investment Property</option>
+                                    <option value="mixed">Mixed Use</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timeline">Purchase Timeline</label>
+                                <select id="timeline" name="timeline" required>
+                                    <option value="">Select Timeline</option>
+                                    <option value="immediate">Immediate (1-3 months)</option>
+                                    <option value="shortterm">Short-term (3-6 months)</option>
+                                    <option value="mediumterm">Medium-term (6-12 months)</option>
+                                    <option value="longterm">Long-term (12+ months)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label>If Investment, What is the Goal?</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="investmentGoal" value="rental"> Rental Income</label>
+                                    <label><input type="checkbox" name="investmentGoal" value="appreciation"> Capital Appreciation</label>
+                                    <label><input type="checkbox" name="investmentGoal" value="citizenship"> Citizenship/Residency</label>
+                                    <label><input type="checkbox" name="investmentGoal" value="tax"> Tax Benefits</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Budget & Financing</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="budgetMin">Budget Range</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="budgetMin" name="budgetMin" placeholder="Min €" required>
+                                    <span>to</span>
+                                    <input type="number" id="budgetMax" name="budgetMax" placeholder="Max €" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="financing">Financing Method</label>
+                                <select id="financing" name="financing" required>
+                                    <option value="">Select Financing</option>
+                                    <option value="cash">Cash Purchase</option>
+                                    <option value="mortgage">Mortgage/Financing</option>
+                                    <option value="installment">Developer Installment Plan</option>
+                                    <option value="mixed">Mixed Financing</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="downPayment">Down Payment Capability</label>
+                                <select id="downPayment" name="downPayment">
+                                    <option value="">Select Down Payment</option>
+                                    <option value="30">30% or less</option>
+                                    <option value="50">30% - 50%</option>
+                                    <option value="70">50% - 70%</option>
+                                    <option value="100">Over 70%</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="monthlyBudget">Monthly Payment Budget</label>
+                                <input type="number" id="monthlyBudget" name="monthlyBudget" placeholder="Monthly €">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Property Preferences</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="propertyType">Property Type</label>
+                                <select id="propertyType" name="propertyType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="townhouse">Townhouse</option>
+                                    <option value="penthouse">Penthouse</option>
+                                    <option value="land">Land</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="bedrooms">Bedrooms</label>
+                                <select id="bedrooms" name="bedrooms" required>
+                                    <option value="">Select Bedrooms</option>
+                                    <option value="studio">Studio</option>
+                                    <option value="1">1 Bedroom</option>
+                                    <option value="2">2 Bedrooms</option>
+                                    <option value="3">3 Bedrooms</option>
+                                    <option value="4">4+ Bedrooms</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Preferred Locations</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="location" value="kyrenia"> Kyrenia</label>
+                                    <label><input type="checkbox" name="location" value="famagusta"> Famagusta</label>
+                                    <label><input type="checkbox" name="location" value="iskele"> Iskele</label>
+                                    <label><input type="checkbox" name="location" value="esentepe"> Esentepe</label>
+                                    <label><input type="checkbox" name="location" value="karpaz"> Karpaz</label>
+                                    <label><input type="checkbox" name="location" value="other"> Other</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Must-Have Features</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="features" value="pool"> Swimming Pool</label>
+                                    <label><input type="checkbox" name="features" value="seaview"> Sea View</label>
+                                    <label><input type="checkbox" name="features" value="garden"> Garden</label>
+                                    <label><input type="checkbox" name="features" value="parking"> Parking</label>
+                                    <label><input type="checkbox" name="features" value="gym"> Gym/Fitness</label>
+                                    <label><input type="checkbox" name="features" value="security"> 24/7 Security</label>
+                                    <label><input type="checkbox" name="features" value="beach"> Beach Access</label>
+                                    <label><input type="checkbox" name="features" value="furnished"> Fully Furnished</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Additional Requirements</h3>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="specialRequirements">Special Requirements or Preferences</label>
+                                <textarea id="specialRequirements" name="specialRequirements" rows="4" placeholder="Any additional preferences, requirements or deal-breakers..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="lifestyle">Lifestyle Considerations</label>
+                                <textarea id="lifestyle" name="lifestyle" rows="4" placeholder="Family needs, proximity to schools, medical facilities, etc..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Analyst Notes</h3>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="analystNotes">Notes & Observations</label>
+                                <textarea id="analystNotes" name="analystNotes" rows="4" placeholder="Additional observations or notes from your conversation with the customer..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recommendedProperties">Recommended Properties</label>
+                                <select id="recommendedProperties" name="recommendedProperties" multiple>
+                                    <option value="sunset-a101">Sunset Bay Resort A-101</option>
+                                    <option value="crystal-15b">Crystal Heights 15B</option>
+                                    <option value="palm-c203">Palm View Residences C-203</option>
+                                    <option value="blue-villa5">Blue Bay Villas #5</option>
+                                    <option value="horizon-p12">Horizon Apartments P-12</option>
+                                </select>
+                                <div class="form-help">Hold Ctrl/Cmd to select multiple properties</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="readiness">Customer Readiness</label>
+                                <select id="readiness" name="readiness">
+                                    <option value="">Select Readiness</option>
+                                    <option value="ready">Ready to Purchase</option>
+                                    <option value="considering">Actively Considering</option>
+                                    <option value="researching">Researching Options</option>
+                                    <option value="early">Early Exploration</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelAnalysis">Cancel</button>
+                        <button type="button" class="btn btn-outline" id="saveAnalysisDraft">Save Draft</button>
+                        <button type="submit" class="btn btn-primary">Complete Analysis</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show target content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${target}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    // Initialize charts if needed
+                    if (target === 'data-insights') {
+                        initCharts();
+                    }
+                });
+            });
+            
+            // Open needs analysis modal
+            const analyzeButtons = document.querySelectorAll('.analyze-needs');
+            const needsAnalysisModal = document.getElementById('needsAnalysisModal');
+            const closeBtn = needsAnalysisModal.querySelector('.close-btn');
+            const cancelBtn = document.getElementById('cancelAnalysis');
+            
+            analyzeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const customerId = btn.getAttribute('data-id');
+                    console.log(`Opening needs analysis for customer ${customerId}`);
+                    needsAnalysisModal.classList.add('active');
+                });
+            });
+            
+            // Close modal
+            function closeModal() {
+                needsAnalysisModal.classList.remove('active');
+            }
+            
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+            
+            // Close when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === needsAnalysisModal) {
+                    closeModal();
+                }
+            });
+            
+            // Save draft button
+            const saveDraftBtn = document.getElementById('saveAnalysisDraft');
+            if (saveDraftBtn) {
+                saveDraftBtn.addEventListener('click', () => {
+                    alert('Analysis draft saved successfully!');
+                });
+            }
+            
+            // Form submission
+            const needsAnalysisForm = document.getElementById('needsAnalysisForm');
+            if (needsAnalysisForm) {
+                needsAnalysisForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('Needs analysis completed and saved successfully!');
+                    closeModal();
+                });
+            }
+            
+            // Select all checkbox
+            const selectAll = document.getElementById('selectAll');
+            const rowCheckboxes = document.querySelectorAll('.select-row');
+            
+            if (selectAll) {
+                selectAll.addEventListener('change', () => {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.checked = selectAll.checked;
+                    });
+                });
+            }
+            
+            // Chart initialization
+            function initCharts() {
+                // Demographics Chart
+                const demographicsCtx = document.getElementById('demographicsChart');
+                if (demographicsCtx && !demographicsCtx.chart) {
+                    demographicsCtx.chart = new Chart(demographicsCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['UK', 'Germany', 'Russia', 'UAE', 'Other'],
+                            datasets: [{
+                                data: [38, 22, 15, 12, 13],
+                                backgroundColor: [
+                                    '#4e73df',
+                                    '#1cc88a',
+                                    '#36b9cc',
+                                    '#f6c23e',
+                                    '#e74a3b'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Preferences Chart
+                const preferencesCtx = document.getElementById('preferencesChart');
+                if (preferencesCtx && !preferencesCtx.chart) {
+                    preferencesCtx.chart = new Chart(preferencesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Sea View', 'Pool', '2 Bedroom', '3 Bedroom', 'Garden', 'Proximity to Beach'],
+                            datasets: [{
+                                label: 'Popularity (%)',
+                                data: [85, 72, 68, 45, 38, 32],
+                                backgroundColor: '#4e73df'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Completion Chart
+                const completionCtx = document.getElementById('completionChart');
+                if (completionCtx && !completionCtx.chart) {
+                    completionCtx.chart = new Chart(completionCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                            datasets: [{
+                                label: 'Completion Rate (%)',
+                                data: [45, 52, 60, 68, 78],
+                                borderColor: '#1cc88a',
+                                backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

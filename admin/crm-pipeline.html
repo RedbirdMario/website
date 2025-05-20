@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Pipeline - RedBird Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-styles.css">
+    <link rel="stylesheet" href="../css/crm-pipeline.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+</head>
+<body class="admin-body">
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+                <span class="admin-badge">Admin</span>
+            </div>
+            <ul class="admin-nav-menu">
+                <li class="admin-nav-item"><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="admin-nav-item active"><a href="crm-pipeline.html"><i class="fas fa-project-diagram"></i> CRM Pipeline</a></li>
+                <li class="admin-nav-item"><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                <li class="admin-nav-item"><a href="unit-onboarding.html"><i class="fas fa-home"></i> Unit Onboarding</a></li>
+                <li class="admin-nav-item"><a href="messaging.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                <li class="admin-nav-item"><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+                <li class="admin-nav-item"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="admin-user-menu">
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin User</span>
+                    <span class="admin-user-role">Administrator</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn"><i class="fas fa-user-circle"></i></button>
+                    <div class="dropdown-content">
+                        <a href="profile.html"><i class="fas fa-user-cog"></i> Profil</a>
+                        <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-content-wrapper">
+        <div class="admin-sidebar">
+            <div class="sidebar-section">
+                <h3>Quick Filters</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">All Leads</a></li>
+                    <li><a href="#">My Leads</a></li>
+                    <li><a href="#">Unassigned Leads</a></li>
+                    <li><a href="#">Hot Leads</a></li>
+                    <li><a href="#">New Today</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>Analytics</h3>
+                <div class="mini-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">23</span>
+                        <span class="stat-label">New Leads</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Conversions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">12</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">€1.2M</span>
+                        <span class="stat-label">Pipeline Value</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Team Activity</h3>
+                <div class="activity-feed">
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                        <div class="activity-content">
+                            <p>Sarah added a new lead: <strong>John Miller</strong></p>
+                            <span class="activity-time">5 min ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="activity-content">
+                            <p>Alex moved <strong>Laura Smith</strong> to <strong>Offer Sent</strong></p>
+                            <span class="activity-time">25 min ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-file-signature"></i></div>
+                        <div class="activity-content">
+                            <p>Mike closed deal with <strong>Robert Johnson</strong></p>
+                            <span class="activity-time">1 hour ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-main-content">
+            <div class="page-header">
+                <h1>Customer Pipeline</h1>
+                <div class="page-actions">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search customers..." class="search-input">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-primary" id="addCustomerBtn"><i class="fas fa-plus"></i> Add Customer</button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <div class="dropdown-content filter-dropdown">
+                            <div class="filter-section">
+                                <h4>Advisor</h4>
+                                <div class="filter-options">
+                                    <label><input type="checkbox" checked> All</label>
+                                    <label><input type="checkbox"> Sarah Williams</label>
+                                    <label><input type="checkbox"> Mike Peterson</label>
+                                    <label><input type="checkbox"> Alex Johnson</label>
+                                </div>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Time Period</h4>
+                                <div class="filter-options">
+                                    <label><input type="radio" name="period" checked> All Time</label>
+                                    <label><input type="radio" name="period"> This Month</label>
+                                    <label><input type="radio" name="period"> Last 30 Days</label>
+                                    <label><input type="radio" name="period"> Custom...</label>
+                                </div>
+                            </div>
+                            <div class="filter-section">
+                                <h4>Budget</h4>
+                                <div class="filter-range">
+                                    <input type="range" min="0" max="1000000" step="50000" value="500000" id="budgetRange">
+                                    <div class="range-labels">
+                                        <span>€0</span>
+                                        <span>€500k</span>
+                                        <span>€1M+</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-actions">
+                                <button class="btn btn-sm">Reset</button>
+                                <button class="btn btn-primary btn-sm">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-container">
+                <div class="pipeline-header">
+                    <div class="pipeline-stage-header" data-stage="lead">
+                        <h3>Leads</h3>
+                        <span class="stage-count">12</span>
+                        <span class="stage-value">€1.8M</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="qualified">
+                        <h3>Qualified</h3>
+                        <span class="stage-count">8</span>
+                        <span class="stage-value">€1.2M</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="needs-analysis">
+                        <h3>Needs Analysis</h3>
+                        <span class="stage-count">5</span>
+                        <span class="stage-value">€750K</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="proposal">
+                        <h3>Proposal</h3>
+                        <span class="stage-count">3</span>
+                        <span class="stage-value">€450K</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="negotiation">
+                        <h3>Negotiation</h3>
+                        <span class="stage-count">2</span>
+                        <span class="stage-value">€300K</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="contract">
+                        <h3>Contract</h3>
+                        <span class="stage-count">1</span>
+                        <span class="stage-value">€150K</span>
+                    </div>
+                    <div class="pipeline-stage-header" data-stage="onboarding">
+                        <h3>Onboarding</h3>
+                        <span class="stage-count">0</span>
+                        <span class="stage-value">€0</span>
+                    </div>
+                </div>
+                
+                <div class="pipeline-stages">
+                    <div class="pipeline-stage" data-stage="lead" id="leadStage">
+                        <div class="customer-card" data-id="cust1">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>John Smith</h4>
+                                    <p>Added: May 15, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                    <div class="card-menu">
+                                        <a href="#"><i class="fas fa-eye"></i> View Details</a>
+                                        <a href="#"><i class="fas fa-edit"></i> Edit</a>
+                                        <a href="#"><i class="fas fa-envelope"></i> Send Email</a>
+                                        <a href="#"><i class="fas fa-phone"></i> Call</a>
+                                        <a href="#" class="text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p><i class="fas fa-envelope"></i> john.smith@example.com</p>
+                                <p><i class="fas fa-phone"></i> +49 123 456789</p>
+                                <div class="property-interest">
+                                    <div class="interest-label">Interest:</div>
+                                    <div class="interest-meter">
+                                        <div class="meter-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <div class="interest-value">75%</div>
+                                </div>
+                                <div class="customer-tags">
+                                    <span class="tag">2BR</span>
+                                    <span class="tag">Kyrenia</span>
+                                    <span class="tag">Investment</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="expected-value">€150,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="customer-card" data-id="cust2">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Maria Garcia</h4>
+                                    <p>Added: May 14, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p><i class="fas fa-envelope"></i> maria.garcia@example.com</p>
+                                <p><i class="fas fa-phone"></i> +49 987 654321</p>
+                                <div class="property-interest">
+                                    <div class="interest-label">Interest:</div>
+                                    <div class="interest-meter">
+                                        <div class="meter-fill" style="width: 60%;"></div>
+                                    </div>
+                                    <div class="interest-value">60%</div>
+                                </div>
+                                <div class="customer-tags">
+                                    <span class="tag">1BR</span>
+                                    <span class="tag">Esentepe</span>
+                                    <span class="tag">Holiday Home</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="expected-value">€130,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="customer-card" data-id="cust3">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Robert Johnson</h4>
+                                    <p>Added: May 13, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p><i class="fas fa-envelope"></i> robert.johnson@example.com</p>
+                                <p><i class="fas fa-phone"></i> +44 789 123456</p>
+                                <div class="property-interest">
+                                    <div class="interest-label">Interest:</div>
+                                    <div class="interest-meter">
+                                        <div class="meter-fill" style="width: 85%;"></div>
+                                    </div>
+                                    <div class="interest-value">85%</div>
+                                </div>
+                                <div class="customer-tags">
+                                    <span class="tag">3BR</span>
+                                    <span class="tag">Famagusta</span>
+                                    <span class="tag">Investment</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-alex.jpg" alt="Alex" class="avatar-xs">
+                                    <span>Alex Johnson</span>
+                                </div>
+                                <div class="expected-value">€180,000</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Lead</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="qualified" id="qualifiedStage">
+                        <div class="customer-card" data-id="cust4">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Lisa Chen</h4>
+                                    <p>Qualified: May 10, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p><i class="fas fa-envelope"></i> lisa.chen@example.com</p>
+                                <p><i class="fas fa-phone"></i> +33 678 901234</p>
+                                <div class="property-interest">
+                                    <div class="interest-label">Interest:</div>
+                                    <div class="interest-meter">
+                                        <div class="meter-fill" style="width: 80%;"></div>
+                                    </div>
+                                    <div class="interest-value">80%</div>
+                                </div>
+                                <div class="customer-tags">
+                                    <span class="tag">2BR</span>
+                                    <span class="tag">Kyrenia</span>
+                                    <span class="tag">Residence</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="expected-value">€160,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="customer-card" data-id="cust5">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Ahmed Hassan</h4>
+                                    <p>Qualified: May 8, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p><i class="fas fa-envelope"></i> ahmed.hassan@example.com</p>
+                                <p><i class="fas fa-phone"></i> +971 50 123 4567</p>
+                                <div class="property-interest">
+                                    <div class="interest-label">Interest:</div>
+                                    <div class="interest-meter">
+                                        <div class="meter-fill" style="width: 90%;"></div>
+                                    </div>
+                                    <div class="interest-value">90%</div>
+                                </div>
+                                <div class="customer-tags">
+                                    <span class="tag">Luxury</span>
+                                    <span class="tag">3BR+</span>
+                                    <span class="tag">Iskele</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="expected-value">€220,000</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Qualified Lead</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="needs-analysis" id="needsAnalysisStage">
+                        <div class="customer-card" data-id="cust6">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Michael West</h4>
+                                    <p>Analysis: May 5, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="analysis-summary">
+                                    <p><strong>Budget:</strong> €180,000 - €220,000</p>
+                                    <p><strong>Preferences:</strong> 2BR, Sea View, Kyrenia</p>
+                                    <p><strong>Timeline:</strong> Purchase within 3 months</p>
+                                    <p><strong>Financing:</strong> 30% down payment</p>
+                                </div>
+                                <div class="needs-match">
+                                    <span class="match-label">Match:</span>
+                                    <span class="match-value">Sunset Bay Resort, A-205</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-alex.jpg" alt="Alex" class="avatar-xs">
+                                    <span>Alex Johnson</span>
+                                </div>
+                                <div class="expected-value">€200,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="customer-card" data-id="cust7">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Emma Wilson</h4>
+                                    <p>Analysis: May 3, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="analysis-summary">
+                                    <p><strong>Budget:</strong> €120,000 - €150,000</p>
+                                    <p><strong>Preferences:</strong> 1BR, Modern, Famagusta</p>
+                                    <p><strong>Timeline:</strong> Purchase within 6 months</p>
+                                    <p><strong>Financing:</strong> 50% down payment</p>
+                                </div>
+                                <div class="needs-match">
+                                    <span class="match-label">Match:</span>
+                                    <span class="match-value">Crystal Heights, 15B</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="expected-value">€135,000</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Analysis</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="proposal" id="proposalStage">
+                        <div class="customer-card" data-id="cust8">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>David Lee</h4>
+                                    <p>Proposal: May 2, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="proposal-property">Sunset Bay Resort, A-203</p>
+                                <div class="proposal-details">
+                                    <p><strong>Price:</strong> €180,000</p>
+                                    <p><strong>Terms:</strong> Standard payment plan</p>
+                                    <p><strong>Status:</strong> Sent, awaiting response</p>
+                                </div>
+                                <div class="proposal-actions">
+                                    <button class="btn btn-sm btn-outline"><i class="fas fa-file-pdf"></i> View Proposal</button>
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i> Send Reminder</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-mike.jpg" alt="Mike" class="avatar-xs">
+                                    <span>Mike Peterson</span>
+                                </div>
+                                <div class="deadline">Follow-up: May 9, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Proposal</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="negotiation" id="negotiationStage">
+                        <div class="customer-card" data-id="cust9">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Sophie Martin</h4>
+                                    <p>Negotiation Started: April 28, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="proposal-property">Crystal Heights, 12A</p>
+                                <div class="negotiation-details">
+                                    <p><strong>Initial Price:</strong> €165,000</p>
+                                    <p><strong>Current Offer:</strong> €157,000</p>
+                                    <p><strong>Points:</strong> Payment terms, closing date</p>
+                                </div>
+                                <div class="negotiation-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Update Offer</button>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-alex.jpg" alt="Alex" class="avatar-xs">
+                                    <span>Alex Johnson</span>
+                                </div>
+                                <div class="next-step">Decision expected: May 7, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Negotiation</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="contract" id="contractStage">
+                        <div class="customer-card" data-id="cust10">
+                            <div class="card-header">
+                                <div class="customer-info">
+                                    <h4>Thomas Weber</h4>
+                                    <p>Contract Sent: April 25, 2025</p>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="contract-property">Sunset Bay Resort, B-110</p>
+                                <div class="contract-details">
+                                    <p><strong>Final Price:</strong> €150,000</p>
+                                    <p><strong>Status:</strong> Awaiting signatures</p>
+                                </div>
+                                <div class="document-status">
+                                    <div class="status-item">
+                                        <span class="status-label">Sales Contract:</span>
+                                        <span class="status-value pending">Pending</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Payment Confirmation:</span>
+                                        <span class="status-value completed">Completed</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">ID Documents:</span>
+                                        <span class="status-value completed">Completed</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="assigned-to">
+                                    <img src="../img/avatar-sarah.jpg" alt="Sarah" class="avatar-xs">
+                                    <span>Sarah Williams</span>
+                                </div>
+                                <div class="expected-close">Expected close: May 10, 2025</div>
+                            </div>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Contract</button>
+                    </div>
+                    
+                    <div class="pipeline-stage" data-stage="onboarding" id="onboardingStage">
+                        <div class="empty-stage-message">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>No clients in onboarding phase</p>
+                        </div>
+                        
+                        <button class="add-item-btn"><i class="fas fa-plus"></i> Add Onboarding</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal" id="addCustomerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Customer</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name*</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name*</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email*</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone*</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="whatsapp">WhatsApp</label>
+                                <input type="tel" id="whatsapp" name="whatsapp">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country" name="country">
+                                    <option value="">Select Country</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="FR">France</option>
+                                    <option value="TR">Turkey</option>
+                                    <option value="RU">Russia</option>
+                                    <option value="AE">UAE</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Lead Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="leadSource">Lead Source</label>
+                                <select id="leadSource" name="leadSource">
+                                    <option value="">Select Source</option>
+                                    <option value="website">Website</option>
+                                    <option value="referral">Referral</option>
+                                    <option value="exhibition">Exhibition</option>
+                                    <option value="digital">Digital Campaign</option>
+                                    <option value="partner">Partner Agent</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignedTo">Assign To</label>
+                                <select id="assignedTo" name="assignedTo">
+                                    <option value="">Select Advisor</option>
+                                    <option value="sarah">Sarah Williams</option>
+                                    <option value="mike">Mike Peterson</option>
+                                    <option value="alex">Alex Johnson</option>
+                                    <option value="unassigned">Unassigned</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="notes">Initial Notes</label>
+                                <textarea id="notes" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="budgetMin">Budget Range</label>
+                                <div class="budget-range">
+                                    <input type="number" id="budgetMin" name="budgetMin" placeholder="Min €">
+                                    <span class="range-separator">to</span>
+                                    <input type="number" id="budgetMax" name="budgetMax" placeholder="Max €">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="interest">Interest Level</label>
+                                <select id="interest" name="interest">
+                                    <option value="high">High</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label>Property Preferences</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="preferences" value="1br"> 1 Bedroom</label>
+                                    <label><input type="checkbox" name="preferences" value="2br"> 2 Bedrooms</label>
+                                    <label><input type="checkbox" name="preferences" value="3br"> 3+ Bedrooms</label>
+                                    <label><input type="checkbox" name="preferences" value="investment"> Investment</label>
+                                    <label><input type="checkbox" name="preferences" value="holiday"> Holiday Home</label>
+                                    <label><input type="checkbox" name="preferences" value="residence"> Residence</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelAddCustomer">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/crm-pipeline.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Sortable.js on each pipeline stage
+            document.querySelectorAll('.pipeline-stage').forEach(stage => {
+                new Sortable(stage, {
+                    group: 'pipeline',
+                    animation: 150,
+                    ghostClass: 'card-ghost',
+                    chosenClass: 'card-chosen',
+                    dragClass: 'card-drag',
+                    onEnd: function(evt) {
+                        // Get the source and target stages
+                        const fromStage = evt.from.getAttribute('data-stage');
+                        const toStage = evt.to.getAttribute('data-stage');
+                        const customerId = evt.item.getAttribute('data-id');
+                        
+                        // Log the move (would be an API call in production)
+                        console.log(`Moved customer ${customerId} from ${fromStage} to ${toStage}`);
+                        
+                        // In a real application, this would update the backend via API
+                        // updateCustomerStage(customerId, toStage);
+                        
+                        // Update the count in each stage
+                        updateStageCounts();
+                    }
+                });
+            });
+            
+            // Function to update stage counts
+            function updateStageCounts() {
+                document.querySelectorAll('.pipeline-stage').forEach(stage => {
+                    const stageId = stage.getAttribute('data-stage');
+                    const count = stage.querySelectorAll('.customer-card').length;
+                    const stageHeader = document.querySelector(`.pipeline-stage-header[data-stage="${stageId}"] .stage-count`);
+                    
+                    if (stageHeader) {
+                        stageHeader.textContent = count;
+                    }
+                });
+            }
+            
+            // Handle card menu toggle
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.card-menu-btn')) {
+                    const menu = e.target.closest('.card-actions').querySelector('.card-menu');
+                    
+                    // Close all other menus first
+                    document.querySelectorAll('.card-menu.active').forEach(m => {
+                        if (m !== menu) m.classList.remove('active');
+                    });
+                    
+                    // Toggle this menu
+                    menu?.classList.toggle('active');
+                    e.stopPropagation();
+                } else if (!e.target.closest('.card-menu')) {
+                    // Close all menus when clicking elsewhere
+                    document.querySelectorAll('.card-menu.active').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Modal handling
+            const addCustomerBtn = document.getElementById('addCustomerBtn');
+            const addCustomerModal = document.getElementById('addCustomerModal');
+            const closeBtn = addCustomerModal.querySelector('.close-btn');
+            const cancelBtn = document.getElementById('cancelAddCustomer');
+            
+            addCustomerBtn.addEventListener('click', function() {
+                addCustomerModal.classList.add('active');
+            });
+            
+            function closeModal() {
+                addCustomerModal.classList.remove('active');
+            }
+            
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === addCustomerModal) {
+                    closeModal();
+                }
+            });
+            
+            // Form submission
+            const addCustomerForm = document.getElementById('addCustomerForm');
+            
+            addCustomerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real application, this would send form data to an API
+                // Here we'll just create a new card based on the form data
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const assignedTo = document.getElementById('assignedTo').value;
+                const interest = document.getElementById('interest').value;
+                
+                // Map advisor value to name and image
+                let advisorName = "Unassigned";
+                let advisorImage = "../img/avatar-default.jpg";
+                
+                switch(assignedTo) {
+                    case 'sarah':
+                        advisorName = "Sarah Williams";
+                        advisorImage = "../img/avatar-sarah.jpg";
+                        break;
+                    case 'mike':
+                        advisorName = "Mike Peterson";
+                        advisorImage = "../img/avatar-mike.jpg";
+                        break;
+                    case 'alex':
+                        advisorName = "Alex Johnson";
+                        advisorImage = "../img/avatar-alex.jpg";
+                        break;
+                }
+                
+                // Map interest to percentage
+                let interestPercentage = "50%";
+                let interestWidth = "50%";
+                
+                switch(interest) {
+                    case 'high':
+                        interestPercentage = "85%";
+                        interestWidth = "85%";
+                        break;
+                    case 'medium':
+                        interestPercentage = "60%";
+                        interestWidth = "60%";
+                        break;
+                    case 'low':
+                        interestPercentage = "30%";
+                        interestWidth = "30%";
+                        break;
+                }
+                
+                // Create preferences tags from checkboxes
+                const preferences = [];
+                document.querySelectorAll('input[name="preferences"]:checked').forEach(checkbox => {
+                    preferences.push(checkbox.value);
+                });
+                
+                // Create tags HTML
+                let tagsHtml = '';
+                preferences.forEach(pref => {
+                    tagsHtml += `<span class="tag">${pref}</span>`;
+                });
+                
+                // Create a new customer card
+                const newCard = document.createElement('div');
+                newCard.className = 'customer-card';
+                newCard.setAttribute('data-id', 'new-' + Date.now());
+                
+                newCard.innerHTML = `
+                    <div class="card-header">
+                        <div class="customer-info">
+                            <h4>${firstName} ${lastName}</h4>
+                            <p>Added: ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            <div class="card-menu">
+                                <a href="#"><i class="fas fa-eye"></i> View Details</a>
+                                <a href="#"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="#"><i class="fas fa-envelope"></i> Send Email</a>
+                                <a href="#"><i class="fas fa-phone"></i> Call</a>
+                                <a href="#" class="text-danger"><i class="fas fa-trash"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p><i class="fas fa-envelope"></i> ${email}</p>
+                        <p><i class="fas fa-phone"></i> ${phone}</p>
+                        <div class="property-interest">
+                            <div class="interest-label">Interest:</div>
+                            <div class="interest-meter">
+                                <div class="meter-fill" style="width: ${interestWidth};"></div>
+                            </div>
+                            <div class="interest-value">${interestPercentage}</div>
+                        </div>
+                        <div class="customer-tags">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="assigned-to">
+                            <img src="${advisorImage}" alt="${advisorName}" class="avatar-xs">
+                            <span>${advisorName}</span>
+                        </div>
+                        <div class="expected-value">€${document.getElementById('budgetMax').value || '0'}</div>
+                    </div>
+                `;
+                
+                // Add the new card to the lead stage
+                const leadStage = document.getElementById('leadStage');
+                leadStage.insertBefore(newCard, leadStage.querySelector('.add-item-btn'));
+                
+                // Update counts
+                updateStageCounts();
+                
+                // Close the modal and reset form
+                closeModal();
+                addCustomerForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>

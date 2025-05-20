@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RedBird Kundenportal</title>
+    <meta name="description" content="Übersichtsseite des RedBird Kundenportals mit Ihren Immobiliendaten, Dokumenten und Prozessfortschritt.">
+    <meta http-equiv="refresh" content="0;url=dashboard-consolidated.html">
+    <script>
+        // Redirect to the consolidated dashboard
+        window.location.href = "dashboard-consolidated.html";
+    </script>
+    
+    <!-- Base scripts needed for authentication -->
+    <script src="../js/config.js" type="module"></script>
+    <script src="../js/api-client.js" type="module"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/demo-login.js"></script>
+    <script src="../js/api-mock.js"></script>
+    <script src="../js/demo-dashboard.js"></script>
+    <style>
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+        
+        .theme-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            color: var(--primary-red-light);
+        }
+        
+        /* Body style for transition */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Theme initialized class to prevent FOUC */
+        .theme-initialized {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <a href="#main-content" class="skip-to-content">Zum Inhalt springen</a>
+    <nav class="main-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="../img/redbird-logo.png" alt="RedBird Logo" class="nav-logo">
+                </a>
+            </div>
+            <ul class="nav-menu" role="menubar">
+                <li class="nav-item active" role="none"><a href="dashboard.html" role="menuitem" aria-current="page"><i class="fas fa-home" aria-hidden="true"></i> Dashboard</a></li>
+                <li class="nav-item" role="none"><a href="documents.html" role="menuitem"><i class="fas fa-file-alt" aria-hidden="true"></i> Dokumente</a></li>
+                <li class="nav-item" role="none"><a href="gallery.html" role="menuitem"><i class="fas fa-images" aria-hidden="true"></i> Fotogalerie</a></li>
+                <li class="nav-item" role="none"><a href="progress.html" role="menuitem"><i class="fas fa-tasks" aria-hidden="true"></i> Prozessverlauf</a></li>
+                <li class="nav-item" role="none"><a href="analytics.html" role="menuitem"><i class="fas fa-chart-line" aria-hidden="true"></i> Analytics</a></li>
+                <li class="nav-item" role="none"><a href="contact.html" role="menuitem"><i class="fas fa-envelope" aria-hidden="true"></i> Kontakt</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="language-switcher"></div>
+                <button class="theme-toggle" data-theme-toggle aria-label="Dark Mode umschalten" aria-pressed="false">
+                    <i class="fas fa-moon" data-theme-icon aria-hidden="true"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Laden...</span>
+                    <span class="user-role" id="userProperty">Laden...</span>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn" aria-label="Benutzermenü öffnen" aria-expanded="false" aria-haspopup="true" aria-controls="user-menu-dropdown"><i class="fas fa-user-circle" aria-hidden="true"></i></button>
+                    <div class="dropdown-content" id="user-menu-dropdown" role="menu">
+                        <a href="profile.html" role="menuitem"><i class="fas fa-user-cog" aria-hidden="true"></i> Profil</a>
+                        <a href="settings.html" role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Einstellungen</a>
+                        <a href="../index.html" role="menuitem"><i class="fas fa-home" aria-hidden="true"></i> Zur Webseite</a>
+                        <a href="#" id="logoutLink" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container" id="main-content" role="main">
+        <div class="dashboard-header">
+            <h1 id="welcomeHeader">Willkommen zurück!</h1>
+            <p class="last-login" id="lastLogin">Laden...</p>
+        </div>
+
+        <div id="loadingIndicator" style="text-align: center; padding: 2rem;" role="status" aria-live="polite">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--redbird-red);" aria-hidden="true"></i>
+            <p>Daten werden geladen...</p>
+        </div>
+
+        <div class="dashboard-grid" id="dashboardGrid" style="display: none;">
+            <div class="dashboard-card status-card">
+                <div class="enhanced-progress-card">
+                    <div class="enhanced-progress-header">
+                        <div class="enhanced-progress-details">
+                            <div class="progress-circle-small">
+                                <div class="progress-circle-small-inner">
+                                    <span class="progress-value" id="progressPercentage">0%</span>
+                                </div>
+                            </div>
+                            <div class="enhanced-progress-info">
+                                <h3>Ihr Immobilienkauf</h3>
+                                <div class="progress-phase">Aktuelle Phase: <strong id="currentPhase">Laden...</strong></div>
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Fortschritt des Immobilienkaufs">
+                                    <div class="progress" id="progressBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="enhanced-progress-actions">
+                            <button class="quick-action-btn" aria-label="Benachrichtigungen aktivieren">
+                                <i class="fas fa-bell" aria-hidden="true"></i>
+                            </button>
+                            <button class="quick-action-btn" aria-label="Prozess teilen">
+                                <i class="fas fa-share-alt" aria-hidden="true"></i>
+                            </button>
+                            <a href="progress.html" class="btn btn-outline">Details</a>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-visualization">
+                        <div class="timeline-path">
+                            <div class="timeline-progress-fill"></div>
+                            <div class="timeline-milestone completed">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Reservierung</div>
+                            </div>
+                            <div class="timeline-milestone completed">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Anzahlung</div>
+                            </div>
+                            <div class="timeline-milestone completed">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Vertrag</div>
+                            </div>
+                            <div class="timeline-milestone completed">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Zahlung</div>
+                            </div>
+                            <div class="timeline-milestone active">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Eintragung</div>
+                            </div>
+                            <div class="timeline-milestone">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Schlüssel</div>
+                            </div>
+                            <div class="timeline-milestone">
+                                <div class="milestone-indicator"></div>
+                                <div class="milestone-title">Abschluss</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="upcoming-tasks">
+                        <h4>Anstehende Aufgaben</h4>
+                        <div class="task-list">
+                            <div class="task-item urgent">
+                                <div class="task-icon"><i class="fas fa-exclamation"></i></div>
+                                <div class="task-content">
+                                    <div class="task-name">Eigentumsdokumente unterschreiben</div>
+                                    <div class="task-description">Die vorläufigen Eigentumsdokumente wurden zur Unterschrift bereitgestellt.</div>
+                                    <div class="task-due">Fällig in 3 Tagen</div>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-icon"><i class="fas fa-calendar"></i></div>
+                                <div class="task-content">
+                                    <div class="task-name">Termin zur Schlüsselübergabe planen</div>
+                                    <div class="task-description">Bitte vereinbaren Sie einen Termin zur Schlüsselübergabe.</div>
+                                    <div class="task-due">Fällig in 14 Tagen</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card recent-docs-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-alt"></i> Neueste Dokumente</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="document-list" id="documentsList">
+                        <li>
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <div class="doc-info">
+                                <span class="doc-name">Dokumente werden geladen...</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="documents.html" class="btn btn-outline">Alle Dokumente</a>
+                </div>
+            </div>
+
+            <div class="dashboard-card property-card property-card-enhanced">
+                <div class="card-header">
+                    <h2><i class="fas fa-home"></i> Ihre Immobilie</h2>
+                </div>
+                <div class="card-body">
+                    <div class="property-gallery-preview">
+                        <img src="../img/apartment-preview.jpg" alt="Property" id="propertyImage">
+                        <div class="property-gallery-nav">
+                            <div class="gallery-dot active"></div>
+                            <div class="gallery-dot"></div>
+                            <div class="gallery-dot"></div>
+                            <div class="gallery-dot"></div>
+                        </div>
+                    </div>
+                    <div class="property-info-enhanced">
+                        <div class="property-price">€150,000</div>
+                        <h3 id="propertyName">Sunset Bay Resort, Apartment A-203</h3>
+                        <p id="propertyLocation">Esentepe, Nordzypern</p>
+                        
+                        <div class="property-stats">
+                            <div class="property-stat">
+                                <div class="stat-value">85 m²</div>
+                                <div class="stat-label">Wohnfläche</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">2</div>
+                                <div class="stat-label">Schlafzimmer</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">1</div>
+                                <div class="stat-label">Badezimmer</div>
+                            </div>
+                            <div class="property-stat">
+                                <div class="stat-value">15 m²</div>
+                                <div class="stat-label">Balkon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="gallery.html" class="btn btn-primary" style="margin: 0 1.25rem 1.25rem;">Fotogalerie ansehen</a>
+                </div>
+            </div>
+
+            <div class="dashboard-card contact-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-tie"></i> Ihr Ansprechpartner</h2>
+                </div>
+                <div class="card-body">
+                    <div class="contact-info" id="contactInfo">
+                        <img src="../img/contact-person.jpg" alt="Advisor" class="contact-img" id="advisorImage">
+                        <div class="contact-details">
+                            <h3 id="advisorName">Laden...</h3>
+                            <p>Ihr persönlicher Immobilienberater</p>
+                            <ul class="contact-list">
+                                <li id="advisorPhone"><i class="fas fa-phone"></i> Laden...</li>
+                                <li id="advisorEmail"><i class="fas fa-envelope"></i> Laden...</li>
+                                <li><i class="fab fa-whatsapp"></i> WhatsApp verfügbar</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="contact-buttons">
+                        <a href="#" id="emailAdvisorBtn" class="btn btn-outline"><i class="fas fa-envelope"></i> E-Mail senden</a>
+                        <a href="contact.html" class="btn btn-primary"><i class="fas fa-comment"></i> Nachricht</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="notification-center" role="region" aria-label="Benachrichtigungszentrum">
+                    <div class="notification-center-header">
+                        <h3 id="notifications-heading"><i class="fas fa-bell" aria-hidden="true"></i> Benachrichtigungen <span class="notification-count" aria-label="2 ungelesene Benachrichtigungen">2</span></h3>
+                        <a href="#" class="mark-all-read" role="button">Alle als gelesen markieren</a>
+                    </div>
+                    
+                    <div class="notification-filters" role="tablist" aria-label="Benachrichtigungsfilter">
+                        <div class="notification-filter active" role="tab" aria-selected="true" data-filter="all" tabindex="0" aria-controls="notifications-all">Alle</div>
+                        <div class="notification-filter" role="tab" aria-selected="false" data-filter="document" tabindex="-1" aria-controls="notifications-document">Dokumente</div>
+                        <div class="notification-filter" role="tab" aria-selected="false" data-filter="progress" tabindex="-1" aria-controls="notifications-progress">Fortschritt</div>
+                        <div class="notification-filter" role="tab" aria-selected="false" data-filter="appointment" tabindex="-1" aria-controls="notifications-appointment">Termine</div>
+                    </div>
+                    
+                    <div class="notification-items" id="notificationsList" role="tabpanel" aria-labelledby="notifications-heading">
+                        <div class="notification-item unread" data-type="document">
+                            <div class="notification-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="notification-info">
+                                <div class="notification-title">Neues Dokument verfügbar</div>
+                                <div class="notification-message">Der Kaufvertrag (final) wurde hochgeladen und steht zur Ansicht bereit.</div>
+                                <div class="notification-meta">
+                                    <span>vor 8 Tagen</span>
+                                    <span class="notification-unread-indicator"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item unread" data-type="appointment">
+                            <div class="notification-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="notification-info">
+                                <div class="notification-title">Termin für Schlüsselübergabe</div>
+                                <div class="notification-message">Die Schlüsselübergabe wurde für den 15.07.2025 um 10:00 Uhr geplant.</div>
+                                <div class="notification-meta">
+                                    <span>vor 10 Tagen</span>
+                                    <span class="notification-unread-indicator"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item" data-type="progress">
+                            <div class="notification-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="notification-info">
+                                <div class="notification-title">Prozessstatus aktualisiert</div>
+                                <div class="notification-message">Die Phase "Eigentumseintragung" hat begonnen. Die Dokumente wurden beim Grundbuchamt eingereicht.</div>
+                                <div class="notification-meta">
+                                    <span>vor 14 Tagen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-actions">
+                        <a href="#">Benachrichtigungseinstellungen</a>
+                        <a href="#">Alle anzeigen</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="quick-upload-widget">
+                    <div class="quick-upload-header">
+                        <h3 id="upload-heading"><i class="fas fa-cloud-upload-alt" aria-hidden="true"></i> Dokumente hochladen</h3>
+                    </div>
+                    
+                    <div class="upload-dropzone-compact" role="button" tabindex="0" aria-labelledby="upload-heading" aria-describedby="upload-formats" aria-dropeffect="copy">
+                        <i class="fas fa-cloud-upload-alt upload-icon" aria-hidden="true"></i>
+                        <p>Dateien hier ablegen oder klicken zum Hochladen</p>
+                        <p id="upload-formats"><small>Unterstützte Formate: PDF, DOCX, JPG, PNG</small></p>
+                    </div>
+                    
+                    <div class="upload-categories">
+                        <div class="category-tag">Vertrag</div>
+                        <div class="category-tag">Identifikation</div>
+                        <div class="category-tag">Zahlung</div>
+                        <div class="category-tag">Grundbuch</div>
+                        <div class="category-tag">Sonstiges</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card next-steps-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-list-ol"></i> Nächste Schritte</h2>
+                </div>
+                <div class="card-body">
+                    <ol class="next-steps-list" id="nextStepsList">
+                        <li>
+                            <div class="step-header">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <h3>Daten werden geladen...</h3>
+                            </div>
+                        </li>
+                    </ol>
+                    <a href="progress.html" class="btn btn-outline">Vollständigen Prozess anzeigen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer dashboard-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 RedBird Real Estate. Alle Rechte vorbehalten.</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add API client and auth service before main.js -->
+    <script src="../js/api-client.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/demo-login.js"></script>
+    <script src="../js/api-mock.js"></script>
+    <script src="../js/demo-dashboard.js"></script>
+    <script src="../js/data-store.js"></script>
+    <script src="../js/api-service-enhanced.js"></script>
+    <script src="../js/theme-switcher.js"></script>
+    <script src="../js/notifications-enhanced.js"></script>
+    <script src="../js/keyboard-nav.js"></script>
+    <script src="../js/lazy-loading.js"></script>
+    <script src="../js/sw-register.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/language-switcher.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/dashboard-enhanced.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language switcher
+            const languageSwitcher = new LanguageSwitcher({
+                containerId: 'language-switcher',
+                i18nService: window.i18n
+            });
+
+            // Initialize accessibility features
+            initAccessibility();
+            
+            // Function to initialize accessibility features
+            function initAccessibility() {
+                // Update theme toggle state based on current theme
+                const themeToggle = document.querySelector('[data-theme-toggle]');
+                if (themeToggle) {
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
+                    
+                    // Update aria-pressed when theme changes
+                    themeToggle.addEventListener('click', function() {
+                        const isDark = document.body.getAttribute('data-theme') === 'dark';
+                        this.setAttribute('aria-pressed', isDark);
+                    });
+                }
+                
+                // Add keyboard support for dropdown menu
+                const dropdownBtn = document.querySelector('.dropbtn');
+                const dropdownContent = document.querySelector('.dropdown-content');
+                
+                if (dropdownBtn && dropdownContent) {
+                    // Toggle dropdown on click
+                    dropdownBtn.addEventListener('click', function() {
+                        const expanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !expanded);
+                        dropdownContent.style.display = expanded ? 'none' : 'block';
+                    });
+                    
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.matches('.dropbtn') && !e.target.closest('.dropdown-content')) {
+                            dropdownBtn.setAttribute('aria-expanded', 'false');
+                            dropdownContent.style.display = 'none';
+                        }
+                    });
+                    
+                    // Handle keyboard navigation within dropdown
+                    const menuItems = dropdownContent.querySelectorAll('[role="menuitem"]');
+                    menuItems.forEach((item, index) => {
+                        item.addEventListener('keydown', function(e) {
+                            let nextItem = null;
+                            
+                            // Arrow down: go to next item
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                nextItem = menuItems[(index + 1) % menuItems.length];
+                            }
+                            // Arrow up: go to previous item
+                            else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                nextItem = menuItems[(index - 1 + menuItems.length) % menuItems.length];
+                            }
+                            // Escape: close dropdown
+                            else if (e.key === 'Escape') {
+                                e.preventDefault();
+                                dropdownBtn.setAttribute('aria-expanded', 'false');
+                                dropdownContent.style.display = 'none';
+                                dropdownBtn.focus();
+                                return;
+                            }
+                            
+                            if (nextItem) {
+                                nextItem.focus();
+                            }
+                        });
+                    });
+                }
+                
+                // Add keyboard support for notification filters
+                const filterTabs = document.querySelectorAll('[role="tab"]');
+                if (filterTabs.length) {
+                    filterTabs.forEach((tab, index) => {
+                        tab.addEventListener('keydown', function(e) {
+                            let nextTab = null;
+                            
+                            // Arrow right: go to next tab
+                            if (e.key === 'ArrowRight') {
+                                e.preventDefault();
+                                nextTab = filterTabs[(index + 1) % filterTabs.length];
+                            }
+                            // Arrow left: go to previous tab
+                            else if (e.key === 'ArrowLeft') {
+                                e.preventDefault();
+                                nextTab = filterTabs[(index - 1 + filterTabs.length) % filterTabs.length];
+                            }
+                            // Space or Enter: activate tab
+                            else if (e.key === ' ' || e.key === 'Enter') {
+                                e.preventDefault();
+                                tab.click();
+                                return;
+                            }
+                            
+                            if (nextTab) {
+                                // Set focus to next tab
+                                nextTab.focus();
+                            }
+                        });
+                        
+                        // Make tab clickable by keyboard
+                        tab.addEventListener('click', function() {
+                            // Remove active state from all tabs
+                            filterTabs.forEach(t => {
+                                t.classList.remove('active');
+                                t.setAttribute('aria-selected', 'false');
+                                t.setAttribute('tabindex', '-1');
+                            });
+                            
+                            // Add active state to clicked tab
+                            this.classList.add('active');
+                            this.setAttribute('aria-selected', 'true');
+                            this.setAttribute('tabindex', '0');
+                        });
+                    });
+                }
+            }
+            // Check authentication (try both regular and demo auth)
+            if (!window.authService.isAuthenticated() && !window.demoAuthService.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Get current user from local storage (while API loads)
+            // Try both auth services
+            const currentUser = window.authService.getCurrentUser() || window.demoAuthService.getCurrentUser();
+            if (currentUser) {
+                // Display initial user info from localStorage
+                document.getElementById('userName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+                document.getElementById('welcomeHeader').textContent = `Willkommen zurück, ${currentUser.first_name}!`;
+            }
+            
+            // Set up logout functionality
+            document.getElementById('logoutLink').addEventListener('click', async function(e) {
+                e.preventDefault();
+                // Check which auth service to use
+                if (localStorage.getItem('rb_is_demo') === 'true') {
+                    window.demoAuthService.logout();
+                } else {
+                    await window.authService.logout();
+                }
+                window.location.href = '../login.html';
+            });
+            
+            // Function to format a date string
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // Format relative time (e.g., "vor 3 Tagen")
+            function getRelativeTime(dateString) {
+                if (!dateString) return '';
+                
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffInMs = now - date;
+                const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+                
+                if (diffInDays === 0) {
+                    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+                    if (diffInHours === 0) {
+                        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+                        return `vor ${diffInMinutes} Minuten`;
+                    }
+                    return `vor ${diffInHours} Stunden`;
+                } else if (diffInDays === 1) {
+                    return 'vor 1 Tag';
+                } else {
+                    return `vor ${diffInDays} Tagen`;
+                }
+            }
+            
+            try {
+                // Fetch dashboard data from API
+                const dashboardData = await window.api.get('/dashboard');
+                
+                // Hide loading indicator and show dashboard
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('dashboardGrid').style.display = 'grid';
+                
+                // Update user info
+                const user = dashboardData.user_info;
+                document.getElementById('userName').textContent = `${user.first_name} ${user.last_name}`;
+                document.getElementById('welcomeHeader').textContent = `Willkommen zurück, ${user.first_name}!`;
+                document.getElementById('lastLogin').textContent = `Letzter Login: ${formatDate(user.last_login) || 'Erster Login'}`;
+                
+                // Handle property data (if available)
+                if (dashboardData.properties && dashboardData.properties.length > 0) {
+                    const property = dashboardData.properties[0];
+                    
+                    // Update property info
+                    document.getElementById('userProperty').textContent = property.unit_number || 'Immobilienkunde';
+                    document.getElementById('propertyName').textContent = property.name || 'Keine Immobilie zugewiesen';
+                    document.getElementById('propertyUnit').textContent = property.unit_number || '';
+                    document.getElementById('propertyLocation').textContent = property.location || '';
+                    
+                    // Update property features
+                    const featuresDiv = document.getElementById('propertyFeatures');
+                    featuresDiv.innerHTML = '';
+                    
+                    if (property.area_size) {
+                        featuresDiv.innerHTML += `<span><i class="fas fa-expand-arrows-alt"></i> ${property.area_size} ${property.area_unit || 'm²'}</span>`;
+                    }
+                    
+                    if (property.bedrooms) {
+                        featuresDiv.innerHTML += `<span><i class="fas fa-bed"></i> ${property.bedrooms} Schlafzimmer</span>`;
+                    }
+                    
+                    if (property.bathrooms) {
+                        featuresDiv.innerHTML += `<span><i class="fas fa-bath"></i> ${property.bathrooms} Bäder</span>`;
+                    }
+                    
+                    if (property.features && property.features.pool) {
+                        featuresDiv.innerHTML += `<span><i class="fas fa-swimming-pool"></i> ${property.features.pool === true ? 'Pool' : property.features.pool}</span>`;
+                    }
+                    
+                    // Update progress information if available
+                    if (property.progress) {
+                        const progressPercentage = property.progress.percentage || 0;
+                        const currentPhase = property.progress.current_phase || 'Anfangsphase';
+                        
+                        document.getElementById('progressPercentage').textContent = `${progressPercentage}%`;
+                        
+                        // Update progress bar with correct ARIA attributes
+                        const progressBar = document.getElementById('progressBar').parentElement;
+                        document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+                        progressBar.setAttribute('aria-valuenow', progressPercentage);
+                        
+                        document.getElementById('currentPhase').textContent = currentPhase;
+                        
+                        // Set next step info (placeholder for now)
+                        document.getElementById('nextStepInfo').textContent = 'Nächster Schritt wird in Kürze bekannt gegeben.';
+                    }
+                }
+                
+                // Update advisor information if available
+                if (dashboardData.advisor) {
+                    const advisor = dashboardData.advisor;
+                    document.getElementById('advisorName').textContent = advisor.name || 'Nicht zugewiesen';
+                    document.getElementById('advisorPhone').innerHTML = advisor.phone ? 
+                        `<i class="fas fa-phone"></i> ${advisor.phone}` : 
+                        `<i class="fas fa-phone"></i> Nicht verfügbar`;
+                    document.getElementById('advisorEmail').innerHTML = advisor.email ? 
+                        `<i class="fas fa-envelope"></i> ${advisor.email}` : 
+                        `<i class="fas fa-envelope"></i> Nicht verfügbar`;
+                    
+                    // Update email button link
+                    if (advisor.email) {
+                        document.getElementById('emailAdvisorBtn').href = `mailto:${advisor.email}`;
+                    }
+                    
+                    // Update advisor image if available
+                    if (advisor.avatar_url) {
+                        document.getElementById('advisorImage').src = advisor.avatar_url;
+                    }
+                }
+                
+                // Update page with current language
+                window.i18n.translatePage();
+                
+                // Listen for language changes
+                document.addEventListener('languageChanged', function(event) {
+                    console.log('Language changed to:', event.detail.language);
+                    // Update the page with new translations
+                    window.i18n.translatePage();
+                });
+                
+                // For demo purposes, use the static data for notifications and next steps
+                // In a real implementation, these would come from the API
+                
+                // Update notifications (using static data for now)
+                const notificationsList = document.getElementById('notificationsList');
+                notificationsList.innerHTML = `
+                    <li class="unread">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="notification-content">
+                            <p>Neues Dokument hochgeladen: <strong>Kaufvertrag_final.pdf</strong></p>
+                            <span class="notification-time">vor 8 Tagen</span>
+                        </div>
+                    </li>
+                    <li class="unread">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="notification-content">
+                            <p>Termin für Schlüsselübergabe geplant: <strong>15.07.2025</strong></p>
+                            <span class="notification-time">vor 10 Tagen</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-tasks"></i>
+                        <div class="notification-content">
+                            <p>Prozessstatus aktualisiert: <strong>Eigentumseintragung</strong> begonnen</p>
+                            <span class="notification-time">vor 14 Tagen</span>
+                        </div>
+                    </li>
+                `;
+                
+                // Update next steps (using static data for now)
+                const nextStepsList = document.getElementById('nextStepsList');
+                nextStepsList.innerHTML = `
+                    <li class="step-completed">
+                        <div class="step-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Zahlungsbestätigung</h3>
+                        </div>
+                        <p>Ihre Zahlung wurde erfolgreich bestätigt.</p>
+                        <span class="step-date">Abgeschlossen am 25.04.2025</span>
+                    </li>
+                    <li class="step-completed">
+                        <div class="step-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Vertragsprüfung durch Anwalt</h3>
+                        </div>
+                        <p>Der Vertrag wurde von unserem Anwalt geprüft und für korrekt befunden.</p>
+                        <span class="step-date">Abgeschlossen am 02.05.2025</span>
+                    </li>
+                    <li class="step-in-progress">
+                        <div class="step-header">
+                            <i class="fas fa-clock"></i>
+                            <h3>Eigentumseintragung</h3>
+                        </div>
+                        <p>Die Eintragung des Eigentums ins Grundbuch ist in Bearbeitung.</p>
+                        <span class="step-date">In Bearbeitung seit 12.05.2025</span>
+                    </li>
+                    <li class="step-upcoming">
+                        <div class="step-header">
+                            <i class="fas fa-hourglass-start"></i>
+                            <h3>Schlüsselübergabe</h3>
+                        </div>
+                        <p>Die Schlüsselübergabe wird nach abgeschlossener Eigentumseintragung stattfinden.</p>
+                        <span class="step-date">Geplant für 15.07.2025</span>
+                    </li>
+                `;
+                
+                // Show a success notification using the new system
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.success(
+                        'Dashboard Daten erfolgreich geladen.',
+                        'Willkommen zurück'
+                    );
+                }
+                
+                // Update document list (using static data for now)
+                const documentsList = document.getElementById('documentsList');
+                documentsList.innerHTML = `
+                    <li>
+                        <i class="fas fa-file-pdf"></i>
+                        <div class="doc-info">
+                            <span class="doc-name">Kaufvertrag_final.pdf</span>
+                            <span class="doc-date">Hinzugefügt am 10.05.2025</span>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </li>
+                    <li>
+                        <i class="fas fa-file-pdf"></i>
+                        <div class="doc-info">
+                            <span class="doc-name">Grundbuchauszug.pdf</span>
+                            <span class="doc-date">Hinzugefügt am 02.05.2025</span>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </li>
+                    <li>
+                        <i class="fas fa-file-excel"></i>
+                        <div class="doc-info">
+                            <span class="doc-name">Kostenaufstellung.xlsx</span>
+                            <span class="doc-date">Hinzugefügt am 28.04.2025</span>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </li>
+                `;
+                
+                // If no properties found, show a message
+                if (!dashboardData.properties || dashboardData.properties.length === 0) {
+                    document.getElementById('propertyName').textContent = 'Keine Immobilie zugewiesen';
+                    document.getElementById('propertyUnit').textContent = '';
+                    document.getElementById('propertyLocation').textContent = 'Bitte kontaktieren Sie Ihren Berater';
+                    document.getElementById('propertyFeatures').innerHTML = '<span>Keine Daten verfügbar</span>';
+                }
+                
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                
+                // Show error message
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--status-danger);"></i>
+                    <p>Fehler beim Laden der Dashboard-Daten. Bitte versuchen Sie es später erneut.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">Erneut versuchen</button>
+                `;
+                
+                // Show notification using the new system
+                if (window.RedBirdNotify) {
+                    window.RedBirdNotify.danger(
+                        'Fehler beim Laden der Dashboard-Daten. Bitte versuchen Sie es später erneut.',
+                        'Verbindungsproblem'
+                    );
+                }
+                
+                // For demo purposes, fall back to static data
+                document.getElementById('dashboardGrid').style.display = 'grid';
+            }
+        });
+    </script>
+</body>
+</html>

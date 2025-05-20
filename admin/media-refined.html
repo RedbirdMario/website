@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medienverwaltung - RedBird Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin-refined.css">
+  <link rel="stylesheet" href="../css/forms-enhanced.css">
+  <link rel="stylesheet" href="../css/file-upload-enhanced.css">
+  <link rel="stylesheet" href="../css/notifications-enhanced.css">
+  <style>
+    /* Media management specific styles */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .media-item {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    
+    .media-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .media-preview {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+      background-color: var(--bg-subtle);
+    }
+    
+    .media-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    
+    .media-item:hover .media-preview img {
+      transform: scale(1.05);
+    }
+    
+    .media-preview-document {
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-subtle);
+      color: var(--text-muted);
+      font-size: 3.5rem;
+    }
+    
+    .media-preview-document i.pdf {
+      color: #f40f02;
+    }
+    
+    .media-preview-document i.doc {
+      color: #2b579a;
+    }
+    
+    .media-preview-document i.xls {
+      color: #217346;
+    }
+    
+    .media-info {
+      padding: 1.25rem;
+    }
+    
+    .media-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+    
+    .media-details {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .media-actions {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      gap: 0.75rem;
+    }
+    
+    .media-item:hover .media-actions {
+      opacity: 1;
+    }
+    
+    .media-action-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: var(--text-primary);
+    }
+    
+    .media-action-btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .media-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .media-filter-select {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-element);
+      color: var(--text-primary);
+      min-width: 160px;
+    }
+    
+    .media-batch-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+    }
+    
+    .media-batch-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .customer-attachment-list {
+      margin-top: 1.5rem;
+    }
+    
+    .customer-attachment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem;
+      background-color: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1rem;
+    }
+    
+    .customer-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .customer-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--bg-subtle);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-primary);
+      border: 2px solid var(--primary-color);
+    }
+    
+    .customer-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+    
+    .customer-property {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .customer-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Media Detail Modal */
+    .media-detail-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1050;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .media-detail-content {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .media-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-subtle);
+    }
+    
+    .media-detail-header h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    
+    .media-detail-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+    
+    .media-detail-close:hover {
+      color: var(--primary-color);
+    }
+    
+    .media-detail-body {
+      padding: 2rem;
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .media-detail-preview {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .media-detail-preview img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      max-height: 350px;
+      object-fit: contain;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .media-detail-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .media-detail-section {
+      margin-bottom: 2rem;
+    }
+    
+    .media-detail-section h4 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    .media-detail-footer {
+      padding: 1.5rem;
+      background-color: var(--bg-subtle);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    
+    .media-detail-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .media-detail-btn.delete {
+      background-color: var(--bg-element);
+      color: var(--danger-color);
+    }
+    
+    .media-detail-btn.delete:hover {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .media-detail-btn.cancel {
+      background-color: var(--bg-element);
+      color: var(--text-primary);
+    }
+    
+    .media-detail-btn.save {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .media-detail-btn.save:hover {
+      opacity: 0.9;
+    }
+    
+    /* Upload area modifications */
+    .upload-section {
+      margin-bottom: 2rem;
+    }
+    
+    .drop-zone {
+      background-color: var(--bg-subtle);
+      border: 2px dashed var(--border-color);
+    }
+    
+    .drop-zone:hover {
+      border-color: var(--primary-color);
+      background-color: var(--bg-hover);
+    }
+    
+    .drop-zone.drag-over {
+      border-color: var(--primary-color);
+      background-color: var(--bg-hover);
+    }
+    
+    .drop-zone-icon {
+      color: var(--text-muted);
+    }
+    
+    .drop-zone:hover .drop-zone-icon,
+    .drop-zone.drag-over .drop-zone-icon {
+      color: var(--primary-color);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .customer-attachment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .customer-actions {
+        width: 100%;
+      }
+      
+      .customer-actions button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body class="admin-body">
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <div class="admin-header-logo">
+      <img src="../img/redbird-logo.svg" alt="RedBird Logo" class="admin-logo">
+      <span class="admin-title">Admin Dashboard</span>
+    </div>
+    <nav class="admin-nav">
+      <a href="dashboard-refined.html" class="admin-nav-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="user-management-refined.html" class="admin-nav-item">
+        <i class="fas fa-users"></i>
+        <span>Benutzerverwaltung</span>
+      </a>
+      <a href="pipeline-management.html" class="admin-nav-item">
+        <i class="fas fa-project-diagram"></i>
+        <span>Pipeline</span>
+      </a>
+      <a href="media-refined.html" class="admin-nav-item active">
+        <i class="fas fa-images"></i>
+        <span>Medienverwaltung</span>
+      </a>
+    </nav>
+    <div class="admin-header-actions">
+      <button class="action-button notification-button" aria-label="Benachrichtigungen">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge">3</span>
+      </button>
+      <button class="action-button theme-toggle" aria-label="Dunkelmodus umschalten" data-theme-toggle>
+        <i class="fas fa-moon" data-theme-icon></i>
+      </button>
+      <div class="admin-user-menu">
+        <button class="user-menu-button">
+          <div class="user-avatar">MN</div>
+          <span class="user-name">Admin</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Container -->
+  <div class="admin-container">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <h3 class="sidebar-heading">Administration</h3>
+          <a href="dashboard-refined.html" class="sidebar-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="user-management-refined.html" class="sidebar-link">
+            <i class="fas fa-users"></i>
+            <span>Benutzerverwaltung</span>
+          </a>
+          <a href="pipeline-management.html" class="sidebar-link">
+            <i class="fas fa-project-diagram"></i>
+            <span>Pipeline-Management</span>
+          </a>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-heading">Medien</h3>
+          <a href="media-refined.html" class="sidebar-link active">
+            <i class="fas fa-images"></i>
+            <span>Medienverwaltung</span>
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Dokumente</span>
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-upload"></i>
+            <span>Uploads</span>
+          </a>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-heading">Einstellungen</h3>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-cog"></i>
+            <span>Systemeinstellungen</span>
+          </a>
+          <a href="#" class="sidebar-link">
+            <i class="fas fa-user-cog"></i>
+            <span>Benutzereinstellungen</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <div class="content-header">
+        <h1>Medienverwaltung</h1>
+        <p class="subtitle">Verwalten Sie Bilder und Dokumente für alle Kunden und Immobilien</p>
+      </div>
+      
+      <!-- Upload Section -->
+      <div class="card upload-section">
+        <div class="card-header">
+          <h2><i class="fas fa-cloud-upload-alt"></i> Medien hochladen</h2>
+        </div>
+        <div class="card-body">
+          <div class="file-upload-enhanced" id="mediaUpload">
+            <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf,.doc,.docx" multiple data-accept-types="all" data-max-size="10">
+            
+            <div class="drop-zone" id="uploadArea" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)">
+              <i class="fas fa-cloud-upload-alt drop-zone-icon"></i>
+              <div class="drop-zone-text">Dateien hier ablegen</div>
+              <div class="drop-zone-hint">oder klicken Sie, um Dateien auszuwählen</div>
+              <p>Unterstützte Formate: JPG, PNG, PDF, DOC, XLS (Max. 10 MB)</p>
+            </div>
+            
+            <div id="uploadPreviewArea" class="file-preview-area">
+              <div id="uploadPreviewGrid" class="file-preview-grid"></div>
+            </div>
+          </div>
+          
+          <form id="uploadForm" class="form-enhanced">
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group-enhanced">
+                  <label for="mediaTitle" class="form-label-enhanced form-label-required">Titel</label>
+                  <input type="text" id="mediaTitle" name="mediaTitle" class="form-control-enhanced" placeholder="z.B. Außenansicht des Gebäudes" required>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group-enhanced">
+                  <label for="mediaCategory" class="form-label-enhanced form-label-required">Kategorie</label>
+                  <select id="mediaCategory" name="mediaCategory" class="form-control-enhanced" required>
+                    <option value="">Kategorie wählen...</option>
+                    <option value="exterior">Außenansicht</option>
+                    <option value="interior">Innenansicht</option>
+                    <option value="amenities">Ausstattung</option>
+                    <option value="area">Umgebung</option>
+                    <option value="contracts">Verträge</option>
+                    <option value="floorplans">Grundrisse</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group-enhanced">
+                  <label for="mediaProperty" class="form-label-enhanced form-label-required">Immobilie</label>
+                  <select id="mediaProperty" name="mediaProperty" class="form-control-enhanced" required>
+                    <option value="">Immobilie wählen...</option>
+                    <option value="property-1">Sunset Bay Resort, A-203</option>
+                    <option value="property-2">Palm View Residence, B-105</option>
+                    <option value="property-3">Golden Bay Villas, C-301</option>
+                    <option value="property-4">Mountain View Resort, D-102</option>
+                    <option value="property-5">Seaside Apartments, E-405</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group-enhanced">
+                  <label for="mediaDescription" class="form-label-enhanced">Beschreibung</label>
+                  <textarea id="mediaDescription" name="mediaDescription" class="form-control-enhanced" rows="3" placeholder="Kurze Beschreibung des Mediums"></textarea>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group-enhanced">
+              <label for="mediaCustomers" class="form-label-enhanced">Kunden zuweisen</label>
+              <select id="mediaCustomers" name="mediaCustomers" class="form-control-enhanced" multiple>
+                <option value="customer-1">Max Mustermann - Sunset Bay Resort, A-203</option>
+                <option value="customer-2">Maria Schmidt - Palm View Residence, B-105</option>
+                <option value="customer-3">Klaus Weber - Golden Bay Villas, C-301</option>
+                <option value="customer-4">Anna Becker - Mountain View Resort, D-102</option>
+                <option value="customer-5">Michael Schneider - Seaside Apartments, E-405</option>
+              </select>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="resetUploadForm()">Abbrechen</button>
+              <button type="button" class="btn btn-primary" onclick="uploadFiles()">Hochladen</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Media Library -->
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-photo-video"></i> Medienbibliothek</h2>
+          <div class="card-header-actions">
+            <div class="search-container">
+              <input type="text" id="searchInput" class="search-input" placeholder="Suche nach Medien...">
+              <i class="fas fa-search search-icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="media-filters">
+            <select class="media-filter-select" id="filterType">
+              <option value="all">Alle Medientypen</option>
+              <option value="image">Bilder</option>
+              <option value="document">Dokumente</option>
+            </select>
+            
+            <select class="media-filter-select" id="filterCategory">
+              <option value="all">Alle Kategorien</option>
+              <option value="exterior">Außenansicht</option>
+              <option value="interior">Innenansicht</option>
+              <option value="amenities">Ausstattung</option>
+              <option value="area">Umgebung</option>
+              <option value="contracts">Verträge</option>
+              <option value="floorplans">Grundrisse</option>
+            </select>
+            
+            <select class="media-filter-select" id="filterProperty">
+              <option value="all">Alle Immobilien</option>
+              <option value="property-1">Sunset Bay Resort</option>
+              <option value="property-2">Palm View Residence</option>
+              <option value="property-3">Golden Bay Villas</option>
+              <option value="property-4">Mountain View Resort</option>
+              <option value="property-5">Seaside Apartments</option>
+            </select>
+            
+            <select class="media-filter-select" id="filterDate">
+              <option value="all">Alle Zeiträume</option>
+              <option value="today">Heute</option>
+              <option value="week">Diese Woche</option>
+              <option value="month">Dieser Monat</option>
+              <option value="year">Dieses Jahr</option>
+            </select>
+          </div>
+          
+          <div class="media-batch-actions">
+            <div class="media-batch-info">
+              <span id="selectedCount">0 Elemente ausgewählt</span>
+            </div>
+            <div class="media-batch-buttons">
+              <button class="btn btn-outline" id="batchAssignBtn" disabled>Zuweisen</button>
+              <button class="btn btn-outline" id="batchDownloadBtn" disabled>Herunterladen</button>
+              <button class="btn btn-outline" id="batchDeleteBtn" disabled>Löschen</button>
+            </div>
+          </div>
+          
+          <div id="mediaGrid" class="media-grid">
+            <!-- Media items will be loaded here -->
+          </div>
+          
+          <div class="pagination">
+            <button class="pagination-btn" aria-label="Vorherige Seite"><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn" aria-label="Nächste Seite"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Customer Assignments -->
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-user-friends"></i> Kundenzuweisungen</h2>
+        </div>
+        <div class="card-body">
+          <p>Sehen Sie, welchen Kunden die Medien zugewiesen sind, und verwalten Sie den Zugriff.</p>
+          
+          <div class="customer-attachment-list" id="customerList">
+            <!-- Customer list will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Media Detail Modal -->
+  <div class="media-detail-modal" id="mediaDetailModal">
+    <div class="media-detail-content">
+      <div class="media-detail-header">
+        <h3>Medium bearbeiten</h3>
+        <button class="media-detail-close" onclick="closeMediaDetail()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="media-detail-body">
+        <div class="media-detail-preview">
+          <img src="" alt="" id="detailPreviewImage">
+        </div>
+        <div class="media-detail-info">
+          <div class="media-detail-section">
+            <h4>Allgemeine Informationen</h4>
+            <div class="form-group-enhanced">
+              <label for="detailTitle" class="form-label-enhanced">Titel</label>
+              <input type="text" id="detailTitle" class="form-control-enhanced" value="">
+            </div>
+            <div class="form-group-enhanced">
+              <label for="detailDescription" class="form-label-enhanced">Beschreibung</label>
+              <textarea id="detailDescription" class="form-control-enhanced" rows="3"></textarea>
+            </div>
+          </div>
+          
+          <div class="media-detail-section">
+            <h4>Kategorisierung</h4>
+            <div class="form-group-enhanced">
+              <label for="detailCategory" class="form-label-enhanced">Kategorie</label>
+              <select id="detailCategory" class="form-control-enhanced">
+                <option value="exterior">Außenansicht</option>
+                <option value="interior">Innenansicht</option>
+                <option value="amenities">Ausstattung</option>
+                <option value="area">Umgebung</option>
+                <option value="contracts">Verträge</option>
+                <option value="floorplans">Grundrisse</option>
+              </select>
+            </div>
+            <div class="form-group-enhanced">
+              <label for="detailProperty" class="form-label-enhanced">Immobilie</label>
+              <select id="detailProperty" class="form-control-enhanced">
+                <option value="property-1">Sunset Bay Resort, A-203</option>
+                <option value="property-2">Palm View Residence, B-105</option>
+                <option value="property-3">Golden Bay Villas, C-301</option>
+                <option value="property-4">Mountain View Resort, D-102</option>
+                <option value="property-5">Seaside Apartments, E-405</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="media-detail-section">
+            <h4>Zugewiesene Kunden</h4>
+            <div class="form-group-enhanced">
+              <label for="detailCustomers" class="form-label-enhanced">Kunden</label>
+              <select id="detailCustomers" class="form-control-enhanced" multiple>
+                <option value="customer-1">Max Mustermann - Sunset Bay Resort, A-203</option>
+                <option value="customer-2">Maria Schmidt - Palm View Residence, B-105</option>
+                <option value="customer-3">Klaus Weber - Golden Bay Villas, C-301</option>
+                <option value="customer-4">Anna Becker - Mountain View Resort, D-102</option>
+                <option value="customer-5">Michael Schneider - Seaside Apartments, E-405</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="media-detail-section">
+            <h4>Metadaten</h4>
+            <p><strong>Dateiname:</strong> <span id="detailFilename"></span></p>
+            <p><strong>Dateigröße:</strong> <span id="detailFilesize"></span></p>
+            <p><strong>Abmessungen:</strong> <span id="detailDimensions"></span></p>
+            <p><strong>Hochgeladen am:</strong> <span id="detailUploadDate"></span></p>
+            <p><strong>Hochgeladen von:</strong> <span id="detailUploader">Administrator</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="media-detail-footer">
+        <button class="media-detail-btn delete" onclick="deleteMedia(currentMediaId)">Löschen</button>
+        <button class="media-detail-btn cancel" onclick="closeMediaDetail()">Abbrechen</button>
+        <button class="media-detail-btn save" onclick="saveMediaDetails()">Änderungen speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/theme-switcher.js"></script>
+  <script src="../js/data-store.js"></script>
+  <script src="../js/notifications-enhanced.js"></script>
+  <script>
+    // Global variables
+    let mediaItems = [];
+    let selectedFiles = [];
+    let currentMediaId = null;
+    const uploadPreviewArea = document.getElementById('uploadPreviewArea');
+    const uploadPreviewGrid = document.getElementById('uploadPreviewGrid');
+    const mediaGrid = document.getElementById('mediaGrid');
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize notifications
+      if (window.RedBirdNotify) {
+        window.RedBirdNotify.configure({
+          position: 'top-right',
+          duration: 5000,
+          maxNotifications: 4
+        });
+      }
+      
+      // Load media items from our data store
+      mediaItems = RedBirdDB ? RedBirdDB.getAllMedia() : [];
+      renderMediaItems();
+      
+      // Populate customer dropdowns with actual users
+      populateCustomerDropdowns();
+      
+      // Initialize filter event listeners
+      document.getElementById('filterType').addEventListener('change', applyFilters);
+      document.getElementById('filterCategory').addEventListener('change', applyFilters);
+      document.getElementById('filterProperty').addEventListener('change', applyFilters);
+      document.getElementById('filterDate').addEventListener('change', applyFilters);
+      
+      // Initialize search
+      document.getElementById('searchInput').addEventListener('input', function() {
+        applyFilters();
+      });
+      
+      // Render customer list
+      renderCustomerList();
+      
+      // Initialize batch action buttons
+      document.getElementById('batchAssignBtn').addEventListener('click', function() {
+        // Get selected media IDs
+        const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+        if (selectedIds.length > 0) {
+          showNotification(`${selectedIds.length} Medien werden zugewiesen...`, 'success');
+        }
+      });
+      
+      document.getElementById('batchDownloadBtn').addEventListener('click', function() {
+        // Get selected media IDs
+        const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+        if (selectedIds.length > 0) {
+          showNotification(`${selectedIds.length} Medien werden heruntergeladen...`, 'success');
+        }
+      });
+      
+      document.getElementById('batchDeleteBtn').addEventListener('click', function() {
+        // Get selected media IDs
+        const selectedIds = mediaItems.filter(item => item.selected).map(item => item.id);
+        if (selectedIds.length > 0) {
+          if (confirm(`Möchten Sie wirklich ${selectedIds.length} Medien löschen?`)) {
+            // Remove selected items from the mediaItems array
+            mediaItems = mediaItems.filter(item => !item.selected);
+            renderMediaItems();
+            showNotification(`${selectedIds.length} Medien wurden gelöscht.`, 'success');
+          }
+        }
+      });
+    });
+    
+    // Render media items
+    function renderMediaItems() {
+      mediaGrid.innerHTML = '';
+      
+      mediaItems.forEach(item => {
+        const mediaItem = document.createElement('div');
+        mediaItem.className = 'media-item';
+        mediaItem.setAttribute('data-id', item.id);
+        mediaItem.setAttribute('data-type', item.type);
+        mediaItem.setAttribute('data-category', item.category);
+        mediaItem.setAttribute('data-property', item.property);
+        
+        if (item.selected) {
+          mediaItem.style.boxShadow = '0 0 0 3px var(--primary-color), 0 8px 20px rgba(0,0,0,0.1)';
+        }
+        
+        if (item.type === 'image') {
+          mediaItem.innerHTML = `
+            <div class="media-preview">
+              <img src="${item.fileUrl}" alt="${item.title}">
+              <div class="media-actions">
+                <button class="media-action-btn" onclick="toggleSelectMedia(${item.id})"><i class="fas ${item.selected ? 'fa-check-square' : 'fa-square'}"></i></button>
+                <button class="media-action-btn" onclick="openMediaDetail(${item.id})"><i class="fas fa-edit"></i></button>
+                <button class="media-action-btn" onclick="viewMedia(${item.id})"><i class="fas fa-eye"></i></button>
+                <button class="media-action-btn" onclick="downloadMedia(${item.id})"><i class="fas fa-download"></i></button>
+                <button class="media-action-btn" onclick="deleteMedia(${item.id})"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+            <div class="media-info">
+              <div class="media-title">${item.title}</div>
+              <div class="media-details">${item.propertyName} | ${item.uploadDate}</div>
+            </div>
+          `;
+        } else {
+          const iconClass = item.documentType === 'pdf' ? 'pdf' : (item.documentType === 'doc' ? 'doc' : 'xls');
+          const icon = item.documentType === 'pdf' ? 'fa-file-pdf' : (item.documentType === 'doc' ? 'fa-file-word' : 'fa-file-excel');
+          
+          mediaItem.innerHTML = `
+            <div class="media-preview-document">
+              <i class="fas ${icon} ${iconClass}"></i>
+            </div>
+            <div class="media-info">
+              <div class="media-title">${item.title}</div>
+              <div class="media-details">${item.propertyName} | ${item.uploadDate}</div>
+            </div>
+            <div class="media-actions">
+              <button class="media-action-btn" onclick="toggleSelectMedia(${item.id})"><i class="fas ${item.selected ? 'fa-check-square' : 'fa-square'}"></i></button>
+              <button class="media-action-btn" onclick="openMediaDetail(${item.id})"><i class="fas fa-edit"></i></button>
+              <button class="media-action-btn" onclick="viewMedia(${item.id})"><i class="fas fa-eye"></i></button>
+              <button class="media-action-btn" onclick="downloadMedia(${item.id})"><i class="fas fa-download"></i></button>
+              <button class="media-action-btn" onclick="deleteMedia(${item.id})"><i class="fas fa-trash"></i></button>
+            </div>
+          `;
+        }
+        
+        mediaGrid.appendChild(mediaItem);
+      });
+      
+      updateSelectedCount();
+    }
+    
+    // Apply media filters
+    function applyFilters() {
+      const typeFilter = document.getElementById('filterType').value;
+      const categoryFilter = document.getElementById('filterCategory').value;
+      const propertyFilter = document.getElementById('filterProperty').value;
+      const dateFilter = document.getElementById('filterDate').value;
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      const mediaItems = document.querySelectorAll('.media-item');
+      
+      mediaItems.forEach(item => {
+        const itemType = item.getAttribute('data-type');
+        const itemCategory = item.getAttribute('data-category');
+        const itemProperty = item.getAttribute('data-property');
+        const itemTitle = item.querySelector('.media-title').textContent.toLowerCase();
+        const itemDetails = item.querySelector('.media-details').textContent.toLowerCase();
+        
+        // Check if the item matches all selected filters
+        const matchesType = typeFilter === 'all' || itemType === typeFilter;
+        const matchesCategory = categoryFilter === 'all' || itemCategory === categoryFilter;
+        const matchesProperty = propertyFilter === 'all' || itemProperty === propertyFilter;
+        
+        // For dateFilter we would need actual dates to compare
+        // In this demo, we'll treat all dates as matching
+        const matchesDate = true;
+        
+        // Check if the item matches the search term
+        const matchesSearch = searchTerm === '' || 
+                            itemTitle.includes(searchTerm) || 
+                            itemDetails.includes(searchTerm);
+        
+        // Show or hide item based on filter match
+        if (matchesType && matchesCategory && matchesProperty && matchesDate && matchesSearch) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+    
+    // File drag and drop handlers
+    function dragOverHandler(e) {
+      e.preventDefault();
+      document.getElementById('uploadArea').classList.add('drag-over');
+    }
+    
+    function dragLeaveHandler(e) {
+      e.preventDefault();
+      document.getElementById('uploadArea').classList.remove('drag-over');
+    }
+    
+    function dropHandler(e) {
+      e.preventDefault();
+      document.getElementById('uploadArea').classList.remove('drag-over');
+      
+      if (e.dataTransfer.items) {
+        // Use DataTransferItemList interface
+        for (let i = 0; i < e.dataTransfer.items.length; i++) {
+          if (e.dataTransfer.items[i].kind === 'file') {
+            const file = e.dataTransfer.items[i].getAsFile();
+            addFileToSelection(file);
+          }
+        }
+      } else {
+        // Use DataTransfer interface
+        for (let i = 0; i < e.dataTransfer.files.length; i++) {
+          addFileToSelection(e.dataTransfer.files[i]);
+        }
+      }
+    }
+    
+    // File input change handler
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      for (let i = 0; i < files.length; i++) {
+        addFileToSelection(files[i]);
+      }
+    }
+    
+    // Add file to selection
+    function addFileToSelection(file) {
+      // Check file type and size
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedDocTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+      
+      if (![...allowedImageTypes, ...allowedDocTypes].includes(file.type)) {
+        showNotification('Nicht unterstütztes Dateiformat. Bitte wählen Sie JPG, PNG, PDF, DOC oder XLS.', 'danger');
+        return;
+      }
+      
+      if (file.size > 10 * 1024 * 1024) { // 10 MB
+        showNotification('Die Datei ist zu groß. Maximale Größe: 10 MB.', 'danger');
+        return;
+      }
+      
+      // Add to selected files array
+      const fileId = Date.now() + Math.random().toString(36).substring(2, 15);
+      selectedFiles.push({
+        id: fileId,
+        file: file,
+        type: file.type,
+        preview: null
+      });
+      
+      // Show preview area
+      uploadPreviewArea.style.display = 'flex';
+      
+      // Create preview item
+      const previewItem = document.createElement('div');
+      previewItem.className = 'file-preview-item';
+      previewItem.setAttribute('data-id', fileId);
+      
+      // Determine file type
+      const isImage = allowedImageTypes.includes(file.type);
+      
+      // Create preview content
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          // Store preview URL
+          selectedFiles.find(f => f.id === fileId).preview = e.target.result;
+          
+          // Create preview element
+          previewItem.innerHTML = `
+            <div class="file-preview-image">
+              <img src="${e.target.result}" alt="${file.name}">
+            </div>
+            <div class="file-preview-info">
+              ${file.name}
+            </div>
+            <div class="file-preview-remove" onclick="removeFileFromSelection('${fileId}')">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="file-progress-container">
+              <div class="file-progress"></div>
+            </div>
+          `;
+          
+          uploadPreviewGrid.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Determine document icon
+        let iconClass = 'fa-file';
+        
+        if (file.type === 'application/pdf') {
+          iconClass = 'fa-file-pdf';
+        } else if (file.type.includes('word')) {
+          iconClass = 'fa-file-word';
+        } else if (file.type.includes('excel')) {
+          iconClass = 'fa-file-excel';
+        }
+        
+        previewItem.innerHTML = `
+          <div class="file-preview-image">
+            <i class="fas ${iconClass} fa-3x"></i>
+          </div>
+          <div class="file-preview-info">
+            ${file.name}
+          </div>
+          <div class="file-preview-remove" onclick="removeFileFromSelection('${fileId}')">
+            <i class="fas fa-times"></i>
+          </div>
+          <div class="file-progress-container">
+            <div class="file-progress"></div>
+          </div>
+        `;
+        
+        uploadPreviewGrid.appendChild(previewItem);
+      }
+    }
+    
+    // Remove file from selection
+    function removeFileFromSelection(fileId) {
+      selectedFiles = selectedFiles.filter(file => file.id !== fileId);
+      
+      const previewItem = document.querySelector(`.file-preview-item[data-id="${fileId}"]`);
+      if (previewItem) {
+        previewItem.remove();
+      }
+      
+      if (selectedFiles.length === 0) {
+        uploadPreviewArea.style.display = 'none';
+      }
+    }
+    
+    // Upload files
+    function uploadFiles() {
+      // Check if any files are selected
+      if (selectedFiles.length === 0) {
+        showNotification('Bitte wählen Sie mindestens eine Datei aus.', 'danger');
+        return;
+      }
+      
+      // Validate form
+      const title = document.getElementById('mediaTitle').value;
+      const category = document.getElementById('mediaCategory').value;
+      const property = document.getElementById('mediaProperty').value;
+      
+      if (!title || !category || !property) {
+        showNotification('Bitte füllen Sie alle erforderlichen Felder aus.', 'danger');
+        return;
+      }
+      
+      // Get additional form values
+      const description = document.getElementById('mediaDescription').value;
+      const customersSelect = document.getElementById('mediaCustomers');
+      const selectedCustomers = [];
+      
+      for (let i = 0; i < customersSelect.options.length; i++) {
+        if (customersSelect.options[i].selected) {
+          selectedCustomers.push(customersSelect.options[i].value);
+        }
+      }
+      
+      // Get property name
+      const propertySelect = document.getElementById('mediaProperty');
+      const propertyName = propertySelect.options[propertySelect.selectedIndex].text;
+      
+      // Upload files (in a real application, this would send files to a server)
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        
+        // Find preview item
+        const previewItem = document.querySelector(`.file-preview-item[data-id="${file.id}"]`);
+        const progressBar = previewItem.querySelector('.file-progress');
+        
+        // Simulate upload progress
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 5;
+          progressBar.style.width = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+            
+            // Add completed class
+            previewItem.classList.add('upload-complete');
+            
+            // Determine file type
+            const isImage = file.type.includes('image');
+            let documentType = '';
+            
+            if (!isImage) {
+              if (file.type.includes('pdf')) {
+                documentType = 'pdf';
+              } else if (file.type.includes('word')) {
+                documentType = 'doc';
+              } else if (file.type.includes('excel')) {
+                documentType = 'xls';
+              }
+            }
+            
+            // Format date
+            const today = new Date();
+            const formattedDate = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
+            
+            // Format file size
+            const fileSizeInMB = (file.file.size / (1024 * 1024)).toFixed(1);
+            
+            // In a real app, we would upload the actual file to a server
+            // For this demo, we'll save file's data URL (for images) or a placeholder (for documents)
+            // In practice, we'd save all uploads to the uploads/ directory
+            
+            // For this demo, simulate file saving to uploads directory
+            let fileUrl = isImage ? file.preview : '#';
+            
+            // In a real implementation, we'd use server-side code to save the file
+            // Simulate it here by using a URL that points to our uploads directory
+            if (isImage) {
+              fileUrl = `../uploads/images/${file.file.name}`;
+            } else if (documentType === 'pdf') {
+              fileUrl = `../uploads/documents/${file.file.name}`;
+            }
+            
+            // Create new media item
+            const newMediaItem = {
+              id: mediaItems.length > 0 ? Math.max(...mediaItems.map(item => item.id)) + 1 : 1,
+              type: isImage ? 'image' : 'document',
+              title: title,
+              description: description,
+              category: category,
+              property: property,
+              propertyName: propertyName,
+              customers: selectedCustomers,
+              fileUrl: fileUrl,
+              fileName: file.file.name,
+              fileSize: `${fileSizeInMB} MB`,
+              dimensions: isImage ? 'Wird geladen...' : 'n/a',
+              uploadDate: formattedDate,
+              documentType: documentType
+            };
+            
+            // Add to mediaItems array
+            mediaItems.push(newMediaItem);
+            
+            // Update UI
+            if (i === selectedFiles.length - 1) {
+              // All files uploaded, render media items
+              renderMediaItems();
+              
+              // Update customer list since media assignments may have changed
+              renderCustomerList();
+              
+              // Reset form
+              resetUploadForm();
+              
+              // Show success message
+              showNotification(`${selectedFiles.length} ${selectedFiles.length === 1 ? 'Datei' : 'Dateien'} erfolgreich hochgeladen.`, 'success');
+            }
+          }
+        }, 100);
+      }
+    }
+    
+    // Reset upload form
+    function resetUploadForm() {
+      document.getElementById('mediaTitle').value = '';
+      document.getElementById('mediaCategory').value = '';
+      document.getElementById('mediaProperty').value = '';
+      document.getElementById('mediaDescription').value = '';
+      document.getElementById('mediaCustomers').selectedIndex = -1;
+      document.getElementById('fileInput').value = '';
+      
+      selectedFiles = [];
+      uploadPreviewArea.style.display = 'none';
+      uploadPreviewGrid.innerHTML = '';
+    }
+    
+    // Media Actions
+    function toggleSelectMedia(id) {
+      const mediaItem = mediaItems.find(item => item.id === id);
+      if (mediaItem) {
+        mediaItem.selected = !mediaItem.selected;
+        renderMediaItems();
+      }
+    }
+    
+    function updateSelectedCount() {
+      const selectedCount = mediaItems.filter(item => item.selected).length;
+      document.getElementById('selectedCount').textContent = `${selectedCount} ${selectedCount === 1 ? 'Element' : 'Elemente'} ausgewählt`;
+      
+      // Update batch action buttons
+      const batchButtons = document.querySelectorAll('.media-batch-buttons button');
+      batchButtons.forEach(button => {
+        button.disabled = selectedCount === 0;
+      });
+    }
+    
+    function openMediaDetail(id) {
+      const mediaItem = mediaItems.find(item => item.id === id);
+      if (mediaItem) {
+        currentMediaId = id;
+        
+        // Populate modal fields
+        document.getElementById('detailTitle').value = mediaItem.title;
+        document.getElementById('detailDescription').value = mediaItem.description;
+        document.getElementById('detailCategory').value = mediaItem.category;
+        document.getElementById('detailProperty').value = mediaItem.property;
+        
+        // Populate metadata
+        document.getElementById('detailFilename').textContent = mediaItem.fileName;
+        document.getElementById('detailFilesize').textContent = mediaItem.fileSize;
+        document.getElementById('detailDimensions').textContent = mediaItem.dimensions;
+        document.getElementById('detailUploadDate').textContent = mediaItem.uploadDate;
+        
+        // Set selected customers
+        const customersSelect = document.getElementById('detailCustomers');
+        for (let i = 0; i < customersSelect.options.length; i++) {
+          customersSelect.options[i].selected = mediaItem.customers.includes(customersSelect.options[i].value);
+        }
+        
+        // Set preview image for images
+        if (mediaItem.type === 'image') {
+          document.getElementById('detailPreviewImage').src = mediaItem.fileUrl;
+          document.getElementById('detailPreviewImage').style.display = 'block';
+        } else {
+          // For documents, hide the image and show an icon instead
+          document.getElementById('detailPreviewImage').style.display = 'none';
+          // In a real app, you might show a document preview or icon here
+        }
+        
+        // Show modal
+        document.getElementById('mediaDetailModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    
+    function closeMediaDetail() {
+      document.getElementById('mediaDetailModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      currentMediaId = null;
+    }
+    
+    function saveMediaDetails() {
+      if (currentMediaId) {
+        const mediaItem = mediaItems.find(item => item.id === currentMediaId);
+        if (mediaItem) {
+          // Update media item with new values
+          mediaItem.title = document.getElementById('detailTitle').value;
+          mediaItem.description = document.getElementById('detailDescription').value;
+          mediaItem.category = document.getElementById('detailCategory').value;
+          mediaItem.property = document.getElementById('detailProperty').value;
+          
+          // Update property name
+          const propertySelect = document.getElementById('detailProperty');
+          mediaItem.propertyName = propertySelect.options[propertySelect.selectedIndex].text;
+          
+          // Update customers
+          const customersSelect = document.getElementById('detailCustomers');
+          mediaItem.customers = [];
+          
+          for (let i = 0; i < customersSelect.options.length; i++) {
+            if (customersSelect.options[i].selected) {
+              mediaItem.customers.push(customersSelect.options[i].value);
+            }
+          }
+          
+          // Close modal
+          closeMediaDetail();
+          
+          // Update UI
+          renderMediaItems();
+          renderCustomerList();
+          
+          // Show success message
+          showNotification('Änderungen gespeichert.', 'success');
+        }
+      }
+    }
+    
+    function viewMedia(id) {
+      const mediaItem = mediaItems.find(item => item.id === id);
+      if (mediaItem) {
+        if (mediaItem.type === 'image') {
+          // Open image in a new tab
+          window.open(mediaItem.fileUrl, '_blank');
+        } else {
+          // For documents, show a message (in a real app, this would open the document)
+          showNotification(`Dokument wird geöffnet: ${mediaItem.fileName}`, 'success');
+        }
+      }
+    }
+    
+    function downloadMedia(id) {
+      const mediaItem = mediaItems.find(item => item.id === id);
+      if (mediaItem) {
+        // In a real app, this would trigger a download
+        showNotification(`Download gestartet: ${mediaItem.fileName}`, 'success');
+      }
+    }
+    
+    function deleteMedia(id) {
+      const mediaItem = mediaItems.find(item => item.id === id);
+      if (mediaItem) {
+        if (confirm(`Möchten Sie wirklich "${mediaItem.title}" löschen?`)) {
+          // Delete from mediaItems array
+          mediaItems = mediaItems.filter(item => item.id !== id);
+          
+          // Close modal if open
+          if (currentMediaId === id) {
+            closeMediaDetail();
+          }
+          
+          // Update UI
+          renderMediaItems();
+          renderCustomerList();
+          
+          // Show success message
+          showNotification('Medium erfolgreich gelöscht.', 'success');
+        }
+      }
+    }
+    
+    // Customer related functions
+    function populateCustomerDropdowns() {
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      const customerDropdowns = document.querySelectorAll('#mediaCustomers, #detailCustomers');
+      
+      customerDropdowns.forEach(dropdown => {
+        dropdown.innerHTML = ''; // Clear existing options
+        
+        customers.forEach(customer => {
+          const option = document.createElement('option');
+          option.value = customer.id;
+          option.textContent = `${customer.name} - ${customer.property}`;
+          dropdown.appendChild(option);
+        });
+      });
+    }
+    
+    function renderCustomerList() {
+      const customerList = document.getElementById('customerList');
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      customerList.innerHTML = ''; // Clear existing list
+      
+      customers.forEach(customer => {
+        // Count media assigned to this customer
+        const customerMedia = mediaItems.filter(item => item.customers && item.customers.includes(customer.id));
+        
+        const customerItem = document.createElement('div');
+        customerItem.className = 'customer-attachment-item';
+        customerItem.innerHTML = `
+          <div class="customer-info">
+            <div class="customer-avatar">${customer.avatar}</div>
+            <div>
+              <div class="customer-name">${customer.name}</div>
+              <div class="customer-property">${customer.property}</div>
+            </div>
+          </div>
+          <div>${customerMedia.length} Medien zugeordnet</div>
+          <div class="customer-actions">
+            <button class="btn btn-outline" onclick="manageCustomerAccess('${customer.id}')">Zugriff verwalten</button>
+            <button class="btn btn-primary" onclick="assignMediaToCustomer('${customer.id}')">Medien zuweisen</button>
+          </div>
+        `;
+        
+        customerList.appendChild(customerItem);
+      });
+    }
+    
+    function assignMediaToCustomer(customerId) {
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      const customer = customers.find(c => c.id === customerId);
+      
+      // Create and show the assign media modal
+      const modal = document.createElement('div');
+      modal.className = 'media-detail-modal';
+      modal.style.display = 'flex';
+      modal.innerHTML = `
+        <div class="media-detail-content">
+          <div class="media-detail-header">
+            <h3>Medien zuweisen</h3>
+            <button class="media-detail-close" onclick="this.closest('.media-detail-modal').remove()"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="media-detail-body">
+            <div class="media-detail-section">
+              <h4>Medien für ${customer.name}</h4>
+              <p>Wählen Sie die Medien aus, die diesem Kunden zugewiesen werden sollen.</p>
+              <div class="media-selection" style="max-height: 400px; overflow-y: auto;">
+                <!-- Media items will be added here -->
+              </div>
+            </div>
+          </div>
+          <div class="media-detail-footer">
+            <button class="media-detail-btn cancel" onclick="this.closest('.media-detail-modal').remove()">Abbrechen</button>
+            <button class="media-detail-btn save" onclick="saveCustomerMediaAssignments('${customerId}', this)">Speichern</button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Add all media items to the selection
+      const mediaSelection = modal.querySelector('.media-selection');
+      const customerMedia = mediaItems.filter(item => item.customers && item.customers.includes(customerId));
+      
+      mediaItems.forEach(media => {
+        const isAssigned = customerMedia.some(item => item.id === media.id);
+        
+        const mediaItem = document.createElement('div');
+        mediaItem.className = 'customer-attachment-item';
+        mediaItem.style.padding = '0.75rem';
+        
+        mediaItem.innerHTML = `
+          <div style="display: flex; align-items: center; width: 100%;">
+            <input type="checkbox" data-media-id="${media.id}" ${isAssigned ? 'checked' : ''} style="margin-right: 1rem;">
+            <div style="flex: 1;">
+              <div style="font-weight: 600;">${media.title}</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">${media.propertyName} | ${media.category}</div>
+            </div>
+            <div>
+              ${media.type === 'image' 
+                ? `<img src="${media.fileUrl}" alt="${media.title}" style="width: 60px; height: 40px; object-fit: cover; border-radius: var(--radius-sm);">` 
+                : `<i class="fas fa-file-${media.documentType} fa-2x"></i>`}
+            </div>
+          </div>
+        `;
+        
+        mediaSelection.appendChild(mediaItem);
+      });
+      
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function saveCustomerMediaAssignments(customerId, button) {
+      const modal = button.closest('.media-detail-modal');
+      const checkboxes = modal.querySelectorAll('input[type="checkbox"]');
+      
+      // Process all checkboxes
+      checkboxes.forEach(checkbox => {
+        const mediaId = parseInt(checkbox.getAttribute('data-media-id'));
+        const isChecked = checkbox.checked;
+        
+        // Get current media item
+        const mediaItem = mediaItems.find(item => item.id === mediaId);
+        
+        if (mediaItem) {
+          // Initialize customers array if it doesn't exist
+          if (!mediaItem.customers) {
+            mediaItem.customers = [];
+          }
+          
+          if (isChecked) {
+            // Add customer if not already assigned
+            if (!mediaItem.customers.includes(customerId)) {
+              mediaItem.customers.push(customerId);
+            }
+          } else {
+            // Remove customer if assigned
+            const index = mediaItem.customers.indexOf(customerId);
+            if (index !== -1) {
+              mediaItem.customers.splice(index, 1);
+            }
+          }
+        }
+      });
+      
+      // Update UI
+      renderMediaItems();
+      renderCustomerList();
+      
+      // Close modal
+      modal.remove();
+      document.body.style.overflow = 'auto';
+      
+      // Show success notification
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      const customer = customers.find(c => c.id === customerId);
+      showNotification(`Medienzuweisungen für ${customer.name} aktualisiert.`, 'success');
+    }
+    
+    function manageCustomerAccess(customerId) {
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      const customer = customers.find(c => c.id === customerId);
+      const customerMedia = mediaItems.filter(item => item.customers && item.customers.includes(customerId));
+      
+      // Create and show modal with list of assigned media for this customer
+      const modal = document.createElement('div');
+      modal.className = 'media-detail-modal';
+      modal.style.display = 'flex';
+      modal.innerHTML = `
+        <div class="media-detail-content">
+          <div class="media-detail-header">
+            <h3>Medienzugriff für ${customer.name}</h3>
+            <button class="media-detail-close" onclick="this.closest('.media-detail-modal').remove()"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="media-detail-body">
+            <div class="media-detail-section">
+              <h4>Zugewiesene Medien</h4>
+              <p>${customer.name} hat Zugriff auf ${customerMedia.length} Medien.</p>
+              <div class="media-list" style="max-height: 400px; overflow-y: auto;">
+                ${customerMedia.length > 0 ? '' : '<p>Diesem Kunden sind noch keine Medien zugewiesen.</p>'}
+              </div>
+            </div>
+          </div>
+          <div class="media-detail-footer">
+            <button class="media-detail-btn cancel" onclick="this.closest('.media-detail-modal').remove()">Schließen</button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      if (customerMedia.length > 0) {
+        const mediaList = modal.querySelector('.media-list');
+        
+        customerMedia.forEach(media => {
+          const mediaItem = document.createElement('div');
+          mediaItem.className = 'customer-attachment-item';
+          
+          mediaItem.innerHTML = `
+            <div style="display: flex; align-items: center; width: 100%;">
+              <div style="flex: 1;">
+                <div style="font-weight: 600;">${media.title}</div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">${media.propertyName} | ${media.category}</div>
+              </div>
+              <button class="btn btn-outline btn-sm" style="margin-right: 10px;" 
+                onclick="removeCustomerAccess('${customerId}', ${media.id}, this)">
+                Zugriff entziehen
+              </button>
+              <div>
+                ${media.type === 'image' 
+                  ? `<img src="${media.fileUrl}" alt="${media.title}" style="width: 60px; height: 40px; object-fit: cover; border-radius: var(--radius-sm);">` 
+                  : `<i class="fas fa-file-${media.documentType} fa-2x"></i>`}
+              </div>
+            </div>
+          `;
+          
+          mediaList.appendChild(mediaItem);
+        });
+      }
+      
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function removeCustomerAccess(customerId, mediaId, button) {
+      const customers = [
+        { id: 'customer-1', name: 'Max Mustermann', property: 'Sunset Bay Resort, A-203', avatar: 'MM' },
+        { id: 'customer-2', name: 'Maria Schmidt', property: 'Palm View Residence, B-105', avatar: 'MS' },
+        { id: 'customer-3', name: 'Klaus Weber', property: 'Golden Bay Villas, C-301', avatar: 'KW' },
+        { id: 'customer-4', name: 'Anna Becker', property: 'Mountain View Resort, D-102', avatar: 'AB' },
+        { id: 'customer-5', name: 'Michael Schneider', property: 'Seaside Apartments, E-405', avatar: 'MS' }
+      ];
+      
+      const customer = customers.find(c => c.id === customerId);
+      
+      if (confirm('Möchten Sie diesem Kunden wirklich den Zugriff auf dieses Medium entziehen?')) {
+        // Find the media item and remove the customer
+        const mediaItem = mediaItems.find(item => item.id === mediaId);
+        
+        if (mediaItem && mediaItem.customers) {
+          const index = mediaItem.customers.indexOf(customerId);
+          if (index !== -1) {
+            mediaItem.customers.splice(index, 1);
+          }
+        }
+        
+        // Remove from UI
+        button.closest('.customer-attachment-item').remove();
+        
+        // Update UI
+        const customerMedia = mediaItems.filter(item => item.customers && item.customers.includes(customerId));
+        
+        // Update media count in the modal
+        const countElement = button.closest('.media-detail-section').querySelector('p');
+        countElement.textContent = `${customer.name} hat Zugriff auf ${customerMedia.length} Medien.`;
+        
+        // If no more media, show message
+        if (customerMedia.length === 0) {
+          const mediaList = button.closest('.media-list');
+          mediaList.innerHTML = '<p>Diesem Kunden sind keine Medien zugewiesen.</p>';
+        }
+        
+        // Update UI
+        renderMediaItems();
+        renderCustomerList();
+        
+        // Show success message
+        showNotification(`Zugriff für ${customer.name} entfernt.`, 'success');
+      }
+    }
+    
+    // Notification handling
+    function showNotification(message, type = 'success') {
+      if (window.RedBirdNotify) {
+        window.RedBirdNotify[type](message);
+      } else {
+        // Fallback to alert
+        alert(message);
+      }
+    }
+    
+    // Initialize file input change event
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+  </script>
+</body>
+</html>

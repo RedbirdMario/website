@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - RedBird Real Estate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/typography-enhanced.css">
+    <link rel="stylesheet" href="../css/ui-enhanced.css">
+    <style>
+        :root {
+            --primary-red: #e72e2e;
+            --primary-red-light: #ff4d4d;
+            --primary-red-dark: #d42020;
+            --primary-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #777;
+            --border-color: #ddd;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #3498db;
+        }
+        
+        [data-theme="dark"] {
+            --primary-bg: #1e272e;
+            --text-dark: #f5f5f5;
+            --text-light: #aaa;
+            --border-color: #2c3e50;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .notifications-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .notifications-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-dropdown {
+            position: relative;
+            margin-right: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background-color: var(--primary-bg);
+        }
+        
+        .filter-dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 10;
+            min-width: 150px;
+            display: none;
+        }
+        
+        .filter-dropdown.active .filter-dropdown-content {
+            display: block;
+        }
+        
+        .filter-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .filter-option:hover {
+            background-color: var(--primary-bg);
+        }
+        
+        .filter-option.active {
+            background-color: rgba(231, 46, 46, 0.1);
+            color: var(--primary-red);
+        }
+        
+        .mark-all-read {
+            padding: 8px 15px;
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .mark-all-read:hover {
+            background-color: var(--primary-red-dark);
+        }
+        
+        .notifications-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: var(--primary-red);
+        }
+        
+        .tab.active {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-red);
+        }
+        
+        .notifications-list {
+            list-style: none;
+        }
+        
+        .notification-item {
+            display: flex;
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(231, 46, 46, 0.05);
+        }
+        
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 70%;
+            background-color: var(--primary-red);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .notification-icon.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification-icon.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .notification-icon.danger {
+            background-color: var(--danger-color);
+        }
+        
+        .notification-icon.info {
+            background-color: var(--info-color);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .notification-message {
+            color: var(--text-light);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .notification-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .notification-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .notification-actions button:hover {
+            color: var(--primary-red);
+        }
+        
+        .notification-actions button i {
+            font-size: 1rem;
+        }
+        
+        .empty-notifications {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        
+        .empty-text {
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .load-more-btn {
+            padding: 10px 20px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .load-more-btn:hover {
+            background-color: var(--primary-bg);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .notifications-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .notifications-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .filter-dropdown {
+                margin-right: 0;
+            }
+            
+            .notifications-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .notification-item {
+                padding: 12px;
+            }
+            
+            .notification-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .notification-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="../index.html">
+                        <img src="../img/redbird-logo.svg" alt="RedBird Logo">
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="progress.html">Progress</a></li>
+                        <li><a href="documents.html">Documents</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="messaging.html">Messaging</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">DC</div>
+                        <span id="userName">Demo Client</span>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="notifications.html" class="active"><i class="fas fa-bell"></i> Notifications</a>
+                            <a href="../index.html"><i class="fas fa-home"></i> Zur Webseite</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Notifications</h1>
+            <p>Stay updated on your property purchase process</p>
+        </div>
+        
+        <div class="notifications-container">
+            <div class="notifications-header">
+                <h2>Your Notifications</h2>
+                <div class="notifications-actions">
+                    <div class="filter-dropdown" id="filterDropdown">
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i>
+                            <span>Filter</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-dropdown-content">
+                            <div class="filter-option active" data-filter="all">All Notifications</div>
+                            <div class="filter-option" data-filter="unread">Unread Only</div>
+                            <div class="filter-option" data-filter="progress">Progress Updates</div>
+                            <div class="filter-option" data-filter="documents">Documents</div>
+                            <div class="filter-option" data-filter="messages">Messages</div>
+                            <div class="filter-option" data-filter="system">System</div>
+                        </div>
+                    </div>
+                    <button class="mark-all-read" id="markAllReadBtn">
+                        <i class="fas fa-check-double"></i>
+                        <span>Mark all as read</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="notifications-tabs">
+                <div class="tab active" data-tab="all">All</div>
+                <div class="tab" data-tab="unread">Unread <span class="badge" id="unreadBadge">4</span></div>
+                <div class="tab" data-tab="today">Today</div>
+                <div class="tab" data-tab="thisWeek">This Week</div>
+                <div class="tab" data-tab="thisMonth">This Month</div>
+            </div>
+            
+            <div class="notifications-content">
+                <ul class="notifications-list" id="notificationsList">
+                    <!-- Notifications will be generated by JavaScript -->
+                </ul>
+                
+                <div class="empty-notifications" id="emptyNotifications" style="display: none;">
+                    <i class="fas fa-bell-slash empty-icon"></i>
+                    <div class="empty-title">No notifications</div>
+                    <div class="empty-text">You don't have any notifications at the moment. We'll notify you when there are updates about your property.</div>
+                </div>
+                
+                <div class="load-more">
+                    <button class="load-more-btn" id="loadMoreBtn">
+                        <span>Load More</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const userJson = localStorage.getItem('rb_current_user');
+            if (!userJson) {
+                window.location.href = '../improved-login.html';
+                return;
+            }
+            
+            // Parse user data
+            const user = JSON.parse(userJson);
+            
+            // Update user info in header
+            document.getElementById('userName').textContent = `${user.first_name} ${user.last_name}`;
+            document.getElementById('userInitials').textContent = `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`;
+            
+            // Initialize demo notifications if not exists
+            if (!localStorage.getItem('rb_demo_notifications')) {
+                initializeDemoNotifications();
+            }
+            
+            // Get DOM elements
+            const notificationsList = document.getElementById('notificationsList');
+            const emptyNotifications = document.getElementById('emptyNotifications');
+            const tabs = document.querySelectorAll('.tab');
+            const filterDropdown = document.getElementById('filterDropdown');
+            const filterOptions = document.querySelectorAll('.filter-option');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const unreadBadge = document.getElementById('unreadBadge');
+            
+            // Set initial state
+            let currentTab = 'all';
+            let currentFilter = 'all';
+            let displayedNotifications = 10; // Initial number of notifications to display
+            
+            // Load notifications
+            loadNotifications();
+            
+            // Update unread badge
+            updateUnreadBadge();
+            
+            // Tab functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Update current tab
+                    currentTab = this.dataset.tab;
+                    
+                    // Reset displayed notifications
+                    displayedNotifications = 10;
+                    
+                    // Load notifications
+                    loadNotifications();
+                });
+            });
+            
+            // Filter dropdown
+            filterDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+            });
+            
+            // Close filter dropdown when clicking outside
+            document.addEventListener('click', function() {
+                filterDropdown.classList.remove('active');
+            });
+            
+            // Filter functionality
+            filterOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    filterOptions.forEach(o => o.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Update current filter
+                    currentFilter = this.dataset.filter;
+                    
+                    // Reset displayed notifications
+                    displayedNotifications = 10;
+                    
+                    // Load notifications
+                    loadNotifications();
+                });
+            });
+            
+            // Mark all as read
+            markAllReadBtn.addEventListener('click', function() {
+                // Get notifications data
+                const notificationsData = JSON.parse(localStorage.getItem('rb_demo_notifications')) || {};
+                const notifications = notificationsData.notifications || [];
+                
+                // Mark all notifications as read
+                notifications.forEach(notification => {
+                    notification.read = true;
+                });
+                
+                // Save to localStorage
+                notificationsData.notifications = notifications;
+                localStorage.setItem('rb_demo_notifications', JSON.stringify(notificationsData));
+                
+                // Update UI
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                
+                // Update badge
+                updateUnreadBadge();
+            });
+            
+            // Load more functionality
+            loadMoreBtn.addEventListener('click', function() {
+                // Increase the number of displayed notifications
+                displayedNotifications += 10;
+                
+                // Load notifications
+                loadNotifications();
+                
+                // Hide load more button if all notifications are displayed
+                const totalNotifications = getFilteredNotifications().length;
+                if (displayedNotifications >= totalNotifications) {
+                    this.style.display = 'none';
+                }
+            });
+            
+            // Function to load notifications
+            function loadNotifications() {
+                // Get filtered notifications
+                const notifications = getFilteredNotifications();
+                
+                // Check if there are notifications
+                if (notifications.length === 0) {
+                    notificationsList.innerHTML = '';
+                    emptyNotifications.style.display = 'block';
+                    loadMoreBtn.style.display = 'none';
+                    return;
+                }
+                
+                // Hide empty state
+                emptyNotifications.style.display = 'none';
+                
+                // Clear notifications list
+                notificationsList.innerHTML = '';
+                
+                // Get notifications to display
+                const notificationsToDisplay = notifications.slice(0, displayedNotifications);
+                
+                // Render notifications
+                notificationsToDisplay.forEach(notification => {
+                    const notificationElement = document.createElement('li');
+                    notificationElement.className = `notification-item ${!notification.read ? 'unread' : ''}`;
+                    notificationElement.dataset.id = notification.id;
+                    
+                    // Format time
+                    const timeString = formatTime(notification.timestamp);
+                    
+                    // Set icon class based on type
+                    let iconClass;
+                    switch (notification.type) {
+                        case 'progress':
+                            iconClass = 'success';
+                            break;
+                        case 'documents':
+                            iconClass = 'info';
+                            break;
+                        case 'messages':
+                            iconClass = 'warning';
+                            break;
+                        case 'system':
+                            iconClass = 'danger';
+                            break;
+                        default:
+                            iconClass = 'info';
+                    }
+                    
+                    // Set icon based on type
+                    let icon;
+                    switch (notification.type) {
+                        case 'progress':
+                            icon = 'chart-line';
+                            break;
+                        case 'documents':
+                            icon = 'file-alt';
+                            break;
+                        case 'messages':
+                            icon = 'comment';
+                            break;
+                        case 'system':
+                            icon = 'cog';
+                            break;
+                        default:
+                            icon = 'bell';
+                    }
+                    
+                    notificationElement.innerHTML = `
+                        <div class="notification-icon ${iconClass}">
+                            <i class="fas fa-${icon}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notification.title}</div>
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="far fa-clock"></i>
+                                    <span>${timeString}</span>
+                                </div>
+                                <div class="notification-actions">
+                                    <button class="mark-read-btn" title="Mark as ${notification.read ? 'unread' : 'read'}">
+                                        <i class="fas fa-${notification.read ? 'envelope' : 'check'}"></i>
+                                        <span>Mark as ${notification.read ? 'unread' : 'read'}</span>
+                                    </button>
+                                    <button class="delete-btn" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add event listeners to action buttons
+                    notificationElement.querySelector('.mark-read-btn').addEventListener('click', function() {
+                        toggleReadStatus(notification.id);
+                    });
+                    
+                    notificationElement.querySelector('.delete-btn').addEventListener('click', function() {
+                        deleteNotification(notification.id);
+                    });
+                    
+                    notificationsList.appendChild(notificationElement);
+                });
+                
+                // Show/hide load more button
+                if (notifications.length > displayedNotifications) {
+                    loadMoreBtn.style.display = 'flex';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+            
+            // Function to get filtered notifications
+            function getFilteredNotifications() {
+                // Get notifications data
+                const notificationsData = JSON.parse(localStorage.getItem('rb_demo_notifications')) || {};
+                let notifications = notificationsData.notifications || [];
+                
+                // Apply filter
+                if (currentFilter !== 'all') {
+                    if (currentFilter === 'unread') {
+                        notifications = notifications.filter(n => !n.read);
+                    } else {
+                        notifications = notifications.filter(n => n.type === currentFilter);
+                    }
+                }
+                
+                // Apply tab filter
+                if (currentTab !== 'all') {
+                    const now = new Date();
+                    
+                    if (currentTab === 'unread') {
+                        notifications = notifications.filter(n => !n.read);
+                    } else if (currentTab === 'today') {
+                        notifications = notifications.filter(n => {
+                            const notificationDate = new Date(n.timestamp);
+                            return notificationDate.toDateString() === now.toDateString();
+                        });
+                    } else if (currentTab === 'thisWeek') {
+                        notifications = notifications.filter(n => {
+                            const notificationDate = new Date(n.timestamp);
+                            const diffDays = Math.floor((now - notificationDate) / (1000 * 60 * 60 * 24));
+                            return diffDays < 7;
+                        });
+                    } else if (currentTab === 'thisMonth') {
+                        notifications = notifications.filter(n => {
+                            const notificationDate = new Date(n.timestamp);
+                            return notificationDate.getMonth() === now.getMonth() && 
+                                   notificationDate.getFullYear() === now.getFullYear();
+                        });
+                    }
+                }
+                
+                // Sort by timestamp (newest first)
+                notifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                return notifications;
+            }
+            
+            // Function to toggle read status
+            function toggleReadStatus(id) {
+                // Get notifications data
+                const notificationsData = JSON.parse(localStorage.getItem('rb_demo_notifications')) || {};
+                const notifications = notificationsData.notifications || [];
+                
+                // Find notification index
+                const index = notifications.findIndex(n => n.id === id);
+                
+                if (index !== -1) {
+                    // Toggle read status
+                    notifications[index].read = !notifications[index].read;
+                    
+                    // Save to localStorage
+                    notificationsData.notifications = notifications;
+                    localStorage.setItem('rb_demo_notifications', JSON.stringify(notificationsData));
+                    
+                    // Update UI
+                    const notificationElement = document.querySelector(`.notification-item[data-id="${id}"]`);
+                    if (notificationElement) {
+                        if (notifications[index].read) {
+                            notificationElement.classList.remove('unread');
+                            notificationElement.querySelector('.mark-read-btn i').className = 'fas fa-envelope';
+                            notificationElement.querySelector('.mark-read-btn span').textContent = 'Mark as unread';
+                        } else {
+                            notificationElement.classList.add('unread');
+                            notificationElement.querySelector('.mark-read-btn i').className = 'fas fa-check';
+                            notificationElement.querySelector('.mark-read-btn span').textContent = 'Mark as read';
+                        }
+                    }
+                    
+                    // Update badge
+                    updateUnreadBadge();
+                }
+            }
+            
+            // Function to delete notification
+            function deleteNotification(id) {
+                // Get notifications data
+                const notificationsData = JSON.parse(localStorage.getItem('rb_demo_notifications')) || {};
+                let notifications = notificationsData.notifications || [];
+                
+                // Filter out the notification
+                notifications = notifications.filter(n => n.id !== id);
+                
+                // Save to localStorage
+                notificationsData.notifications = notifications;
+                localStorage.setItem('rb_demo_notifications', JSON.stringify(notificationsData));
+                
+                // Update UI
+                const notificationElement = document.querySelector(`.notification-item[data-id="${id}"]`);
+                if (notificationElement) {
+                    notificationElement.remove();
+                }
+                
+                // Check if there are no notifications left
+                if (notifications.length === 0 || getFilteredNotifications().length === 0) {
+                    emptyNotifications.style.display = 'block';
+                    loadMoreBtn.style.display = 'none';
+                }
+                
+                // Update badge
+                updateUnreadBadge();
+            }
+            
+            // Function to update unread badge
+            function updateUnreadBadge() {
+                // Get notifications data
+                const notificationsData = JSON.parse(localStorage.getItem('rb_demo_notifications')) || {};
+                const notifications = notificationsData.notifications || [];
+                
+                // Count unread notifications
+                const unreadCount = notifications.filter(n => !n.read).length;
+                
+                // Update badge
+                unreadBadge.textContent = unreadCount;
+                
+                // Hide badge if no unread notifications
+                if (unreadCount === 0) {
+                    unreadBadge.style.display = 'none';
+                } else {
+                    unreadBadge.style.display = 'inline-block';
+                }
+            }
+            
+            // Function to format time
+            function formatTime(timestamp) {
+                const now = new Date();
+                const notificationDate = new Date(timestamp);
+                
+                // Check if it's today
+                if (notificationDate.toDateString() === now.toDateString()) {
+                    // If it's within the last hour
+                    const diffMinutes = Math.floor((now - notificationDate) / (1000 * 60));
+                    if (diffMinutes < 60) {
+                        if (diffMinutes < 1) {
+                            return 'Just now';
+                        } else if (diffMinutes === 1) {
+                            return '1 minute ago';
+                        } else {
+                            return `${diffMinutes} minutes ago`;
+                        }
+                    } else {
+                        return notificationDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+                } else {
+                    // Check if it's yesterday
+                    const yesterday = new Date(now);
+                    yesterday.setDate(now.getDate() - 1);
+                    if (notificationDate.toDateString() === yesterday.toDateString()) {
+                        return 'Yesterday';
+                    } else {
+                        // Check if it's within the last week
+                        const diffDays = Math.floor((now - notificationDate) / (1000 * 60 * 60 * 24));
+                        if (diffDays < 7) {
+                            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                            return days[notificationDate.getDay()];
+                        } else {
+                            return notificationDate.toLocaleDateString();
+                        }
+                    }
+                }
+            }
+            
+            // Function to initialize demo notifications
+            function initializeDemoNotifications() {
+                const now = new Date();
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1);
+                const twoDaysAgo = new Date(now);
+                twoDaysAgo.setDate(now.getDate() - 2);
+                const threeDaysAgo = new Date(now);
+                threeDaysAgo.setDate(now.getDate() - 3);
+                const fiveDaysAgo = new Date(now);
+                fiveDaysAgo.setDate(now.getDate() - 5);
+                const oneWeekAgo = new Date(now);
+                oneWeekAgo.setDate(now.getDate() - 7);
+                const twoWeeksAgo = new Date(now);
+                twoWeeksAgo.setDate(now.getDate() - 14);
+                
+                const notificationsData = {
+                    notifications: [
+                        {
+                            id: '1',
+                            type: 'progress',
+                            title: 'Progress Update',
+                            message: 'Your property ownership registration has moved to the next stage. Title deed processing is now 65% complete.',
+                            timestamp: now.toISOString(),
+                            read: false
+                        },
+                        {
+                            id: '2',
+                            type: 'documents',
+                            title: 'New Document Available',
+                            message: 'A new document "Draft Title Deed - For Review" has been uploaded to your account by John Advisor.',
+                            timestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+                            read: false
+                        },
+                        {
+                            id: '3',
+                            type: 'messages',
+                            title: 'New Message',
+                            message: 'You have a new message from Emma Consultant regarding your interior photos.',
+                            timestamp: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+                            read: false
+                        },
+                        {
+                            id: '4',
+                            type: 'progress',
+                            title: 'Property Inspection Scheduled',
+                            message: 'A property inspection has been scheduled for your unit at Sunset Bay Resort on May 25, 2025.',
+                            timestamp: yesterday.toISOString(),
+                            read: false
+                        },
+                        {
+                            id: '5',
+                            type: 'system',
+                            title: 'Account Security',
+                            message: 'Your RedBird account password was changed successfully. If you did not make this change, please contact support immediately.',
+                            timestamp: yesterday.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '6',
+                            type: 'documents',
+                            title: 'Document Signed',
+                            message: 'Your signed property registration forms have been received and processed successfully.',
+                            timestamp: twoDaysAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '7',
+                            type: 'messages',
+                            title: 'Advisor Assigned',
+                            message: 'John Advisor has been assigned as your primary real estate advisor. You can now contact them directly through the messaging system.',
+                            timestamp: threeDaysAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '8',
+                            type: 'progress',
+                            title: 'Payment Received',
+                            message: 'Your payment of €10,000 for the property downpayment has been received and processed.',
+                            timestamp: fiveDaysAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '9',
+                            type: 'system',
+                            title: 'Account Created',
+                            message: 'Welcome to RedBird Real Estate! Your account has been successfully created. You can now access all of our client portal features.',
+                            timestamp: oneWeekAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '10',
+                            type: 'progress',
+                            title: 'Purchase Agreement Approved',
+                            message: 'Your purchase agreement for Sunset Bay Resort, Unit A-203 has been approved by the seller.',
+                            timestamp: oneWeekAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '11',
+                            type: 'documents',
+                            title: 'Floor Plan Uploaded',
+                            message: 'The detailed floor plan for your property has been uploaded to your account.',
+                            timestamp: twoWeeksAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '12',
+                            type: 'messages',
+                            title: 'Welcome Message',
+                            message: 'You have a welcome message from the RedBird Real Estate team. Check your messages to read it.',
+                            timestamp: twoWeeksAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '13',
+                            type: 'system',
+                            title: 'Email Verification',
+                            message: 'Your email address has been successfully verified. Thank you for completing your account setup.',
+                            timestamp: twoWeeksAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '14',
+                            type: 'progress',
+                            title: 'Property Reserved',
+                            message: 'Your property at Sunset Bay Resort has been successfully reserved for purchase.',
+                            timestamp: twoWeeksAgo.toISOString(),
+                            read: true
+                        },
+                        {
+                            id: '15',
+                            type: 'documents',
+                            title: 'Property Brochure Available',
+                            message: 'The detailed property brochure for Sunset Bay Resort is now available in your documents section.',
+                            timestamp: twoWeeksAgo.toISOString(),
+                            read: true
+                        }
+                    ]
+                };
+                
+                localStorage.setItem('rb_demo_notifications', JSON.stringify(notificationsData));
+            }
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('rb_theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', function() {
+                if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('rb_theme', 'light');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('rb_theme', 'dark');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Clear user data
+                localStorage.removeItem('rb_current_user');
+                localStorage.removeItem('rb_auth_token');
+                localStorage.removeItem('rb_is_demo');
+                
+                // Redirect to login
+                window.location.href = '../improved-login.html';
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const mainNav = document.querySelector('.main-nav');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                mainNav.classList.toggle('active');
+            });
+            
+            // Dropdown toggle
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            dropdownToggle.addEventListener('click', function() {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
